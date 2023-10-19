@@ -31,7 +31,6 @@ export default {
         imageborder: "inset 0 0 0 1px hsla(0, 0%, 0%, .1)",
       },
       colors: {
-        sometest: "hsl(var(--sometest))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
