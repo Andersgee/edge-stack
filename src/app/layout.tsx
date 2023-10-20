@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { fontSans } from "#src/utils/font";
 import { Init } from "./Init";
+import { TrpcProvider } from "#src/context/Trpc";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={fontSans.variable}>{children}</body>
+      <body className={fontSans.variable}>
+        <TrpcProvider>{children}</TrpcProvider>
+      </body>
       <Init />
     </html>
   );
