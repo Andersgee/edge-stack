@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
           githubUserId: userInfo.id,
           image: userInfo.avatar_url,
         })
-        .postTakeFirst();
+        .post();
 
       tokenUser = {
         id: Number(insertResult.insertId),

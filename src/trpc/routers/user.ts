@@ -33,7 +33,7 @@ export const userRouter = createTRPCRouter({
       .set({
         name: input.name,
       })
-      .postTakeFirst();
+      .post();
 
     if (Number(updateResult.numUpdatedRows)) {
       revalidateTag(tagsUserRouter.info({ userId: ctx.user.id }));

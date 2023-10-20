@@ -17,7 +17,7 @@ import { type RequestInitLimited, executeWithFetchGet, executeWithFetchPost } fr
 
 // this is a mysql dummy driver eg only for compiling querys but with
 // get() getFirst() getFirstOrThrow() on select querys and
-// post() postTakeFirst() postTakeFirstOrThrow() on other types of querys
+// post() postOrThrow() on other types of querys
 
 declare module "kysely" {
   interface SelectQueryBuilder<DB, TB extends keyof DB, O> {
@@ -27,21 +27,18 @@ declare module "kysely" {
   }
 
   interface UpdateQueryBuilder<DB, UT extends keyof DB, TB extends keyof DB, O> {
-    post(): Promise<Simplify<O>[]>;
-    postTakeFirst(): Promise<Simplify<O>>;
-    postTakeFirstOrThrow(): Promise<Simplify<O>>;
+    post(): Promise<Simplify<O>>;
+    postOrThrow(): Promise<Simplify<O>>;
   }
 
   interface DeleteQueryBuilder<DB, TB extends keyof DB, O> {
-    post(): Promise<Simplify<O>[]>;
-    postTakeFirst(): Promise<Simplify<O> | null>;
-    postTakeFirstOrThrow(): Promise<Simplify<O>>;
+    post(): Promise<Simplify<O>>;
+    postOrThrow(): Promise<Simplify<O>>;
   }
 
   interface InsertQueryBuilder<DB, TB extends keyof DB, O> {
-    post(): Promise<Simplify<O>[]>;
-    postTakeFirst(): Promise<Simplify<O>>;
-    postTakeFirstOrThrow(): Promise<Simplify<O>>;
+    post(): Promise<Simplify<O>>;
+    postOrThrow(): Promise<Simplify<O>>;
   }
 }
 
@@ -68,13 +65,8 @@ UpdateQueryBuilder.prototype.post = async function <O>(): Promise<Simplify<O>[]>
   return executeWithFetchPost(this.compile());
 };
 
-UpdateQueryBuilder.prototype.postTakeFirst = async function <O>(): Promise<Simplify<O>> {
-  const [result] = await this.post();
-  return result as Simplify<O>;
-};
-
-UpdateQueryBuilder.prototype.postTakeFirstOrThrow = async function <O>(): Promise<Simplify<O>> {
-  const [result] = await this.post();
+UpdateQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<Simplify<O>> {
+  const result = await this.post();
   if (result === undefined) {
     throw new Error("no result");
   }
@@ -86,35 +78,27 @@ DeleteQueryBuilder.prototype.post = async function <O>(): Promise<Simplify<O>[]>
   return executeWithFetchPost(this.compile());
 };
 
-DeleteQueryBuilder.prototype.postTakeFirst = async function <O>(): Promise<Simplify<O> | null> {
-  const [result] = await this.post();
-  return (result as Simplify<O>) ?? null;
-};
-
-DeleteQueryBuilder.prototype.postTakeFirstOrThrow = async function <O>(): Promise<Simplify<O>> {
-  const [result] = await this.post();
+DeleteQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<Simplify<O>> {
+  const result = await this.post();
   if (result === undefined) {
     throw new Error("no result");
   }
-  return result as Simplify<O>;
+  return result as unknown as Simplify<O>;
 };
 
 //insert
-InsertQueryBuilder.prototype.post = async function <O>(): Promise<Simplify<O>[]> {
+InsertQueryBuilder.prototype.post = async function <O>(): Promise<Simplify<O>> {
   return executeWithFetchPost(this.compile());
 };
 
-InsertQueryBuilder.prototype.postTakeFirst = async function <O>(): Promise<Simplify<O>> {
-  const [result] = await this.post();
-  return result as Simplify<O>;
-};
+InsertQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<Simplify<O>> {
+  const result = await this.post();
 
-InsertQueryBuilder.prototype.postTakeFirstOrThrow = async function <O>(): Promise<Simplify<O>> {
-  const [result] = await this.post();
+  //const [result] = await this.post();
   if (result === undefined) {
     throw new Error("no result");
   }
-  return result as Simplify<O>;
+  return result as unknown as Simplify<O>;
 };
 
 export const db = new Kysely<DB>({

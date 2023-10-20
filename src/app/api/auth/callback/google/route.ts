@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
           googleUserSub: userInfo.sub,
           image: userInfo.picture,
         })
-        .postTakeFirst();
+        .post();
 
       tokenUser = {
         id: Number(insertResult.insertId),

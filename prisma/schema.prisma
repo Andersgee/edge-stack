@@ -18,5 +18,22 @@ model User {
     image         String?
     name          String
 
-    //
+    //app
+    posts UserPostPivot[]
+}
+
+model UserPostPivot {
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int
+    post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId Int
+
+    @@id([userId, postId])
+}
+
+model Post {
+    id   Int    @id @default(autoincrement())
+    text String
+
+    users UserPostPivot[]
 }

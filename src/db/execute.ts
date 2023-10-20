@@ -25,7 +25,9 @@ export async function executeWithFetchGet(compiledQuery: CompiledQuery, init?: R
 
   if (res.ok) {
     try {
-      return rowsFromResponse(res);
+      const result = parse(await res.text());
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+      return result.rows;
     } catch (error) {
       throw new Error("failed to parse response");
     }
@@ -52,18 +54,13 @@ export async function executeWithFetchPost(compiledQuery: CompiledQuery) {
 
   if (res.ok) {
     try {
-      return rowsFromResponse(res);
+      const info = parse(await res.text());
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return info;
     } catch (error) {
       throw new Error("failed to parse response");
     }
   } else {
     throw new Error(`${res.status} ${res.statusText}`);
   }
-}
-
-async function rowsFromResponse(res: Response) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const result = parse(await res.text());
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-  return result.rows;
 }
