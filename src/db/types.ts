@@ -7,6 +7,7 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 export type Post = {
   id: Generated<number>;
   text: string;
+  createdAt: Generated<Timestamp>;
 };
 export type User = {
   id: Generated<number>;

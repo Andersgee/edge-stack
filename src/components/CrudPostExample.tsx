@@ -75,7 +75,10 @@ export function CrudPostExample({ initialPost, className }: Props) {
       {isEditing ? (
         <input className="text-black" type="text" onChange={(e) => setText(e.target.value)} value={text} />
       ) : (
-        <p className={className}>{postInfo.text}</p>
+        <div>
+          <p>{postInfo.createdAt.toLocaleString()}</p>
+          <p className={className}>{postInfo.text}</p>
+        </div>
       )}
     </div>
   );
