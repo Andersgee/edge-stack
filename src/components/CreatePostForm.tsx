@@ -9,7 +9,7 @@ type Props = {
   onSuccess: (newPost: RouterOutputs["post"]["create"]) => void;
 };
 
-export function CreatePostForm({ onSuccess, className }: Props) {
+export function CreatePostForm({ onSuccess }: Props) {
   const [text, setText] = useState("");
 
   const postCreate = api.post.create.useMutation({
