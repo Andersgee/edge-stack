@@ -64,4 +64,13 @@ export const postRouter = createTRPCRouter({
     revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
     return postId;
   }),
+  delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
+    const stuff = await db.deleteFrom("Post").where("id", "=", input.postId).postOrThrow();
+
+    console.log("api.post.remove, stuff:", stuff);
+
+    revalidateTag(tagsPostRouter.latest10());
+    revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
+    return true;
+  }),
 });

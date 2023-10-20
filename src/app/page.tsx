@@ -1,4 +1,4 @@
-import { CreatePostForm } from "#src/components/CreatePostForm";
+import { CreatePostForm, DeletePostButton } from "#src/components/CreatePostForm";
 import { SigninButtons } from "#src/components/SigninButtons";
 import { apiRsc } from "#src/trpc/api-rsc";
 
@@ -15,7 +15,10 @@ export default async function Page() {
           <div>
             latest 10 from Everyone
             {latest10.map((post) => (
-              <div key={post.id}>{post.text}</div>
+              <div key={post.id} className="flex">
+                <p>{post.text}</p>
+                <DeletePostButton postId={post.id} />
+              </div>
             ))}
           </div>
           <div>

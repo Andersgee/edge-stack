@@ -39,3 +39,13 @@ export function CreatePostForm({ className }: Props) {
     </form>
   );
 }
+
+export function DeletePostButton({ postId }: { postId: number }) {
+  const postRemove = api.post.delete.useMutation();
+
+  return (
+    <button onClick={() => postRemove.mutate({ postId })} className="bg-red-500 p-2">
+      DELETE
+    </button>
+  );
+}
