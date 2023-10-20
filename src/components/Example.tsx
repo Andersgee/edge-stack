@@ -5,5 +5,10 @@ type Props = {
 };
 
 export function Example({ className }: Props) {
-  return <div className={className}>Example</div>;
+  return (
+    <div className={className}>
+      <div>Example</div>
+      <div className="my-3 bg-slate-200 px-3">hello</div>
+    </div>
+  );
 }
