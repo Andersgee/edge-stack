@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
 
     if (existingUser) {
       if (!existingUser.discordUserId) {
-        await db.updateTable("User").set({ discordUserId: userInfo.id }).where("id", "=", existingUser.id).execute();
+        await db.updateTable("User").set({ discordUserId: userInfo.id }).where("id", "=", existingUser.id).post();
       }
       tokenUser = {
         id: existingUser.id,

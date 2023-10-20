@@ -100,17 +100,3 @@ export const DISCORD_TOKEN = z.object({
   refresh_token: z.string(),
   scope: z.string(),
 });
-
-/*
-export async function addUser(user: InsertObjectOrList<DB, "User">) {
-  return await db.insertInto("User").values(user).executeTakeFirst();
-}
-
-export async function getUserByEmail(email: string) {
-  return await db
-    .selectFrom("User")
-    .selectAll()
-    .where("email", "=", email)
-    .executeTakeFirst();
-}
-*/
