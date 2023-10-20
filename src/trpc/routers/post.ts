@@ -31,7 +31,6 @@ export const postRouter = createTRPCRouter({
         next: { tags: [tagsPostRouter.myLatest10({ userId: ctx.user.id })] },
       });
   }),
-
   latest10: publicProcedure.query(async () => {
     return db
       .selectFrom("Post")

@@ -18,6 +18,7 @@ import { type RequestInitLimited, executeWithFetchGet, executeWithFetchPost } fr
 // this is a mysql dummy driver eg only for compiling querys but with
 // get() getFirst() getFirstOrThrow() on select querys and
 // post() postOrThrow() on other types of querys
+// also use these result types instead of "SimplifySingleResult<O>" because getting insertId etc as bigint instead of number is annoying
 
 type InsertResult = {
   insertId: number;
@@ -117,6 +118,7 @@ DeleteQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<DeleteR
 };
 
 //insert
+
 InsertQueryBuilder.prototype.post = async function <O>(): Promise<InsertResult | null> {
   const result = (await executeWithFetchPost(this.compile())) as {
     insertId: bigint | undefined;
