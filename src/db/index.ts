@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Kysely,
   SelectQueryBuilder,
@@ -26,7 +28,7 @@ declare module "kysely" {
 
   interface UpdateQueryBuilder<DB, UT extends keyof DB, TB extends keyof DB, O> {
     post(): Promise<Simplify<O>[]>;
-    postTakeFirst(): Promise<Simplify<O> | null>;
+    postTakeFirst(): Promise<Simplify<O>>;
     postTakeFirstOrThrow(): Promise<Simplify<O>>;
   }
 
@@ -66,9 +68,9 @@ UpdateQueryBuilder.prototype.post = async function <O>(): Promise<Simplify<O>[]>
   return executeWithFetchPost(this.compile());
 };
 
-UpdateQueryBuilder.prototype.postTakeFirst = async function <O>(): Promise<Simplify<O> | null> {
+UpdateQueryBuilder.prototype.postTakeFirst = async function <O>(): Promise<Simplify<O>> {
   const [result] = await this.post();
-  return (result as Simplify<O>) ?? null;
+  return result as Simplify<O>;
 };
 
 UpdateQueryBuilder.prototype.postTakeFirstOrThrow = async function <O>(): Promise<Simplify<O>> {

@@ -7,7 +7,7 @@ export const runtime = "edge";
 
 // remove cookies by setting a new cookie with same exact parameters but Max-Age 0
 export function GET(request: NextRequest) {
-  const route = request.nextUrl.searchParams.get("route") || "";
+  const route = request.nextUrl.searchParams.get("route") ?? "";
   return new Response(undefined, {
     status: 303,
     headers: {

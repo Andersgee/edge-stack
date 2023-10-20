@@ -20,7 +20,7 @@ https://developers.google.com/identity/openid-connect/openid-connect#server-flow
 
 export async function GET(request: NextRequest) {
   try {
-    const route = request.nextUrl.searchParams.get("route") || "";
+    const route = request.nextUrl.searchParams.get("route") ?? "";
 
     const session = await getSessionFromRequestCookie(request);
     if (!session) throw new Error("no session");

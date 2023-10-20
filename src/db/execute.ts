@@ -8,10 +8,7 @@ export type RequestInitLimited = RequestInit & {
   cache?: "force-cache" | "no-store";
 };
 
-export async function executeWithFetchGet(
-  compiledQuery: CompiledQuery,
-  init?: RequestInit
-) {
+export async function executeWithFetchGet(compiledQuery: CompiledQuery, init?: RequestInit) {
   const q = stringify({
     sql: compiledQuery.sql,
     parameters: compiledQuery.parameters,
@@ -28,8 +25,7 @@ export async function executeWithFetchGet(
 
   if (res.ok) {
     try {
-      const result = parse(await res.text()) as any;
-      return result.rows;
+      return rowsFromResponse(res);
     } catch (error) {
       throw new Error("failed to parse response");
     }
@@ -49,19 +45,25 @@ export async function executeWithFetchPost(compiledQuery: CompiledQuery) {
     cache: "no-store",
     headers: {
       "Content-Type": "text/plain",
-      Authorization: process.env.DATABASE_HTTP_AUTH_HEADER,
+      "Authorization": process.env.DATABASE_HTTP_AUTH_HEADER,
     },
     body: stringify(body),
   });
 
   if (res.ok) {
     try {
-      const result = parse(await res.text()) as any;
-      return result.rows;
+      return rowsFromResponse(res);
     } catch (error) {
       throw new Error("failed to parse response");
     }
   } else {
     throw new Error(`${res.status} ${res.statusText}`);
   }
+}
+
+async function rowsFromResponse(res: Response) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const result = parse(await res.text());
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  return result.rows;
 }

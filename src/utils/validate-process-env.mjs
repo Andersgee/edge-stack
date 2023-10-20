@@ -24,9 +24,11 @@ export const envSchema = z.object({
 });
 
 function formatErrors(errors) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return Object.entries(errors)
     .map(([name, value]) => {
       if (value && "_errors" in value)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         return `${name}: ${value._errors.join(", ")}\n`;
     })
     .filter(Boolean);
@@ -35,9 +37,6 @@ function formatErrors(errors) {
 const parsedSchema = envSchema.safeParse(process.env);
 
 if (!parsedSchema.success) {
-  console.error(
-    "❌ Invalid env vars:\n",
-    ...formatErrors(parsedSchema.error.format())
-  );
+  console.error("❌ Invalid env vars:\n", ...formatErrors(parsedSchema.error.format()));
   throw new Error("Invalid environment variables");
 }

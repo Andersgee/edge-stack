@@ -4,10 +4,10 @@ make sure these values match what is in next.config.mjs
 */
 
 const DEVICE_SIZES = {
-  sm: 640,
-  md: 768,
-  lg: 1024,
-  xl: 1280,
+  "sm": 640,
+  "md": 768,
+  "lg": 1024,
+  "xl": 1280,
   "2xl": 1536,
 } as const;
 
@@ -25,10 +25,10 @@ const IMAGE_SIZES = {
 type TailwindSize = keyof typeof IMAGE_SIZES;
 
 type Options = {
-  sm?: TailwindSize;
-  md?: TailwindSize;
-  lg?: TailwindSize;
-  xl?: TailwindSize;
+  "sm"?: TailwindSize;
+  "md"?: TailwindSize;
+  "lg"?: TailwindSize;
+  "xl"?: TailwindSize;
   "2xl"?: TailwindSize;
 };
 
@@ -46,9 +46,9 @@ type Options = {
  */
 export function imageSizes(width: TailwindSize, o: Options) {
   const xl2 = o["2xl"] ? `(min-width: ${DEVICE_SIZES["2xl"]}px) ${IMAGE_SIZES[o["2xl"]]}px, ` : "";
-  const xl = o["xl"] ? `(min-width: ${DEVICE_SIZES["xl"]}px) ${IMAGE_SIZES[o["xl"]]}px, ` : "";
-  const md = o["md"] ? `(min-width: ${DEVICE_SIZES["md"]}px) ${IMAGE_SIZES[o["md"]]}px, ` : "";
-  const sm = o["sm"] ? `(min-width: ${DEVICE_SIZES["sm"]}px) ${IMAGE_SIZES[o["sm"]]}px, ` : "";
+  const xl = o.xl ? `(min-width: ${DEVICE_SIZES.xl}px) ${IMAGE_SIZES[o.xl]}px, ` : "";
+  const md = o.md ? `(min-width: ${DEVICE_SIZES.md}px) ${IMAGE_SIZES[o.md]}px, ` : "";
+  const sm = o.sm ? `(min-width: ${DEVICE_SIZES.sm}px) ${IMAGE_SIZES[o.sm]}px, ` : "";
   const w = `${IMAGE_SIZES[width]}px`;
   return `${xl2}${xl}${md}${sm}${w}`;
 }

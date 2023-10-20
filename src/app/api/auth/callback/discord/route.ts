@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
       tokenUser = {
         id: existingUser.id,
         name: existingUser.name,
-        image: existingUser.image || "",
+        image: existingUser.image ?? "",
       };
     } else {
       const insertResult = await db

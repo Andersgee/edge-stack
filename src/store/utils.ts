@@ -2,9 +2,7 @@ import type { StoreApi, UseBoundStore } from "zustand";
 
 type State = object;
 
-type WithSelectors<S> = S extends { getState: () => infer T }
-  ? S & { select: { [K in keyof T]: () => T[K] } }
-  : never;
+type WithSelectors<S> = S extends { getState: () => infer T } ? S & { select: { [K in keyof T]: () => T[K] } } : never;
 
 /**
  * adds convenience usage
@@ -19,12 +17,11 @@ type WithSelectors<S> = S extends { getState: () => infer T }
  * const stuff = useStore(state => state.stuff)
  * ```
  */
-export const createSelectors = <S extends UseBoundStore<StoreApi<State>>>(
-  _store: S
-) => {
-  let store = _store as WithSelectors<typeof _store>;
+export const createSelectors = <S extends UseBoundStore<StoreApi<State>>>(_store: S) => {
+  const store = _store as WithSelectors<typeof _store>;
   store.select = {};
-  for (let k of Object.keys(store.getState())) {
+  for (const k of Object.keys(store.getState())) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     (store.select as any)[k] = () => store((s) => s[k as keyof typeof s]);
   }
   return store;

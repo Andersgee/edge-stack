@@ -13,7 +13,7 @@ import {
   userCookieString,
 } from "#src/utils/auth/schema";
 import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
-import { TokenUser } from "#src/utils/jwt/schema";
+import type { TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
 
 export const dynamic = "force-dynamic";
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
       tokenUser = {
         id: existingUser.id,
         name: existingUser.name,
-        image: existingUser.image || "",
+        image: existingUser.image ?? "",
       };
     } else {
       const insertResult = await db

@@ -13,7 +13,7 @@ https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth
 
 export async function GET(request: NextRequest) {
   try {
-    const route = request.nextUrl.searchParams.get("route") || "";
+    const route = request.nextUrl.searchParams.get("route") ?? "";
     const session = await getSessionFromRequestCookie(request);
     if (!session) throw new Error("no session");
 
