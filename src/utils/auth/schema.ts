@@ -1,7 +1,12 @@
 import { z } from "zod";
 export const SESSION_COOKIE_NAME = "__Host-session";
 export const USER_COOKIE_NAME = "__Host-user";
-export const USER_COOKIE_MAXAGE = "2592000"; //in seconds. 2592000 is 30 days, prob avoid anything longer than that
+export const USER_COOKIE_MAXAGE = 2592000; //in seconds. 2592000 is 30 days, prob avoid anything longer than that
+
+/** remove with token="null" and maxAge=0 */
+export function userCookieString(token: string, maxAge: number) {
+  return `${USER_COOKIE_NAME}=${token}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`;
+}
 
 /**
  * should be hardcoded
@@ -12,17 +17,14 @@ export const USER_COOKIE_MAXAGE = "2592000"; //in seconds. 2592000 is 30 days, p
  *
  * but the only things we care about is `authorization_endpoint` and  `token_endpoint`
  * */
-export const GOOGLE_OPENID_DISCOVERY_URL =
-  "https://accounts.google.com/.well-known/openid-configuration";
+export const GOOGLE_OPENID_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration";
 
-export const GITHUB_AUTHORIZATION_URL =
-  "https://github.com/login/oauth/authorize";
+export const GITHUB_AUTHORIZATION_URL = "https://github.com/login/oauth/authorize";
 export const GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token";
 export const GITHUB_USERINFO_URL = "https://api.github.com/user";
 export const GITHUB_EMAILS_URL = "https://api.github.com/user/emails";
 
-export const DISCORD_AUTHORIZATION_URL =
-  "https://discord.com/api/oauth2/authorize";
+export const DISCORD_AUTHORIZATION_URL = "https://discord.com/api/oauth2/authorize";
 export const DISCORD_TOKEN_URL = "https://discord.com/api/oauth2/token";
 export const DISCORD_USERINFO_URL = "https://discord.com/api/users/@me";
 

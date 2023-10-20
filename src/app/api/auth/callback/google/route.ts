@@ -1,23 +1,17 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest } from "next/server";
-import { tagsUserRouter } from "#src/api/routers/user";
+import { tagsUserRouter } from "#src/trpc/routers/user";
 import { db } from "#src/db";
 import {
-  addUser,
-  getUserByEmail,
   GOOGLE_discoveryDocument,
   GOOGLE_OPENID_DISCOVERY_URL,
   GOOGLE_TOKEN,
   GOOGLE_USERINFO,
   USER_COOKIE_MAXAGE,
-  USER_COOKIE_NAME,
+  userCookieString,
 } from "#src/utils/auth/schema";
-import {
-  createTokenFromUser,
-  getSessionFromRequestCookie,
-  verifyStateToken,
-} from "#src/utils/token";
-import { type TokenUser } from "#src/utils/token/schema";
+import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
+import { type TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
 
 export const dynamic = "force-dynamic";
@@ -40,9 +34,7 @@ export async function GET(request: NextRequest) {
 
     //const token_endpoint = "https://oauth2.googleapis.com/token";
     const token_endpoint = GOOGLE_discoveryDocument.parse(
-      await fetch(GOOGLE_OPENID_DISCOVERY_URL, { cache: "default" }).then((r) =>
-        r.json()
-      )
+      await fetch(GOOGLE_OPENID_DISCOVERY_URL, { cache: "default" }).then((r) => r.json())
     ).token_endpoint;
 
     // Exchange code for access token and ID token
@@ -70,22 +62,18 @@ export async function GET(request: NextRequest) {
     // so just grab the payload part of the Base64-encoded object
     const id_token_payload = token.id_token.split(".")[1];
     if (!id_token_payload) throw new Error("no id token");
-    const userInfo = GOOGLE_USERINFO.parse(
-      JSON.parse(Buffer.from(id_token_payload, "base64").toString())
-    );
+    const userInfo = GOOGLE_USERINFO.parse(JSON.parse(Buffer.from(id_token_payload, "base64").toString()));
 
     // Authenticate the user
-    const existingUser = await getUserByEmail(userInfo.email);
+    const existingUser = await db.selectFrom("User").selectAll().where("email", "=", userInfo.email).getFirst({
+      cache: "no-store",
+    });
 
     let tokenUser: TokenUser | undefined = undefined;
 
     if (existingUser) {
       if (!existingUser.googleUserSub) {
-        await db
-          .updateTable("User")
-          .set({ googleUserSub: userInfo.sub })
-          .where("id", "=", existingUser.id)
-          .execute();
+        await db.updateTable("User").set({ googleUserSub: userInfo.sub }).where("id", "=", existingUser.id).post();
       }
 
       tokenUser = {
@@ -94,12 +82,15 @@ export async function GET(request: NextRequest) {
         image: existingUser.image || "",
       };
     } else {
-      const insertResult = await addUser({
-        name: userInfo.name,
-        email: userInfo.email,
-        googleUserSub: userInfo.sub,
-        image: userInfo.picture,
-      });
+      const insertResult = await db
+        .insertInto("User")
+        .values({
+          name: userInfo.name,
+          email: userInfo.email,
+          googleUserSub: userInfo.sub,
+          image: userInfo.picture,
+        })
+        .postTakeFirst();
 
       tokenUser = {
         id: Number(insertResult.insertId),
@@ -114,8 +105,8 @@ export async function GET(request: NextRequest) {
     return new Response(undefined, {
       status: 303,
       headers: {
-        Location: absUrl(state.route),
-        "Set-Cookie": `${USER_COOKIE_NAME}=${userCookie}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${USER_COOKIE_MAXAGE}`,
+        "Location": absUrl(state.route),
+        "Set-Cookie": userCookieString(userCookie, USER_COOKIE_MAXAGE),
       },
     });
   } catch (error) {

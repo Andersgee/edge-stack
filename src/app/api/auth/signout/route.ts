@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { USER_COOKIE_NAME } from "#src/utils/auth/schema";
+import { USER_COOKIE_NAME, userCookieString } from "#src/utils/auth/schema";
 import { absUrl } from "#src/utils/url";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,8 @@ export function GET(request: NextRequest) {
     status: 303,
     headers: {
       Location: absUrl(route),
-      "Set-Cookie": `${USER_COOKIE_NAME}=null; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=0`,
+      //"Set-Cookie": `${USER_COOKIE_NAME}=null; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=0`,
+      "Set-Cookie": userCookieString("null", 0),
     },
   });
 }

@@ -1,19 +1,17 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest } from "next/server";
-import { tagsUserRouter } from "#src/api/routers/user";
+import { tagsUserRouter } from "#src/trpc/routers/user";
 import { db } from "#src/db";
 import {
-  addUser,
   DISCORD_TOKEN,
   DISCORD_TOKEN_URL,
   DISCORD_USERINFO,
   DISCORD_USERINFO_URL,
-  getUserByEmail,
   USER_COOKIE_MAXAGE,
-  USER_COOKIE_NAME,
-} from "#src/utils/auth";
-import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/token";
-import type { TokenUser } from "#src/utils/token/schema";
+  userCookieString,
+} from "#src/utils/auth/schema";
+import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
+import type { TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
 
 export const dynamic = "force-dynamic";
@@ -78,7 +76,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Authenticate the user
-    const existingUser = await getUserByEmail(userInfo.email);
+    const existingUser = await db
+      .selectFrom("User")
+      .selectAll()
+      .where("email", "=", userInfo.email)
+      .getFirst({ cache: "no-store" });
+
     let tokenUser: TokenUser | undefined = undefined;
 
     if (existingUser) {
@@ -91,12 +94,16 @@ export async function GET(request: NextRequest) {
         image: existingUser.image || "",
       };
     } else {
-      const insertResult = await addUser({
-        name: userInfo.username,
-        email: userInfo.email,
-        discordUserId: userInfo.id,
-        image: userInfo.avatar,
-      });
+      const insertResult = await db
+        .insertInto("User")
+        .values({
+          name: userInfo.username,
+          email: userInfo.email,
+          discordUserId: userInfo.id,
+          image: userInfo.avatar,
+        })
+        .postTakeFirst();
+
       tokenUser = {
         id: Number(insertResult.insertId),
         name: userInfo.username,
@@ -110,8 +117,8 @@ export async function GET(request: NextRequest) {
     return new Response(undefined, {
       status: 303,
       headers: {
-        Location: absUrl(state.route),
-        "Set-Cookie": `${USER_COOKIE_NAME}=${userCookie}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${USER_COOKIE_MAXAGE}`,
+        "Location": absUrl(state.route),
+        "Set-Cookie": userCookieString(userCookie, USER_COOKIE_MAXAGE),
       },
     });
   } catch (error) {

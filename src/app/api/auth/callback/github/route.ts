@@ -1,10 +1,8 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest } from "next/server";
-import { tagsUserRouter } from "#src/api/routers/user";
+import { tagsUserRouter } from "#src/trpc/routers/user";
 import { db } from "#src/db";
 import {
-  addUser,
-  getUserByEmail,
   GITHUB_EMAILINFO,
   GITHUB_EMAILS_URL,
   GITHUB_TOKEN,
@@ -12,10 +10,10 @@ import {
   GITHUB_USERINFO,
   GITHUB_USERINFO_URL,
   USER_COOKIE_MAXAGE,
-  USER_COOKIE_NAME,
-} from "#src/utils/auth";
-import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/token";
-import { type TokenUser } from "#src/utils/token/schema";
+  userCookieString,
+} from "#src/utils/auth/schema";
+import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
+import { TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +41,7 @@ export async function GET(request: NextRequest) {
         cache: "no-store",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Accept: "application/json", //ask for json (by default response is just a "search params string")
+          "Accept": "application/json", //ask for json (by default response is just a "search params string")
         },
         body: encodeParams({
           client_id: process.env.GITHUB_CLIENT_ID,
@@ -83,12 +81,15 @@ export async function GET(request: NextRequest) {
     }
 
     // Authenticate the user
-    const existingUser = await getUserByEmail(userInfo.email);
+    const existingUser = await db.selectFrom("User").selectAll().where("email", "=", userInfo.email).getFirst({
+      cache: "no-store",
+    });
+
     let tokenUser: TokenUser | undefined = undefined;
 
     if (existingUser) {
       if (!existingUser.githubUserId) {
-        await db.updateTable("User").set({ githubUserId: userInfo.id }).where("id", "=", existingUser.id).execute();
+        await db.updateTable("User").set({ githubUserId: userInfo.id }).where("id", "=", existingUser.id).post();
       }
 
       tokenUser = {
@@ -97,12 +98,15 @@ export async function GET(request: NextRequest) {
         image: existingUser.image || "",
       };
     } else {
-      const insertResult = await addUser({
-        name: userInfo.name,
-        email: userInfo.email,
-        githubUserId: userInfo.id,
-        image: userInfo.avatar_url,
-      });
+      const insertResult = await db
+        .insertInto("User")
+        .values({
+          name: userInfo.name,
+          email: userInfo.email,
+          githubUserId: userInfo.id,
+          image: userInfo.avatar_url,
+        })
+        .postTakeFirst();
 
       tokenUser = {
         id: Number(insertResult.insertId),
@@ -117,8 +121,8 @@ export async function GET(request: NextRequest) {
     return new Response(undefined, {
       status: 303,
       headers: {
-        Location: absUrl(state.route),
-        "Set-Cookie": `${USER_COOKIE_NAME}=${userCookie}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${USER_COOKIE_MAXAGE}`,
+        "Location": absUrl(state.route),
+        "Set-Cookie": userCookieString(userCookie, USER_COOKIE_MAXAGE),
       },
     });
   } catch (error) {
