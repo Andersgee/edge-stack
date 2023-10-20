@@ -1,11 +1,15 @@
 "use client";
 
 import { useStore } from "#src/store";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function Init() {
+  const didRun = useRef(false);
   const userGetSession = useStore.select.userGetSession();
+
   useEffect(() => {
+    if (didRun.current) return; //only run once even in development
+    didRun.current = true;
     userGetSession()
       .then(() => void {})
       .catch(() => void {});

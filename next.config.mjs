@@ -36,6 +36,11 @@ const nextConfig = {
       */
     ],
   },
+  experimental: {
+    logging: {
+      level: "verbose",
+    },
+  },
 };
 
 export default nextConfig;
