@@ -12,6 +12,7 @@
     "@trpc/client": "^10.41.0",
     "@trpc/react-query": "^10.41.0",
     "@trpc/server": "^10.41.0",
+    "clsx": "^2.0.0",
     "devalue": "^4.3.2",
     "jose": "^4.15.4",
     "kysely": "0.25",

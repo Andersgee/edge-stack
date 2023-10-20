@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { fontSans } from "#src/utils/font";
+import { Init } from "./Init";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,6 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={fontSans.variable}>{children}</body>
+      <Init />
     </html>
   );
 }

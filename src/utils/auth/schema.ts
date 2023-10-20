@@ -8,6 +8,10 @@ export function userCookieString(token: string, maxAge: number) {
   return `${USER_COOKIE_NAME}=${token}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`;
 }
 
+export function sessionCookieString(token: string) {
+  return `${SESSION_COOKIE_NAME}=${token}; Path=/; Secure; HttpOnly; SameSite=Lax`;
+}
+
 /**
  * should be hardcoded
  *

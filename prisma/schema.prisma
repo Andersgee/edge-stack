@@ -1,0 +1,22 @@
+generator kysely {
+    provider = "prisma-kysely"
+    output   = "../src/db"
+    fileName = "types.ts"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_MYSQL_URL")
+}
+
+model User {
+    id            Int     @id @default(autoincrement())
+    email         String  @unique //allow multiple sign in methods, but same email would be same user.
+    googleUserSub String? @unique
+    discordUserId String? @unique
+    githubUserId  Int?    @unique
+    image         String?
+    name          String
+
+    //
+}
