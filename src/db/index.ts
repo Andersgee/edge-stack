@@ -89,7 +89,7 @@ UpdateQueryBuilder.prototype.post = async function <O>(): Promise<UpdateResult |
 
 UpdateQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<UpdateResult> {
   const result = await this.post();
-  if (!result) {
+  if (!result || result.numUpdatedRows <= 0) {
     throw new Error("no result");
   }
   return result;
@@ -110,7 +110,7 @@ DeleteQueryBuilder.prototype.post = async function <O>(): Promise<DeleteResult |
 
 DeleteQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<DeleteResult> {
   const result = await this.post();
-  if (!result) {
+  if (!result || result.numDeletedRows <= 0) {
     throw new Error("no result");
   }
   return result;
@@ -134,7 +134,7 @@ InsertQueryBuilder.prototype.post = async function <O>(): Promise<InsertResult |
 InsertQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<InsertResult> {
   const result = await this.post();
 
-  if (!result) {
+  if (!result || result.numInsertedRows <= 0) {
     throw new Error("no result");
   }
   return result;
