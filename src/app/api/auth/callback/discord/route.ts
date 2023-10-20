@@ -102,10 +102,10 @@ export async function GET(request: NextRequest) {
           discordUserId: userInfo.id,
           image: userInfo.avatar,
         })
-        .post();
+        .postOrThrow();
 
       tokenUser = {
-        id: Number(insertResult.insertId),
+        id: insertResult.insertId,
         name: userInfo.username,
         image: userInfo.avatar,
       };

@@ -27,18 +27,15 @@ export const userRouter = createTRPCRouter({
       });
   }),
   update: protectedProcedure.input(z.object({ name: z.string() })).query(async ({ input, ctx }) => {
-    const updateResult = await db
+    await db
       .updateTable("User")
       .where("id", "=", ctx.user.id)
       .set({
         name: input.name,
       })
-      .post();
+      .postOrThrow();
 
-    if (Number(updateResult.numUpdatedRows)) {
-      revalidateTag(tagsUserRouter.info({ userId: ctx.user.id }));
-      return true;
-    }
-    return false;
+    revalidateTag(tagsUserRouter.info({ userId: ctx.user.id }));
+    return true;
   }),
 });

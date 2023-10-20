@@ -5,7 +5,6 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const tagsPostRouter = {
   info: (p: { postId: number }) => `post-info-${p.postId}`,
-  latest10: () => `post-latest10`,
   myLatest10: (p: { userId: number }) => `post-myLatest10-${p.userId}`,
 };
 
@@ -16,7 +15,7 @@ export const postRouter = createTRPCRouter({
       .selectAll()
       .where("id", "=", input.postId)
       .getFirst({
-        next: { tags: [tagsPostRouter.info(input)] },
+        next: { tags: [tagsPostRouter.info({ postId: input.postId })] },
       });
   }),
   myLatest10: protectedProcedure.query(async ({ ctx }) => {
@@ -24,21 +23,11 @@ export const postRouter = createTRPCRouter({
       .selectFrom("UserPostPivot")
       .where("userId", "=", ctx.user.id)
       .innerJoin("Post", "Post.id", "UserPostPivot.postId")
-      .selectAll()
+      .selectAll("Post")
       .orderBy("Post.id", "desc")
       .limit(10)
       .get({
         next: { tags: [tagsPostRouter.myLatest10({ userId: ctx.user.id })] },
-      });
-  }),
-  latest10: publicProcedure.query(async () => {
-    return db
-      .selectFrom("Post")
-      .selectAll()
-      .orderBy("id", "desc")
-      .limit(10)
-      .get({
-        next: { tags: [tagsPostRouter.latest10()] },
       });
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
@@ -49,8 +38,6 @@ export const postRouter = createTRPCRouter({
       })
       .postOrThrow();
 
-    console.log("api.post, inserted postId:", postId);
-
     await db
       .insertInto("UserPostPivot")
       .values({
@@ -59,34 +46,31 @@ export const postRouter = createTRPCRouter({
       })
       .postOrThrow();
 
-    revalidateTag(tagsPostRouter.latest10());
     revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
-    return postId;
+    return db.selectFrom("Post").selectAll().where("id", "=", postId).getFirstOrThrow({ cache: "no-store" });
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.number(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const { numUpdatedRows } = await db
+      await db
         .updateTable("Post")
-        .where("id", "=", input.postId)
         .set({
           text: input.text,
         })
+        .where("id", "=", input.postId)
         .postOrThrow();
 
-      console.log("api.post.update, numUpdatedRows:", numUpdatedRows);
-
-      revalidateTag(tagsPostRouter.latest10());
       revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
-      return true;
+      revalidateTag(tagsPostRouter.info({ postId: input.postId }));
+
+      return db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirstOrThrow({
+        cache: "no-store",
+      });
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
-    const stuff = await db.deleteFrom("Post").where("id", "=", input.postId).postOrThrow();
+    await db.deleteFrom("Post").where("id", "=", input.postId).postOrThrow();
 
-    console.log("api.post.remove, stuff:", stuff);
-
-    revalidateTag(tagsPostRouter.latest10());
     revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
     return true;
   }),

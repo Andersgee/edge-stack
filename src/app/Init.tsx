@@ -9,6 +9,6 @@ export function Init() {
     userGetSession()
       .then(() => void {})
       .catch(() => void {});
-  }, []);
+  }, [userGetSession]);
   return null;
 }

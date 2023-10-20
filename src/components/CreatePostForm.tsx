@@ -1,17 +1,20 @@
 "use client";
 
-import { api } from "#src/hooks/api";
+import { type RouterOutputs, api } from "#src/hooks/api";
 import { useState } from "react";
 import { cn } from "#src/utils/cn";
 
 type Props = {
   className?: string;
+  onSuccess: (newPost: RouterOutputs["post"]["create"]) => void;
 };
 
-export function CreatePostForm({ className }: Props) {
+export function CreatePostForm({ onSuccess, className }: Props) {
   const [text, setText] = useState("");
 
-  const postCreate = api.post.create.useMutation();
+  const postCreate = api.post.create.useMutation({
+    onSuccess: (newPost) => onSuccess(newPost),
+  });
 
   return (
     <form
@@ -20,63 +23,17 @@ export function CreatePostForm({ className }: Props) {
         postCreate.mutate({ text });
         setText("");
       }}
-      className={cn("flex flex-col gap-2", className)}
+      className="my-10"
     >
       <input
         type="text"
         placeholder="some text"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className="w-full rounded-full px-4 py-2 text-black"
+        className="p-2 text-black"
       />
-      <button
-        type="submit"
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-        disabled={postCreate.isLoading}
-      >
-        {postCreate.isLoading ? "Submitting..." : "Submit"}
-      </button>
-    </form>
-  );
-}
-
-export function DeletePostButton({ postId }: { postId: number }) {
-  const postRemove = api.post.delete.useMutation();
-
-  return (
-    <button onClick={() => postRemove.mutate({ postId })} className="bg-red-500 p-2">
-      DELETE
-    </button>
-  );
-}
-
-export function UpdatePostForm({ postId }: { postId: number }) {
-  const [text, setText] = useState("");
-
-  const postUpdate = api.post.update.useMutation();
-
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        postUpdate.mutate({ text, postId });
-        setText("");
-      }}
-      className="flex"
-    >
-      <input
-        type="text"
-        placeholder="some text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="w-full rounded-full px-4 py-2 text-black"
-      />
-      <button
-        type="submit"
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-        disabled={postUpdate.isLoading}
-      >
-        {postUpdate.isLoading ? "Updating..." : "Update"}
+      <button type="submit" className="ml-4 bg-green-500 px-3 py-2" disabled={postCreate.isLoading}>
+        {postCreate.isLoading ? "Loading..." : "Create"}
       </button>
     </form>
   );
