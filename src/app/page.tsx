@@ -1,4 +1,4 @@
-import { CreatePostForm, DeletePostButton } from "#src/components/CreatePostForm";
+import { CreatePostForm, DeletePostButton, UpdatePostForm } from "#src/components/CreatePostForm";
 import { SigninButtons } from "#src/components/SigninButtons";
 import { apiRsc } from "#src/trpc/api-rsc";
 
@@ -18,6 +18,7 @@ export default async function Page() {
               <div key={post.id} className="flex">
                 <p>{post.text}</p>
                 <DeletePostButton postId={post.id} />
+                <UpdatePostForm postId={post.id} />
               </div>
             ))}
           </div>

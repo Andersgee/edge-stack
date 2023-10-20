@@ -28,6 +28,10 @@ type DeleteResult = {
   numDeletedRows: number;
 };
 
+type UpdateResult = {
+  numUpdatedRows: number;
+};
+
 declare module "kysely" {
   interface SelectQueryBuilder<DB, TB extends keyof DB, O> {
     get(init?: RequestInitLimited): Promise<Simplify<O>[]>;
@@ -36,8 +40,8 @@ declare module "kysely" {
   }
 
   interface UpdateQueryBuilder<DB, UT extends keyof DB, TB extends keyof DB, O> {
-    post(): Promise<Simplify<O>>;
-    postOrThrow(): Promise<Simplify<O>>;
+    post(): Promise<UpdateResult | null>;
+    postOrThrow(): Promise<UpdateResult>;
   }
 
   interface DeleteQueryBuilder<DB, TB extends keyof DB, O> {
@@ -70,16 +74,25 @@ SelectQueryBuilder.prototype.getFirstOrThrow = async function <O>(init?: Request
 };
 
 //update
-UpdateQueryBuilder.prototype.post = async function <O>(): Promise<Simplify<O>[]> {
-  return executeWithFetchPost(this.compile());
+UpdateQueryBuilder.prototype.post = async function <O>(): Promise<UpdateResult | null> {
+  const result = (await executeWithFetchPost(this.compile())) as {
+    numUpdatedOrDeletedRows: bigint | undefined;
+  };
+  console.log("UpdateQueryBuilder, result:", result);
+
+  if (!result) return null;
+
+  return {
+    numUpdatedRows: result.numUpdatedOrDeletedRows === undefined ? 0 : Number(result.numUpdatedOrDeletedRows),
+  };
 };
 
-UpdateQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<Simplify<O>> {
+UpdateQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<UpdateResult> {
   const result = await this.post();
-  if (result === undefined) {
+  if (!result) {
     throw new Error("no result");
   }
-  return result as Simplify<O>;
+  return result;
 };
 
 //delete
