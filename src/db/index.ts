@@ -19,6 +19,11 @@ import { type RequestInitLimited, executeWithFetchGet, executeWithFetchPost } fr
 // get() getFirst() getFirstOrThrow() on select querys and
 // post() postOrThrow() on other types of querys
 
+type InsertResult = {
+  insertId: number;
+  numInsertedRows: number;
+};
+
 declare module "kysely" {
   interface SelectQueryBuilder<DB, TB extends keyof DB, O> {
     get(init?: RequestInitLimited): Promise<Simplify<O>[]>;
@@ -37,8 +42,8 @@ declare module "kysely" {
   }
 
   interface InsertQueryBuilder<DB, TB extends keyof DB, O> {
-    post(): Promise<Simplify<O>>;
-    postOrThrow(): Promise<Simplify<O>>;
+    post(): Promise<InsertResult | null>;
+    postOrThrow(): Promise<InsertResult>;
   }
 }
 
@@ -87,18 +92,27 @@ DeleteQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<Simplif
 };
 
 //insert
-InsertQueryBuilder.prototype.post = async function <O>(): Promise<Simplify<O>> {
-  return executeWithFetchPost(this.compile());
+InsertQueryBuilder.prototype.post = async function <O>(): Promise<InsertResult | null> {
+  const result = (await executeWithFetchPost(this.compile())) as {
+    insertId: bigint | undefined;
+    numUpdatedOrDeletedRows: bigint | undefined;
+  };
+
+  if (!result) return null;
+
+  return {
+    insertId: result.insertId === undefined ? 0 : Number(result.insertId),
+    numInsertedRows: Number(result.numUpdatedOrDeletedRows),
+  };
 };
 
-InsertQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<Simplify<O>> {
+InsertQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<InsertResult> {
   const result = await this.post();
 
-  //const [result] = await this.post();
-  if (result === undefined) {
+  if (!result) {
     throw new Error("no result");
   }
-  return result as unknown as Simplify<O>;
+  return result;
 };
 
 export const db = new Kysely<DB>({

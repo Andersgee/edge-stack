@@ -43,30 +43,22 @@ export const postRouter = createTRPCRouter({
       });
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    const insertResult = await db
+    const { insertId: postId } = await db
       .insertInto("Post")
       .values({
         text: input.text,
       })
-      .post();
+      .postOrThrow();
 
-    const x = await db
-      .insertInto("Post")
-      .values({
-        text: input.text,
-      })
-      .executeTakeFirst();
+    console.log("api.post, inserted postId:", postId);
 
-    console.log("in api.post.create... insertResult:", insertResult);
-    const postId = Number(insertResult.insertId);
-
-    const insertResult2 = await db
+    await db
       .insertInto("UserPostPivot")
       .values({
         postId: postId,
         userId: ctx.user.id,
       })
-      .post();
+      .postOrThrow();
 
     revalidateTag(tagsPostRouter.latest10());
     revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
