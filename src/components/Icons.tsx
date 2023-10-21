@@ -7,7 +7,7 @@ type IconProps = ComponentProps<"svg">;
 type IconClickableProps = { clickable?: boolean } & IconProps;
 
 //size of clickable area should be atleast 48x48
-const clickableStyles = "hover:bg-secondary rounded-full p-3";
+const clickableStyles = "";
 
 const newclickableStyles =
   "hover:bg-secondary rounded-full p-3 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
@@ -518,25 +518,6 @@ export function IconLocate({ className, clickable, ...props }: IconClickableProp
   );
 }
 
-export function IconClose({ className, clickable, ...props }: IconClickableProps) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
-      {...props}
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  );
-}
-
 export function IconImage({ className, clickable, ...props }: IconClickableProps) {
   return (
     <svg
@@ -577,6 +558,65 @@ export function IconLoadingSpinner({ className, ...props }: IconProps) {
           values="0 250 250; 360 250 250"
         />
       </path>
+    </svg>
+  );
+}
+
+export function IconTrash({ className, clickable, ...props }: IconClickableProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+      <line x1="10" x2="10" y1="11" y2="17" />
+      <line x1="14" x2="14" y1="11" y2="17" />
+    </svg>
+  );
+}
+
+export function IconCheck({ className, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn("h-6 w-6", className)}
+    >
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+export function IconX({ className, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn("h-6 w-6", className)}
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
     </svg>
   );
 }

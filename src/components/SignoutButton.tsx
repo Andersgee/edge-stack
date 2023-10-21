@@ -12,7 +12,9 @@ export function SignoutButton({ children }: Props) {
 
   return (
     <Button asChild variant="outline">
-      <a href={`/api/auth/signout?route=${pathname}`}>{children}</a>
+      <a className="block" href={`/api/auth/signout?route=${pathname}`}>
+        {children}
+      </a>
     </Button>
   );
 }

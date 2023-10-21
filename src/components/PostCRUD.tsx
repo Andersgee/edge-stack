@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { IconExternalLink } from "./Icons";
+import { IconCheck, IconEdit, IconExternalLink, IconTrash, IconX } from "./Icons";
 import { PrettyDate } from "./PrettyDate";
 
 type Props = {
@@ -43,40 +43,40 @@ export function PostCRUD({ initialPost, className }: Props) {
 
   return (
     <div className="flex items-center gap-4 border-b py-2">
-      <Button asChild variant="icon" size="icon">
+      <Button asChild variant="icon">
         <Link href={`/post/${hashidFromId(postInfo.id)}`} prefetch={false}>
-          <IconExternalLink clickable />
+          <IconExternalLink /> View
         </Link>
       </Button>
-      <Button variant="destructive" disabled={postDelete.isLoading} onClick={() => postDelete.mutate({ postId })}>
-        Delete
+      <Button variant="icon" disabled={postDelete.isLoading} onClick={() => postDelete.mutate({ postId })}>
+        <IconTrash /> Delete
       </Button>
 
       {isEditing ? (
         <div className="flex">
-          <Button variant="secondary" onClick={() => setIsEditing(false)}>
-            Cancel
+          <Button variant="icon" onClick={() => setIsEditing(false)}>
+            <IconX /> Cancel
           </Button>
-          <Button variant="default" disabled={postUpdate.isLoading} onClick={() => postUpdate.mutate({ postId, text })}>
-            Save
+          <Button variant="icon" disabled={postUpdate.isLoading} onClick={() => postUpdate.mutate({ postId, text })}>
+            <IconCheck /> Save
           </Button>
         </div>
       ) : (
         <div>
           <Button
-            variant="outline"
+            variant="icon"
             onClick={() => {
               setText(postInfo.text ?? "");
               setIsEditing(true);
             }}
           >
-            Edit
+            <IconEdit /> Edit
           </Button>
         </div>
       )}
 
       {isEditing ? (
-        <Input type="text" onChange={(e) => setText(e.target.value)} value={text} />
+        <Input autoFocus type="text" onChange={(e) => setText(e.target.value)} value={text} />
       ) : (
         <div>
           <div className="flex gap-2 text-muted-foreground">
