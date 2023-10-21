@@ -1,18 +1,11 @@
 import type { ComponentProps } from "react";
 import { cn } from "#src/utils/cn";
 
-//many of these based on https://lucide.dev/icons/
+//many of these based on or copy pasted from https://lucide.dev/icons/
 
-type IconProps = ComponentProps<"svg">;
-type IconClickableProps = { clickable?: boolean } & IconProps;
+type Props = ComponentProps<"svg">;
 
-//size of clickable area should be atleast 48x48
-const clickableStyles = "";
-
-const newclickableStyles =
-  "hover:bg-secondary rounded-full p-3 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
-
-export function IconArrowLeft({ className, clickable, ...props }: IconClickableProps) {
+export function IconArrowLeft({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +13,7 @@ export function IconArrowLeft({ className, clickable, ...props }: IconClickableP
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <path d="m12 19-7-7 7-7" />
@@ -29,7 +22,7 @@ export function IconArrowLeft({ className, clickable, ...props }: IconClickableP
   );
 }
 
-export function IconArrowDown({ className, ...props }: IconProps) {
+export function IconArrowDown({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +38,7 @@ export function IconArrowDown({ className, ...props }: IconProps) {
   );
 }
 
-export function IconArrowLink({ className, ...props }: IconProps) {
+export function IconArrowLink({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +58,7 @@ export function IconArrowLink({ className, ...props }: IconProps) {
   );
 }
 
-export function IconExternalLink({ className, clickable, ...props }: IconClickableProps) {
+export function IconExternalLink({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +69,7 @@ export function IconExternalLink({ className, clickable, ...props }: IconClickab
       strokeLinejoin="round"
       viewBox="0 0 24 24"
       {...props}
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
     >
       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
       <polyline points="15 3 21 3 21 9" />
@@ -85,7 +78,7 @@ export function IconExternalLink({ className, clickable, ...props }: IconClickab
   );
 }
 
-export function IconUser({ className, ...props }: IconProps) {
+export function IconUser({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +97,7 @@ export function IconUser({ className, ...props }: IconProps) {
   );
 }
 
-export function IconAvatar({ className, ...props }: IconProps) {
+export function IconAvatar({ className, ...props }: Props) {
   return (
     <svg viewBox="0 0 24 24" stroke="currentColor" className={cn("h-6 w-6", className)} {...props}>
       <circle cx="12" cy="8" r="4" />
@@ -113,7 +106,7 @@ export function IconAvatar({ className, ...props }: IconProps) {
   );
 }
 
-export function IconDiscord({ className = "", ...props }: IconProps) {
+export function IconDiscord({ className = "", ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +124,7 @@ export function IconDiscord({ className = "", ...props }: IconProps) {
   );
 }
 
-export function IconFacebook({ className, ...props }: IconProps) {
+export function IconFacebook({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -162,7 +155,7 @@ export function IconFacebook({ className, ...props }: IconProps) {
   );
 }
 
-export function IconGithub({ className, ...props }: IconProps) {
+export function IconGithub({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +169,7 @@ export function IconGithub({ className, ...props }: IconProps) {
   );
 }
 
-export function IconGoogle({ className, ...props }: IconProps) {
+export function IconGoogle({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +198,7 @@ export function IconGoogle({ className, ...props }: IconProps) {
   );
 }
 
-export function IconTwitter({ className, ...props }: IconProps) {
+export function IconTwitter({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -222,13 +215,13 @@ export function IconTwitter({ className, ...props }: IconProps) {
   );
 }
 
-export function IconHowler({ className, clickable, ...props }: IconClickableProps) {
+export function IconHowler({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 475 475"
       fill="none"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       aria-label="Howler"
       {...props}
     >
@@ -245,7 +238,7 @@ export function IconHowler({ className, clickable, ...props }: IconClickableProp
   );
 }
 
-export function IconShare({ className, ...props }: IconProps) {
+export function IconShare({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +254,7 @@ export function IconShare({ className, ...props }: IconProps) {
   );
 }
 
-export function IconWhat({ className, ...props }: IconProps) {
+export function IconWhat({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -282,7 +275,7 @@ export function IconWhat({ className, ...props }: IconProps) {
   );
 }
 
-export function IconWhen({ className, ...props }: IconProps) {
+export function IconWhen({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -302,7 +295,7 @@ export function IconWhen({ className, ...props }: IconProps) {
   );
 }
 
-export function IconWhere({ className, ...props }: IconProps) {
+export function IconWhere({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -323,7 +316,7 @@ export function IconWhere({ className, ...props }: IconProps) {
   );
 }
 
-export function IconWho({ className, ...props }: IconProps) {
+export function IconWho({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -343,7 +336,7 @@ export function IconWho({ className, ...props }: IconProps) {
   );
 }
 
-export function IconBell({ className, clickable, ...props }: IconClickableProps) {
+export function IconBell({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -353,7 +346,7 @@ export function IconBell({ className, clickable, ...props }: IconClickableProps)
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -362,7 +355,7 @@ export function IconBell({ className, clickable, ...props }: IconClickableProps)
   );
 }
 
-export function IconBellWithNumber({ number, className, ...props }: { number: number } & IconProps) {
+export function IconBellWithNumber({ number, className, ...props }: { number: number } & Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -389,7 +382,7 @@ export function IconBellWithNumber({ number, className, ...props }: { number: nu
   );
 }
 
-export function IconSettings({ className, clickable, ...props }: IconClickableProps) {
+export function IconSettings({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -399,7 +392,7 @@ export function IconSettings({ className, clickable, ...props }: IconClickablePr
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
@@ -408,7 +401,7 @@ export function IconSettings({ className, clickable, ...props }: IconClickablePr
   );
 }
 
-export function IconSend({ className, clickable, ...props }: IconClickableProps) {
+export function IconSend({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -418,7 +411,7 @@ export function IconSend({ className, clickable, ...props }: IconClickableProps)
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <path d="M5 12h14" />
@@ -427,7 +420,7 @@ export function IconSend({ className, clickable, ...props }: IconClickableProps)
   );
 }
 
-export function IconEdit({ className, clickable, ...props }: IconClickableProps) {
+export function IconEdit({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -437,7 +430,7 @@ export function IconEdit({ className, clickable, ...props }: IconClickableProps)
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -446,7 +439,7 @@ export function IconEdit({ className, clickable, ...props }: IconClickableProps)
   );
 }
 
-export function IconChat({ className, clickable, ...props }: IconClickableProps) {
+export function IconChat({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -456,7 +449,7 @@ export function IconChat({ className, clickable, ...props }: IconClickableProps)
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z" />
@@ -465,7 +458,7 @@ export function IconChat({ className, clickable, ...props }: IconClickableProps)
   );
 }
 
-export function IconChatWithNumber({ number, className, ...props }: { number: number } & IconProps) {
+export function IconChatWithNumber({ number, className, ...props }: { number: number } & Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -495,7 +488,7 @@ export function IconChatWithNumber({ number, className, ...props }: { number: nu
   );
 }
 
-export function IconLocate({ className, clickable, ...props }: IconClickableProps) {
+export function IconLocate({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -505,7 +498,7 @@ export function IconLocate({ className, clickable, ...props }: IconClickableProp
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <line x1="2" x2="5" y1="12" y2="12" />
@@ -518,7 +511,7 @@ export function IconLocate({ className, clickable, ...props }: IconClickableProp
   );
 }
 
-export function IconImage({ className, clickable, ...props }: IconClickableProps) {
+export function IconImage({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -528,7 +521,7 @@ export function IconImage({ className, clickable, ...props }: IconClickableProps
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
       {...props}
     >
       <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
@@ -538,7 +531,7 @@ export function IconImage({ className, clickable, ...props }: IconClickableProps
   );
 }
 
-export function IconLoadingSpinner({ className, ...props }: IconProps) {
+export function IconLoadingSpinner({ className, ...props }: Props) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className={cn("h-6 w-6", className)} {...props}>
       <circle cx="250" cy="250" r="230" fill="none" stroke="#737373" strokeWidth="40" />
@@ -562,7 +555,7 @@ export function IconLoadingSpinner({ className, ...props }: IconProps) {
   );
 }
 
-export function IconTrash({ className, clickable, ...props }: IconClickableProps) {
+export function IconTrash({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -573,7 +566,7 @@ export function IconTrash({ className, clickable, ...props }: IconClickableProps
       strokeLinejoin="round"
       viewBox="0 0 24 24"
       {...props}
-      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+      className={cn("h-6 w-6", className)}
     >
       <path d="M3 6h18" />
       <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -584,7 +577,7 @@ export function IconTrash({ className, clickable, ...props }: IconClickableProps
   );
 }
 
-export function IconCheck({ className, ...props }: IconProps) {
+export function IconCheck({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -602,7 +595,7 @@ export function IconCheck({ className, ...props }: IconProps) {
   );
 }
 
-export function IconX({ className, ...props }: IconProps) {
+export function IconX({ className, ...props }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
