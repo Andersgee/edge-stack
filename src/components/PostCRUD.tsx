@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { IconExternalLink } from "./Icons";
-import { PrettyDateShortString } from "./PrettyDate";
+import { PrettyDate } from "./PrettyDate";
 
 type Props = {
   className?: string;
@@ -84,7 +84,7 @@ export function PostCRUD({ initialPost, className }: Props) {
               <div key={editor.userId}>{editor.name}</div>
             ))}
             <div className="">
-              <PrettyDateShortString date={postInfo.createdAt} />
+              <PrettyDate date={postInfo.createdAt} />
             </div>
           </div>
           <p>{postInfo.text}</p>
@@ -113,7 +113,7 @@ export function PostInfo({ initialPost, className }: Props) {
           <div key={editor.userId}>{editor.name}</div>
         ))}
         <div className="">
-          <PrettyDateShortString date={postInfo.createdAt} />
+          <PrettyDate date={postInfo.createdAt} />
         </div>
       </div>
       <p>{postInfo.text}</p>

@@ -1,24 +1,32 @@
 "use client";
 
-import { prettyDate, prettyDateShort } from "#src/utils/date";
+import { prettyDate, prettyDateLong } from "#src/utils/date";
 import { useEffect, useState } from "react";
 
 type Props = {
   date: Date;
 };
 
-/** without hydration mismatch, by editing string on mount */
-export function PrettyDateShortString({ date }: Props) {
-  const [str, setStr] = useState(() => prettyDateShort(date, false));
+/**
+ * without hydration mismatch, by editing string on mount
+ *
+ * return string, example: "Wednesday, July 5, 2023 at 13:17"
+ * */
+export function PrettyDateLong({ date }: Props) {
+  const [str, setStr] = useState(() => prettyDateLong(date, false));
   useEffect(() => {
-    setStr(prettyDateShort(date, true));
+    setStr(prettyDateLong(date, true));
   }, [date]);
 
   return str;
 }
 
-/** without hydration mismatch, by editing string on mount */
-export function PrettyDateString({ date }: Props) {
+/**
+ * without hydration mismatch, by editing string on mount
+ *
+ * returns string, example: "Jul 5, 2023, 13:17"
+ * */
+export function PrettyDate({ date }: Props) {
   const [str, setStr] = useState(() => prettyDate(date, false));
   useEffect(() => {
     setStr(prettyDate(date, true));
