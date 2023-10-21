@@ -82,7 +82,7 @@ export function PostCRUD({ initialPost, className }: Props) {
         <div>
           <div className="flex gap-2 text-muted-foreground">
             {postInfo.editors.map((editor) => (
-              <Username key={editor.userId} userId={editor.userId} />
+              <div key={editor.userId}>{editor.name}</div>
             ))}
             <div className="">
               <PrettyDateShortString date={postInfo.createdAt} />
@@ -111,7 +111,7 @@ export function PostInfo({ initialPost, className }: Props) {
     <div>
       <div className="flex gap-2 text-muted-foreground">
         {postInfo.editors.map((editor) => (
-          <Username key={editor.userId} userId={editor.userId} />
+          <div key={editor.userId}>{editor.name}</div>
         ))}
         <div className="">
           <PrettyDateShortString date={postInfo.createdAt} />

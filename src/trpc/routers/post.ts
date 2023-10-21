@@ -18,7 +18,12 @@ function postInfoQuery(postId: number) {
       "Post.text",
       "Post.createdAt",
       jsonArrayFrom(
-        eb.selectFrom("UserPostPivot").select("UserPostPivot.userId").whereRef("UserPostPivot.postId", "=", "Post.id")
+        eb
+          .selectFrom("UserPostPivot")
+          .select("UserPostPivot.userId")
+          .whereRef("UserPostPivot.postId", "=", "Post.id")
+          .innerJoin("User", "User.id", "UserPostPivot.userId")
+          .select(["User.name", "User.image"])
       ).as("editors"),
     ]);
 }
