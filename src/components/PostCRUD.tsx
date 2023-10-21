@@ -8,6 +8,7 @@ import { Username } from "./Username";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { IconExternalLink } from "./Icons";
+import { prettyDateShort } from "#src/utils/date";
 
 type Props = {
   className?: string;
@@ -19,10 +20,10 @@ export function PostCRUD({ initialPost, className }: Props) {
   const [isEditing, setIsEditing] = useState(false);
 
   const apiUtils = api.useUtils();
-  const { data: postInfo } = api.post.getById.useQuery(
+  const { data: postInfo, isSuccess } = api.post.getById.useQuery(
     { postId },
     {
-      initialData: initialPost,
+      placeholderData: initialPost,
     }
   );
   const postUpdate = api.post.update.useMutation({
@@ -42,7 +43,7 @@ export function PostCRUD({ initialPost, className }: Props) {
   if (!postInfo) return null;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-4 border-b py-2">
       <Button asChild variant="icon" size="icon">
         <Link href={`/post/${hashidFromId(postInfo.id)}`} prefetch={false}>
           <IconExternalLink clickable />
@@ -79,9 +80,12 @@ export function PostCRUD({ initialPost, className }: Props) {
         <Input type="text" onChange={(e) => setText(e.target.value)} value={text} />
       ) : (
         <div>
-          {postInfo.editors.map((editor) => (
-            <Username key={editor.userId} userId={editor.userId} />
-          ))}
+          <div className="flex gap-2 text-muted-foreground">
+            {postInfo.editors.map((editor) => (
+              <Username key={editor.userId} userId={editor.userId} />
+            ))}
+            <div className="">{isSuccess ? prettyDateShort(postInfo.createdAt) : postInfo.createdAt.toString()}</div>
+          </div>
 
           <p>{postInfo.text}</p>
         </div>
@@ -93,10 +97,10 @@ export function PostCRUD({ initialPost, className }: Props) {
 export function PostInfo({ initialPost, className }: Props) {
   const postId = initialPost.id;
 
-  const { data: postInfo } = api.post.getById.useQuery(
+  const { data: postInfo, isSuccess } = api.post.getById.useQuery(
     { postId },
     {
-      initialData: initialPost,
+      placeholderData: initialPost,
     }
   );
 
@@ -108,7 +112,7 @@ export function PostInfo({ initialPost, className }: Props) {
         <Username key={editor.userId} userId={editor.userId} />
       ))}
 
-      <p>{postInfo.createdAt.toLocaleString()}</p>
+      <p>{isSuccess ? prettyDateShort(postInfo.createdAt) : postInfo.createdAt.toString()}</p>
       <p>{postInfo.text}</p>
     </div>
   );

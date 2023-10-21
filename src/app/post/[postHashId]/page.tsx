@@ -1,7 +1,6 @@
 import { PostCRUD, PostInfo } from "#src/components/PostCRUD";
 import { apiRsc } from "#src/trpc/api-rsc";
 import { idFromHashid } from "#src/utils/hashid";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -20,9 +19,11 @@ export default async function Page({ params }: Props) {
   const isEditor = user && postInfo.editors.map((editor) => editor.userId).includes(user.id);
 
   return (
-    <div>
-      <p>below here you can edit the post if you are one of its editors, otherwise just view it</p>
-      {isEditor ? <PostCRUD initialPost={postInfo} /> : <PostInfo initialPost={postInfo} />}
-    </div>
+    <main className="flex justify-center">
+      <div className="">
+        <p>if you are one of the editors of this post, then you can edit it</p>
+        {isEditor ? <PostCRUD initialPost={postInfo} /> : <PostInfo initialPost={postInfo} />}
+      </div>
+    </main>
   );
 }
