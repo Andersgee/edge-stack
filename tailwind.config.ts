@@ -6,10 +6,10 @@ import { type ScreensConfig } from "tailwindcss/types/config";
 //https://tailwindcss.com/docs/screens
 //make sure these values match what is in next.config.mjs
 const DEVICE_SIZES: ScreensConfig = {
-  sm: "640px",
-  md: "768px",
-  lg: "1024px",
-  xl: "1280px",
+  "sm": "640px",
+  "md": "768px",
+  "lg": "1024px",
+  "xl": "1280px",
   "2xl": "1536px",
 };
 
@@ -91,8 +91,7 @@ export default {
     plugin(({ addUtilities }) => {
       addUtilities({
         ".mainwidth": {
-          "@apply w-full sm:max-w-[436px] md:max-w-[520px] lg:max-w-[620px]":
-            {},
+          "@apply w-full sm:max-w-[436px] md:max-w-[520px] lg:max-w-[620px]": {},
         },
         ".text-tweet": {
           "@apply whitespace-pre-wrap break-words": {},

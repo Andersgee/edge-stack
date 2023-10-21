@@ -1,11 +1,16 @@
 import type { ComponentProps } from "react";
 import { cn } from "#src/utils/cn";
 
+//many of these based on https://lucide.dev/icons/
+
 type IconProps = ComponentProps<"svg">;
 type IconClickableProps = { clickable?: boolean } & IconProps;
 
 //size of clickable area should be atleast 48x48
-const clickableStyles = "hover:bg-secondary h-6 w-6 rounded-full p-3";
+const clickableStyles = "hover:bg-secondary rounded-full p-3";
+
+const newclickableStyles =
+  "hover:bg-secondary rounded-full p-3 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
 export function IconArrowLeft({ className, clickable, ...props }: IconClickableProps) {
   return (
@@ -56,6 +61,26 @@ export function IconArrowLink({ className, ...props }: IconProps) {
         strokeLinejoin="round"
         d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
       />
+    </svg>
+  );
+}
+
+export function IconExternalLink({ className, clickable, ...props }: IconClickableProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn("h-6 w-6", clickable && clickableStyles, className)}
+    >
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" x2="21" y1="14" y2="3" />
     </svg>
   );
 }

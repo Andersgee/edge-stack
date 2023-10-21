@@ -1,17 +1,18 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import type { ComponentPropsWithoutRef } from "react";
-import { cn } from "#src/utils/cn";
+import { Button } from "./ui/button";
 
-type Props = ComponentPropsWithoutRef<"a">;
+type Props = {
+  children: React.ReactNode;
+};
 
-export function SignoutButton({ children, className, ...props }: Props) {
+export function SignoutButton({ children }: Props) {
   const pathname = usePathname();
 
   return (
-    <a href={`/api/auth/signout?route=${pathname}`} className={cn("px-3 py-2", className)} {...props}>
-      {children}
-    </a>
+    <Button asChild variant="outline">
+      <a href={`/api/auth/signout?route=${pathname}`}>{children}</a>
+    </Button>
   );
 }

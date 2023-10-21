@@ -5,6 +5,9 @@ import { hashidFromId } from "#src/utils/hashid";
 import Link from "next/link";
 import { useState } from "react";
 import { Username } from "./Username";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { IconExternalLink } from "./Icons";
 
 type Props = {
   className?: string;
@@ -39,47 +42,41 @@ export function PostCRUD({ initialPost, className }: Props) {
   if (!postInfo) return null;
 
   return (
-    <div className="flex gap-2">
-      <Link className="px-3 py-2" href={`/post/${hashidFromId(postInfo.id)}`} prefetch={false}>
-        Go to post
-      </Link>
-      <button
-        className="bg-red-500 px-3 py-2"
-        disabled={postDelete.isLoading}
-        onClick={() => postDelete.mutate({ postId })}
-      >
+    <div className="flex items-center gap-2">
+      <Button asChild variant="icon" size="icon">
+        <Link href={`/post/${hashidFromId(postInfo.id)}`} prefetch={false}>
+          <IconExternalLink clickable />
+        </Link>
+      </Button>
+      <Button variant="destructive" disabled={postDelete.isLoading} onClick={() => postDelete.mutate({ postId })}>
         Delete
-      </button>
+      </Button>
 
       {isEditing ? (
         <div className="flex">
-          <button className="bg-yellow-500 px-3 py-2" onClick={() => setIsEditing(false)}>
+          <Button variant="secondary" onClick={() => setIsEditing(false)}>
             Cancel
-          </button>
-          <button
-            className="bg-green-500 px-3 py-2"
-            disabled={postUpdate.isLoading}
-            onClick={() => postUpdate.mutate({ postId, text })}
-          >
+          </Button>
+          <Button variant="default" disabled={postUpdate.isLoading} onClick={() => postUpdate.mutate({ postId, text })}>
             Save
-          </button>
+          </Button>
         </div>
       ) : (
         <div>
-          <button
-            className="bg-yellow-500 px-3 py-2"
+          <Button
+            variant="outline"
             onClick={() => {
               setText(postInfo.text ?? "");
               setIsEditing(true);
             }}
           >
             Edit
-          </button>
+          </Button>
         </div>
       )}
 
       {isEditing ? (
-        <input className="text-black" type="text" onChange={(e) => setText(e.target.value)} value={text} />
+        <Input type="text" onChange={(e) => setText(e.target.value)} value={text} />
       ) : (
         <div>
           {postInfo.editors.map((editor) => (

@@ -2,7 +2,8 @@
 
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { useState } from "react";
-import { cn } from "#src/utils/cn";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 type Props = {
   className?: string;
@@ -23,18 +24,12 @@ export function CreatePostForm({ onSuccess }: Props) {
         postCreate.mutate({ text });
         setText("");
       }}
-      className="my-10"
+      className="my-10 flex"
     >
-      <input
-        type="text"
-        placeholder="some text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="p-2 text-black"
-      />
-      <button type="submit" className="ml-4 bg-green-500 px-3 py-2" disabled={postCreate.isLoading}>
+      <Input type="text" placeholder="some text" value={text} onChange={(e) => setText(e.target.value)} />
+      <Button variant="default" type="submit" className="ml-4" disabled={postCreate.isLoading}>
         {postCreate.isLoading ? "Loading..." : "Create"}
-      </button>
+      </Button>
     </form>
   );
 }

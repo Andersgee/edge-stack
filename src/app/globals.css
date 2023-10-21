@@ -71,11 +71,13 @@
     }
   }
 
+  /*
   * {
     @apply border-border;
   }
+  */
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
     /*font-feature-settings: "rlig" 1, "calt" 1; */
   }
 
@@ -86,7 +88,7 @@
   h4,
   h5,
   h6 {
-    @apply font-sans text-lg mb-2 font-medium text-black dark:text-white;
+    @apply mb-2 font-sans text-lg font-medium text-black dark:text-white;
   }
   p {
     @apply max-w-[55ch] font-sans text-base font-normal leading-[1.55] tracking-[0.15px] text-neutral-600 [word-spacing:0.5px] dark:text-neutral-300;
@@ -100,7 +102,7 @@
   }
 
   svg {
-    @apply shrink-0 box-content;
+    @apply box-content shrink-0;
     shape-rendering: geometricPrecision;
     text-rendering: geometricPrecision;
   }
