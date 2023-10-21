@@ -21,6 +21,7 @@ export const envSchema = z.object({
   JWT_SECRET: z.string(),
   DATABASE_HTTP_URL: z.string().url(),
   DATABASE_HTTP_AUTH_HEADER: z.string(),
+  NEXT_PUBLIC_HASHIDS_SALT: z.string(),
 });
 
 function formatErrors(errors) {

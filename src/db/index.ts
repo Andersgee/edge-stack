@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 import {
   Kysely,
   SelectQueryBuilder,
@@ -79,7 +79,7 @@ UpdateQueryBuilder.prototype.post = async function <O>(): Promise<UpdateResult |
   const result = (await executeWithFetchPost(this.compile())) as {
     numUpdatedOrDeletedRows: bigint | undefined;
   };
-  console.log("UpdateQueryBuilder, result:", result);
+  //console.log("UpdateQueryBuilder, result:", result);
 
   if (!result) return null;
 

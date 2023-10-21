@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { CombinedDataTransformer } from "@trpc/server";
 import { parse, stringify } from "devalue";

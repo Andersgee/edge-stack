@@ -1,26 +1,26 @@
 "use client";
 
 import { CreatePostForm } from "#src/components/CreatePostForm";
-import { CrudPostExample } from "#src/components/CrudPostExample";
+import { PostCRUD } from "#src/components/PostCRUD";
 import { api, type RouterOutputs } from "#src/hooks/api";
 import type { TokenUser } from "#src/utils/jwt/schema";
 
 type Props = {
   className?: string;
   user: TokenUser;
-  initialData: RouterOutputs["post"]["myLatest10"];
+  initialData: RouterOutputs["post"]["latest10whereImEditor"];
 };
 
-export function ClientPage({ user, className, initialData }: Props) {
+export function Posts({ user, className, initialData }: Props) {
   const apiUtils = api.useUtils();
-  const { data: myLatest10 } = api.post.myLatest10.useQuery(undefined, { initialData: initialData });
+  const { data: posts } = api.post.latest10whereImEditor.useQuery(undefined, { initialData: initialData });
 
   return (
     <main className="flex justify-center">
       <div className="">
         <CreatePostForm
           onSuccess={(newPost) => {
-            apiUtils.post.myLatest10.setData(undefined, (prev) => {
+            apiUtils.post.latest10whereImEditor.setData(undefined, (prev) => {
               if (!prev) return prev;
               const data = structuredClone(prev);
               data.unshift(newPost);
@@ -28,13 +28,7 @@ export function ClientPage({ user, className, initialData }: Props) {
             });
           }}
         />
-        <div className="">
-          {myLatest10.map((post) => (
-            <div key={post.id} className="my-4">
-              <CrudPostExample initialPost={post} />
-            </div>
-          ))}
-        </div>
+        <div className="">{posts.map((post) => (post ? <PostCRUD key={post.id} initialPost={post} /> : null))}</div>
       </div>
     </main>
   );

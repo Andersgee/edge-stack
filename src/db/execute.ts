@@ -26,7 +26,6 @@ export async function executeWithFetchGet(compiledQuery: CompiledQuery, init?: R
   if (res.ok) {
     try {
       const result = parse(await res.text());
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
       return result.rows;
     } catch (error) {
       throw new Error("failed to parse response");
@@ -55,7 +54,6 @@ export async function executeWithFetchPost(compiledQuery: CompiledQuery) {
   if (res.ok) {
     try {
       const info = parse(await res.text());
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return info;
     } catch (error) {
       throw new Error("failed to parse response");

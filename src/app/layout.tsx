@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { fontSans } from "#src/utils/font";
-import { Init } from "./Init";
-import { TrpcProvider } from "#src/context/Trpc";
+import { Providers } from "#src/context/Providers";
+import Topnav from "#src/components/Topnav";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,9 +13,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={fontSans.variable}>
-        <TrpcProvider>{children}</TrpcProvider>
+        <Providers>
+          <Topnav />
+          {children}
+        </Providers>
       </body>
-      <Init />
     </html>
   );
 }
