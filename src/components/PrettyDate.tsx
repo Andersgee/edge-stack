@@ -7,6 +7,7 @@ type Props = {
   date: Date;
 };
 
+/** without hydration mismatch, by editing string on mount */
 export function PrettyDateShortString({ date }: Props) {
   const [str, setStr] = useState(() => prettyDateShort(date, false));
   useEffect(() => {
@@ -16,6 +17,7 @@ export function PrettyDateShortString({ date }: Props) {
   return str;
 }
 
+/** without hydration mismatch, by editing string on mount */
 export function PrettyDateString({ date }: Props) {
   const [str, setStr] = useState(() => prettyDate(date, false));
   useEffect(() => {
