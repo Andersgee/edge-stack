@@ -97,9 +97,11 @@
   p > a {
     @apply underline decoration-dotted;
   }
+  /*
   input::placeholder {
     @apply text-neutral-500 opacity-100;
   }
+  */
 
   svg {
     @apply box-content shrink-0;

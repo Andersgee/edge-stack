@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { IconCheck, IconEdit, IconExternalLink, IconTrash, IconX } from "./Icons";
+import { Check, Edit, ExternalLink, Trash, X } from "./Icons";
 import { PrettyDate } from "./PrettyDate";
 
 type Props = {
@@ -45,20 +45,20 @@ export function PostCRUD({ initialPost, className }: Props) {
     <div className="flex items-center gap-4 border-b py-2">
       <Button asChild variant="icon">
         <Link href={`/post/${hashidFromId(postInfo.id)}`} prefetch={false}>
-          <IconExternalLink /> View
+          <ExternalLink /> View
         </Link>
       </Button>
       <Button variant="icon" disabled={postDelete.isLoading} onClick={() => postDelete.mutate({ postId })}>
-        <IconTrash /> Delete
+        <Trash /> Delete
       </Button>
 
       {isEditing ? (
         <div className="flex">
           <Button variant="icon" onClick={() => setIsEditing(false)}>
-            <IconX /> Cancel
+            <X /> Cancel
           </Button>
           <Button variant="icon" disabled={postUpdate.isLoading} onClick={() => postUpdate.mutate({ postId, text })}>
-            <IconCheck /> Save
+            <Check /> Save
           </Button>
         </div>
       ) : (
@@ -70,7 +70,7 @@ export function PostCRUD({ initialPost, className }: Props) {
               setIsEditing(true);
             }}
           >
-            <IconEdit /> Edit
+            <Edit /> Edit
           </Button>
         </div>
       )}

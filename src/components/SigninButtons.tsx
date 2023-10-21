@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IconDiscord, IconGithub, IconGoogle } from "./Icons";
+import { IconDiscord, IconGithub, IconGoogle } from "./IconsSpecial";
 
 function useBrowserIsConsideredSafeForOauth() {
   const [browserInfo, setBrowserInfo] = useState({ userAgent: "unkown", isConsideredSafeForOauth: true });
