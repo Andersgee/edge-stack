@@ -4,7 +4,6 @@ import { type RouterOutputs, api } from "#src/hooks/api";
 import { hashidFromId } from "#src/utils/hashid";
 import Link from "next/link";
 import { useState } from "react";
-import { Username } from "./Username";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { IconExternalLink } from "./Icons";
