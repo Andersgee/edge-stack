@@ -8,7 +8,7 @@ import { Username } from "./Username";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { IconExternalLink } from "./Icons";
-import { prettyDateShort } from "#src/utils/date";
+import { PrettyDateShortString } from "./PrettyDate";
 
 type Props = {
   className?: string;
@@ -20,10 +20,10 @@ export function PostCRUD({ initialPost, className }: Props) {
   const [isEditing, setIsEditing] = useState(false);
 
   const apiUtils = api.useUtils();
-  const { data: postInfo, isSuccess } = api.post.getById.useQuery(
+  const { data: postInfo } = api.post.getById.useQuery(
     { postId },
     {
-      placeholderData: initialPost,
+      initialData: initialPost,
     }
   );
   const postUpdate = api.post.update.useMutation({
@@ -84,9 +84,10 @@ export function PostCRUD({ initialPost, className }: Props) {
             {postInfo.editors.map((editor) => (
               <Username key={editor.userId} userId={editor.userId} />
             ))}
-            <div className="">{isSuccess ? prettyDateShort(postInfo.createdAt) : postInfo.createdAt.toString()}</div>
+            <div className="">
+              <PrettyDateShortString date={postInfo.createdAt} />
+            </div>
           </div>
-
           <p>{postInfo.text}</p>
         </div>
       )}
@@ -97,10 +98,10 @@ export function PostCRUD({ initialPost, className }: Props) {
 export function PostInfo({ initialPost, className }: Props) {
   const postId = initialPost.id;
 
-  const { data: postInfo, isSuccess } = api.post.getById.useQuery(
+  const { data: postInfo } = api.post.getById.useQuery(
     { postId },
     {
-      placeholderData: initialPost,
+      initialData: initialPost,
     }
   );
 
@@ -108,11 +109,14 @@ export function PostInfo({ initialPost, className }: Props) {
 
   return (
     <div>
-      {postInfo.editors.map((editor) => (
-        <Username key={editor.userId} userId={editor.userId} />
-      ))}
-
-      <p>{isSuccess ? prettyDateShort(postInfo.createdAt) : postInfo.createdAt.toString()}</p>
+      <div className="flex gap-2 text-muted-foreground">
+        {postInfo.editors.map((editor) => (
+          <Username key={editor.userId} userId={editor.userId} />
+        ))}
+        <div className="">
+          <PrettyDateShortString date={postInfo.createdAt} />
+        </div>
+      </div>
       <p>{postInfo.text}</p>
     </div>
   );
