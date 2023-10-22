@@ -4,25 +4,22 @@ export function ButtonsDemo() {
   return (
     <div className="flex flex-col gap-2">
       <div>
-        <Button variant="default">default</Button>
+        <Button variant="primary">primary</Button>
       </div>
       <div>
-        <Button variant="destructive">destructive</Button>
+        <Button variant="warning">warning</Button>
       </div>
       <div>
-        <Button variant="ghost">ghost</Button>
+        <Button variant="danger">danger</Button>
+      </div>
+      <div>
+        <Button variant="positive">positive</Button>
       </div>
       <div>
         <Button variant="icon">icon</Button>
       </div>
       <div>
         <Button variant="link">link</Button>
-      </div>
-      <div>
-        <Button variant="outline">outline</Button>
-      </div>
-      <div>
-        <Button variant="secondary">secondary</Button>
       </div>
     </div>
   );

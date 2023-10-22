@@ -9,14 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "h-12 bg-primary-600 px-4 py-2 text-primary-200 hover:bg-primary-500 hover:text-primary-100",
-        destructive:
+        primary: "h-12 bg-primary-600 px-4 py-2 text-primary-200 hover:bg-primary-500 hover:text-primary-100",
+        warning:
+          "h-12 bg-accent-warning-600 px-4 py-2 text-accent-warning-200 hover:bg-accent-warning-500 hover:text-accent-warning-100",
+        danger:
           "h-12 bg-accent-danger-600 px-4 py-2 text-accent-danger-200 hover:bg-accent-danger-500 hover:text-accent-danger-100",
-        outline: "border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 border px-4 py-2",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 h-12 px-4 py-2",
-        ghost: "hover:bg-accent hover:text-accent-foreground h-12 px-4 py-2",
-        link: "text-primary h-12 px-4 py-2 underline-offset-4 hover:underline",
-        icon: "text-primary bg-neutral-200 p-3 hover:bg-neutral-100",
+        positive:
+          "h-12 bg-accent-positive-600 px-4 py-2 text-accent-positive-200 hover:bg-accent-positive-500 hover:text-accent-positive-100",
+        link: "h-12 bg-neutral-100 px-4 py-2 text-neutral-900 underline-offset-4 hover:underline",
+        icon: "bg-neutral-100 p-3 text-neutral-800 hover:text-neutral-950",
       },
       //size: {
       //  default: "h-10 px-4 py-2",
@@ -26,7 +27,7 @@ const buttonVariants = cva(
       //},
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       //size: "default",
     },
   }
