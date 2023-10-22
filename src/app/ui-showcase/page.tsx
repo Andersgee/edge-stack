@@ -2,6 +2,7 @@ import { ButtonsDemo } from "./ButtonsDemo";
 import { CardDemo } from "./CardDemo";
 import { ComboboxDemo } from "./ComboBoxDemo";
 import { ComboboxDropdownMenu } from "./ComboboxDropdownMenu";
+import { DialogDemo } from "./DialogDemo";
 
 export default function Page() {
   return (
@@ -25,6 +26,10 @@ export default function Page() {
         <div>
           <h2>4. ButtonsDemo</h2>
           <ButtonsDemo />
+        </div>
+        <div>
+          <h2>5. DialogDemo</h2>
+          <DialogDemo />
         </div>
       </div>
     </main>

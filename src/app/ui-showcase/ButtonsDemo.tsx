@@ -1,3 +1,4 @@
+import { Edit } from "#src/components/Icons";
 import { Button } from "#src/components/ui/button";
 
 export function ButtonsDemo() {
@@ -16,10 +17,12 @@ export function ButtonsDemo() {
         <Button variant="positive">positive</Button>
       </div>
       <div>
-        <Button variant="icon">icon</Button>
+        <Button variant="icon">
+          <Edit /> Icon
+        </Button>
       </div>
       <div>
-        <Button variant="link">link</Button>
+        <Button variant="link"> link</Button>
       </div>
     </div>
   );
