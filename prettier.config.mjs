@@ -7,6 +7,7 @@ const config = {
   printWidth: 120,
   trailingComma: "es5",
   quoteProps: "consistent",
+  tailwindFunctions: ["clsx", "cva"],
   plugins: ["prettier-plugin-tailwindcss"],
 };
 
