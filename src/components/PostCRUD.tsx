@@ -48,7 +48,7 @@ export function PostCRUD({ initialPost, className }: Props) {
           <ExternalLink /> View
         </Link>
       </Button>
-      <Button variant="icon" disabled={postDelete.isLoading} onClick={() => postDelete.mutate({ postId })}>
+      <Button variant="danger" disabled={postDelete.isLoading} onClick={() => postDelete.mutate({ postId })}>
         <Trash /> Delete
       </Button>
 
@@ -57,14 +57,18 @@ export function PostCRUD({ initialPost, className }: Props) {
           <Button variant="icon" onClick={() => setIsEditing(false)}>
             <X /> Cancel
           </Button>
-          <Button variant="icon" disabled={postUpdate.isLoading} onClick={() => postUpdate.mutate({ postId, text })}>
+          <Button
+            variant="positive"
+            disabled={postUpdate.isLoading}
+            onClick={() => postUpdate.mutate({ postId, text })}
+          >
             <Check /> Save
           </Button>
         </div>
       ) : (
         <div>
           <Button
-            variant="icon"
+            variant="warning"
             onClick={() => {
               setText(postInfo.text ?? "");
               setIsEditing(true);
@@ -79,7 +83,7 @@ export function PostCRUD({ initialPost, className }: Props) {
         <Input autoFocus type="text" onChange={(e) => setText(e.target.value)} value={text} />
       ) : (
         <div>
-          <div className="flex gap-2 text-muted-foreground">
+          <div className="text-muted-foreground flex gap-2">
             {postInfo.editors.map((editor) => (
               <div key={editor.userId}>{editor.name}</div>
             ))}
@@ -108,7 +112,7 @@ export function PostInfo({ initialPost, className }: Props) {
 
   return (
     <div>
-      <div className="flex gap-2 text-muted-foreground">
+      <div className="text-muted-foreground flex gap-2">
         {postInfo.editors.map((editor) => (
           <div key={editor.userId}>{editor.name}</div>
         ))}

@@ -27,7 +27,7 @@ export function CreatePostForm({ onSuccess }: Props) {
       className="my-10 flex items-center"
     >
       <Input type="text" placeholder="some text" value={text} onChange={(e) => setText(e.target.value)} />
-      <Button variant="default" type="submit" className="ml-4" disabled={postCreate.isLoading}>
+      <Button variant="primary" type="submit" className="ml-4" disabled={postCreate.isLoading}>
         {postCreate.isLoading ? "Loading..." : "Create"}
       </Button>
     </form>
