@@ -3,6 +3,7 @@ import { CardDemo } from "./CardDemo";
 import { ComboboxDemo } from "./ComboBoxDemo";
 import { ComboboxDropdownMenu } from "./ComboboxDropdownMenu";
 import { DialogDemo } from "./DialogDemo";
+import { InputDemo } from "./InputDemo";
 
 export default function Page() {
   return (
@@ -30,6 +31,8 @@ export default function Page() {
         <div>
           <h2>5. DialogDemo</h2>
           <DialogDemo />
+          <h2>6. InputDemo</h2>
+          <InputDemo />
         </div>
       </div>
     </main>

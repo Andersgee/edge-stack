@@ -1,20 +1,24 @@
-import { Edit } from "#src/components/Icons";
+import { Check, Edit, Trash } from "#src/components/Icons";
 import { Button } from "#src/components/ui/button";
 
 export function ButtonsDemo() {
   return (
     <div className="flex flex-col gap-2">
       <div>
-        <Button variant="primary">primary</Button>
+        <Button variant="primary">Primary</Button>
       </div>
       <div>
-        <Button variant="warning">warning</Button>
+        <Button variant="warning">Warning</Button>
       </div>
       <div>
-        <Button variant="danger">danger</Button>
+        <Button variant="danger">
+          <Trash /> Danger
+        </Button>
       </div>
       <div>
-        <Button variant="positive">positive</Button>
+        <Button variant="positive">
+          <Check /> Positive
+        </Button>
       </div>
       <div>
         <Button variant="icon">
@@ -22,7 +26,7 @@ export function ButtonsDemo() {
         </Button>
       </div>
       <div>
-        <Button variant="link"> link</Button>
+        <Button variant="link">Link</Button>
       </div>
     </div>
   );

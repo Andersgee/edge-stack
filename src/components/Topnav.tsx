@@ -28,7 +28,7 @@ export default async function Topnav() {
 
 function HomeButton() {
   return (
-    <Button asChild variant="default">
+    <Button asChild variant="primary">
       <Link href="/">Home</Link>
     </Button>
   );
