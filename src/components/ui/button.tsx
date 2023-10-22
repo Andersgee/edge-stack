@@ -17,7 +17,7 @@ const buttonVariants = cva(
         positive:
           "h-12 bg-accent-positive-600 px-4 py-2 text-accent-positive-100 hover:bg-accent-positive-500 hover:text-accent-positive-50",
         link: "h-12 bg-neutral-100 px-4 py-2 text-neutral-900 underline-offset-4 hover:underline",
-        icon: "border border-neutral-300 bg-accent-highlight-50 p-3 text-neutral-900 hover:bg-accent-highlight-100 hover:text-neutral-950",
+        icon: "border border-neutral-300 bg-neutral-50 p-3 text-neutral-900 hover:bg-accent-highlight-50 hover:text-neutral-950",
         outline: "bg-background hover:bg-accent hover:text-accent-foreground border border-neutral-500",
       },
       //size: {
