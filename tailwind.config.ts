@@ -21,7 +21,6 @@ export default {
       screens: DEVICE_SIZES,
       center: true,
     },
-
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

@@ -38,50 +38,57 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
+      /* Default background color of <body />...etc */
       --background: 224 71% 4%;
       --foreground: 213 31% 91%;
 
+      /* Muted backgrounds such as <TabsList />, <Skeleton /> and <Switch /> */
       --muted: 223 47% 11%;
       --muted-foreground: 215.4 16.3% 56.9%;
 
+      /* Used for accents such as hover effects on <DropdownMenuItem>, <SelectItem>...etc */
       --accent: 216 34% 17%;
       --accent-foreground: 210 40% 98%;
 
+      /* Background color for popovers such as <DropdownMenu />, <HoverCard />, <Popover /> */
       --popover: 224 71% 4%;
       --popover-foreground: 215 20.2% 65.1%;
 
+      /* Default border color */
       --border: 216 34% 17%;
+
+      /* Border color for inputs such as <Input />, <Select />, <Textarea /> */
       --input: 216 34% 17%;
 
+      /* Background color for <Card /> */
       --card: 224 71% 4%;
       --card-foreground: 213 31% 91%;
 
+      /* Primary colors for <Button /> */
       --primary: 210 40% 98%;
       --primary-foreground: 222.2 47.4% 1.2%;
 
+      /* Secondary colors for <Button /> */
       --secondary: 222.2 47.4% 11.2%;
       --secondary-foreground: 210 40% 98%;
 
+      /* Used for destructive actions such as <Button variant="destructive"> */
       --destructive: 0 63% 31%;
       --destructive-foreground: 210 40% 98%;
 
+      /* Used for focus ring */
       --ring: 216 34% 17%;
 
+      /* Border radius for card, input and buttons */
       --radius: 0.5rem;
     }
   }
 
   /*
-  * {
-    @apply border-border;
-  }
-  */
   body {
     @apply bg-background font-sans text-foreground antialiased;
-    /*font-feature-settings: "rlig" 1, "calt" 1; */
   }
 
-  /* other */
   h1,
   h2,
   h3,
@@ -97,15 +104,11 @@
   p > a {
     @apply underline decoration-dotted;
   }
-  /*
-  input::placeholder {
-    @apply text-neutral-500 opacity-100;
-  }
-  */
 
   svg {
     @apply box-content shrink-0;
     shape-rendering: geometricPrecision;
     text-rendering: geometricPrecision;
   }
+  */
 }

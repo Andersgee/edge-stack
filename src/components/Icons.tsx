@@ -169,5 +169,3 @@ export function Tags({ className, ...props }: Props) {
     </Svg>
   );
 }
-
-User;
