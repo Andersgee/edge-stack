@@ -1,4 +1,5 @@
 import { PostCRUD, PostInfo } from "#src/components/PostCRUD";
+import { PostCRUD2 } from "#src/components/PostCRUD2";
 import { apiRsc } from "#src/trpc/api-rsc";
 import { idFromHashid } from "#src/utils/hashid";
 import { notFound } from "next/navigation";
@@ -22,7 +23,7 @@ export default async function Page({ params }: Props) {
     <main className="flex justify-center">
       <div className="">
         <p>if you are one of the editors of this post, then you can edit it</p>
-        {isEditor ? <PostCRUD initialPost={postInfo} /> : <PostInfo initialPost={postInfo} />}
+        {isEditor ? <PostCRUD2 initialPost={postInfo} /> : <PostInfo initialPost={postInfo} />}
       </div>
     </main>
   );

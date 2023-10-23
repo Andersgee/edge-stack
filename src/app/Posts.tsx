@@ -2,6 +2,7 @@
 
 import { CreatePostForm } from "#src/components/CreatePostForm";
 import { PostCRUD } from "#src/components/PostCRUD";
+import { PostCRUD2 } from "#src/components/PostCRUD2";
 import { api, type RouterOutputs } from "#src/hooks/api";
 import type { TokenUser } from "#src/utils/jwt/schema";
 
@@ -28,7 +29,7 @@ export function Posts({ user, className, initialData }: Props) {
             });
           }}
         />
-        <div className="">{posts.map((post) => (post ? <PostCRUD key={post.id} initialPost={post} /> : null))}</div>
+        <div className="">{posts.map((post) => (post ? <PostCRUD2 key={post.id} initialPost={post} /> : null))}</div>
       </div>
     </main>
   );

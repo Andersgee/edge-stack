@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/mysql";
+import { wait } from "#src/utils/wait";
 
 export const tagsPostRouter = {
   getById: (p: { postId: number }) => `post-info-${p.postId}`,
@@ -83,6 +84,9 @@ export const postRouter = createTRPCRouter({
   update: protectedProcedure
     .input(z.object({ postId: z.number(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      //await wait(4000);
+      //throw "debug throw here";
+
       await db
         .updateTable("Post")
         .set({
