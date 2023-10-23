@@ -86,9 +86,94 @@
 
     --radius: 0.5rem;
   }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --theme-neutral-0: 0 0% 0%; /* 000000 */
+      --theme-neutral-50: 228.57 84% 4.9%; /* #020617 */
+      --theme-neutral-100: 222.22 47.37% 11.18%; /* #0f172a */
+      --theme-neutral-200: 217.24 32.58% 17.45%; /* #1e293b */
+      --theme-neutral-300: 215.29 25% 26.67%; /* #334155 */
+      --theme-neutral-400: 215.29 19.32% 34.51%; /* #475569 */
+      --theme-neutral-500: 215.38 16.32% 46.86%; /* #64748b */
+      --theme-neutral-600: 215 20.22% 65.1%; /* #94a3b8 */
+      --theme-neutral-700: 212.73 26.83% 83.92%; /* #cbd5e1 */
+      --theme-neutral-800: 214.29 31.82% 91.37%; /* #e2e8f0 */
+      --theme-neutral-900: 210 40% 96.08%; /* #f1f5f9 */
+      --theme-neutral-950: 210 40% 98.04%; /* #f8fafc */
+      --theme-neutral-1000: 0 0% 100%; /* #ffffff */
+      --theme-primary-50: 197 78.95% 14.9%; /* #083344 */
+      --theme-primary-100: 196.36 63.64% 23.73%; /* #164e63 */
+      --theme-primary-200: 194.37 69.57% 27.06%; /* #155e75 */
+      --theme-primary-300: 192.92 82.28% 30.98%; /* #0e7490 */
+      --theme-primary-400: 191.65 91.4% 36.47%; /* #0891b2 */
+      --theme-primary-500: 188.74 94.5% 42.75%; /* #06b6d4 */
+      --theme-primary-600: 187.94 85.71% 53.33%; /* #22d3ee */
+      --theme-primary-700: 186.99 92.41% 69.02%; /* #67e8f9 */
+      --theme-primary-800: 186.21 93.55% 81.76%; /* #a5f3fc */
+      --theme-primary-900: 185.11 95.92% 90.39%; /* #cffafe */
+      --theme-primary-950: 183.16 100% 96.27%; /* #ecfeff */
+      --theme-accent-highlight-50: 178.6 84.31% 10%; /* #042f2e */
+      --theme-accent-highlight-100: 175.93 60.82% 19.02%; /* #134e4a */
+      --theme-accent-highlight-200: 176.1 69.37% 21.76%; /* #115e59 */
+      --theme-accent-highlight-300: 175.34 77.44% 26.08%; /* #0f766e */
+      --theme-accent-highlight-400: 174.67 83.85% 31.57%; /* #0d9488 */
+      --theme-accent-highlight-500: 173.41 80.39% 40%; /* #14b8a6 */
+      --theme-accent-highlight-600: 172.46 66.01% 50.39%; /* #2dd4bf */
+      --theme-accent-highlight-700: 170.57 76.92% 64.31%; /* #5eead4 */
+      --theme-accent-highlight-800: 168.39 83.78% 78.24%; /* #99f6e4 */
+      --theme-accent-highlight-900: 167.23 85.45% 89.22%; /* #ccfbf1 */
+      --theme-accent-highlight-950: 166.15 76.47% 96.67%; /* #f0fdfa */
+      --theme-accent-danger-50: 0 74.68% 15.49%; /* #450a0a */
+      --theme-accent-danger-100: 0 62.82% 30.59%; /* #7f1d1d */
+      --theme-accent-danger-200: 0 70% 35.29%; /* #991b1b */
+      --theme-accent-danger-300: 0 73.71% 41.76%; /* #b91c1c */
+      --theme-accent-danger-400: 0 72.22% 50.59%; /* #dc2626 */
+      --theme-accent-danger-500: 0 84.24% 60.2%; /* #ef4444 */
+      --theme-accent-danger-600: 0 90.6% 70.78%; /* #f87171 */
+      --theme-accent-danger-700: 0 93.55% 81.76%; /* #fca5a5 */
+      --theme-accent-danger-800: 0 96.3% 89.41%; /* #fecaca */
+      --theme-accent-danger-900: 0 93.33% 94.12%; /* #fee2e2 */
+      --theme-accent-danger-950: 0 85.71% 97.25%; /* #fef2f2 */
+      --theme-accent-warning-50: 26 83.33% 14.12%; /* #422006 */
+      --theme-accent-warning-100: 28.42 72.52% 25.69%; /* #713f12 */
+      --theme-accent-warning-200: 31.76 80.95% 28.82%; /* #854d0e */
+      --theme-accent-warning-300: 35.45 91.67% 32.94%; /* #a16207 */
+      --theme-accent-warning-400: 40.61 96.12% 40.39%; /* #ca8a04 */
+      --theme-accent-warning-500: 45.4 93.39% 47.45%; /* #eab308 */
+      --theme-accent-warning-600: 47.95 95.82% 53.14%; /* #facc15 */
+      --theme-accent-warning-700: 50.44 97.85% 63.53%; /* #fde047 */
+      --theme-accent-warning-800: 52.76 98.31% 76.86%; /* #fef08a */
+      --theme-accent-warning-900: 54.92 96.72% 88.04%; /* #fef9c3 */
+      --theme-accent-warning-950: 54.55 91.67% 95.29%; /* #fefce8 */
+      --theme-accent-positive-50: 144.88 80.39% 10%; /* #052e16 */
+      --theme-accent-positive-100: 143.81 61.17% 20.2%; /* #14532d */
+      --theme-accent-positive-200: 142.78 64.23% 24.12%; /* #166534 */
+      --theme-accent-positive-300: 142.43 71.81% 29.22%; /* #15803d */
+      --theme-accent-positive-400: 142.13 76.22% 36.27%; /* #16a34a */
+      --theme-accent-positive-500: 142.09 70.56% 45.29%; /* #22c55e */
+      --theme-accent-positive-600: 141.89 69.16% 58.04%; /* #4ade80 */
+      --theme-accent-positive-700: 141.71 76.64% 73.14%; /* #86efac */
+      --theme-accent-positive-800: 141 78.95% 85.1%; /* #bbf7d0 */
+      --theme-accent-positive-900: 140.62 84.21% 92.55%; /* #dcfce7 */
+      --theme-accent-positive-950: 138.46 76.47% 96.67%; /* #f0fdf4 */
+      --theme-accent-focus-50: 273.55 86.92% 20.98%; /* #3b0764 */
+      --theme-accent-focus-100: 273.64 65.64% 31.96%; /* #581c87 */
+      --theme-accent-focus-200: 272.89 67.16% 39.41%; /* #6b21a8 */
+      --theme-accent-focus-300: 272.09 71.67% 47.06%; /* #7e22ce */
+      --theme-accent-focus-400: 271.48 81.33% 55.88%; /* #9333ea */
+      --theme-accent-focus-500: 270.74 91.01% 65.1%; /* #a855f7 */
+      --theme-accent-focus-600: 270 95.24% 75.29%; /* #c084fc */
+      --theme-accent-focus-700: 269.19 97.37% 85.1%; /* #d8b4fe */
+      --theme-accent-focus-800: 268.57 100% 91.76%; /* #e9d5ff */
+      --theme-accent-focus-900: 268.7 100% 95.49%; /* #f3e8ff */
+      --theme-accent-focus-950: 270 100% 98.04%; /* #faf5ff */
+
+      --radius: 0.5rem;
+    }
+  }
 
   body {
-    @apply bg-theme-neutral-100 text-theme-neutral-900 font-sans antialiased;
+    @apply bg-theme-neutral-50 font-sans text-theme-neutral-900 antialiased;
   }
 
   h1,
@@ -97,10 +182,10 @@
   h4,
   h5,
   h6 {
-    @apply text-theme-neutral-1000 mb-2 text-lg font-medium;
+    @apply mb-2 text-lg font-medium text-theme-neutral-1000;
   }
   p {
-    @apply text-theme-neutral-800 max-w-[55ch];
+    @apply max-w-[55ch] text-theme-neutral-800;
   }
   svg {
     @apply box-content shrink-0;

@@ -19,14 +19,20 @@ export function ButtonsDemo() {
         <Button variant="positive">
           <Check /> Positive
         </Button>
+        <div>hello after button</div>
       </div>
       <div>
         <Button variant="icon">
-          <Edit /> Icon
+          <Edit />
         </Button>
       </div>
       <div>
-        <Button variant="link">Link</Button>
+        <Button variant="icon">
+          <Edit /> Edit
+        </Button>
+      </div>
+      <div>
+        <Button variant="outline">Outline</Button>
       </div>
     </div>
   );

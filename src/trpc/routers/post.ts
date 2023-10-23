@@ -98,8 +98,15 @@ export const postRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
-    await db.deleteFrom("Post").where("id", "=", input.postId).postOrThrow();
+    const isEditor = await db
+      .selectFrom("UserPostPivot")
+      .selectAll()
+      .where("userId", "=", ctx.user.id)
+      .where("postId", "=", input.postId)
+      .getFirst();
+    if (!isEditor) return false;
 
+    await db.deleteFrom("Post").where("id", "=", input.postId).postOrThrow();
     revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
     revalidateTag(tagsPostRouter.getById({ postId: input.postId }));
     return true;
