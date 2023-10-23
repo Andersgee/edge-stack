@@ -94,6 +94,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
+      "select-none outline-none",
       //"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       //focusStyles,
@@ -143,7 +144,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current" />
+        <Circle className="fill-current h-2 w-2" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -171,7 +172,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("bg-color-neutral-200 -mx-1 my-1 h-px", className)}
+    className={cn("-mx-1 my-1 h-px bg-color-neutral-200", className)}
     {...props}
   />
 ));

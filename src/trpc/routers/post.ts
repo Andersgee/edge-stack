@@ -102,6 +102,9 @@ export const postRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
+    //await wait(4000);
+    //throw "debug throw here";
+
     const isEditor = await db
       .selectFrom("UserPostPivot")
       .selectAll()

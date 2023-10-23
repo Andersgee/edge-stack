@@ -35,7 +35,7 @@ export function PostCRUD2({ initialPost, className }: Props) {
     }
   );
   const postUpdate = api.post.update.useMutation({
-    onMutate: ({ text }) => {
+    onMutate: ({ text, postId }) => {
       const context = { postInfoBeforeOptimisticUpdate: apiUtils.post.getById.getData({ postId }) };
 
       apiUtils.post.getById.setData({ postId }, (prev) => {
@@ -57,10 +57,22 @@ export function PostCRUD2({ initialPost, className }: Props) {
   });
 
   const postDelete = api.post.delete.useMutation({
-    onSuccess: () => {
+    onMutate: ({ postId }) => {
+      const context = { postInfoBeforeOptimisticDelete: apiUtils.post.getById.getData({ postId }) };
+
       apiUtils.post.getById.setData({ postId }, null);
+
+      return context;
+    },
+    //onSuccess: () => {
+    //  apiUtils.post.getById.setData({ postId }, null);
+    //},
+    onError: (_err, _variables, context) => {
+      //rollback to using the context returned whatever we returned in onMutate as context
+      apiUtils.post.getById.setData({ postId }, context?.postInfoBeforeOptimisticDelete);
     },
   });
+
   const [text, setText] = useState("");
 
   if (!postInfo) return null;
@@ -73,23 +85,26 @@ export function PostCRUD2({ initialPost, className }: Props) {
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-24">
-          <DropdownMenuItem
-            asChild
-            onSelect={() => {
-              setText(postInfo.text ?? "");
-              setIsEditing(true);
-            }}
-          >
-            <Button variant="icon" className="my-2 w-full">
-              <Edit />
-            </Button>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild disabled={postDelete.isLoading} onSelect={() => postDelete.mutate({ postId })}>
-            <Button variant="danger" className="my-2 w-full">
-              <Trash />
-            </Button>
-          </DropdownMenuItem>
+        <DropdownMenuContent align="end" className="px-3 py-2">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              asChild
+              onSelect={() => {
+                setText(postInfo.text ?? "");
+                setIsEditing(true);
+              }}
+            >
+              <Button variant="icon" className="my-2 w-full">
+                <Edit /> Edit
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild disabled={postDelete.isLoading} onSelect={() => postDelete.mutate({ postId })}>
+              <Button variant="danger" className="my-2 w-full">
+                <Trash /> Delete
+              </Button>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
 
