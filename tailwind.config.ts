@@ -2,6 +2,7 @@ import { type Config } from "tailwindcss";
 //import { fontFamily } from "tailwindcss/defaultTheme";
 import { type ScreensConfig } from "tailwindcss/types/config";
 import defaultTheme from "tailwindcss/defaultTheme";
+import plugin from "tailwindcss/plugin";
 
 //https://tailwindcss.com/docs/configuration#scaffolding-the-entire-default-configuration
 
@@ -1054,5 +1055,24 @@ export default {
       50: "50",
     },
   },
-  plugins: [],
+  //also edited
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(({ addUtilities, addVariant }) => {
+      addUtilities({
+        ".focusvisiblering": {
+          "@apply ring-color-accent-focus-300 outline-none focus-visible:outline-none focus-visible:ring-offset-2 ring-offset-color-neutral-0 focus-visible:ring-4":
+            {},
+        },
+      });
+      addUtilities({
+        ".focusring": {
+          "@apply ring-color-accent-focus-300 outline-none ring-offset-2 ring-offset-color-neutral-0 ring-4": {},
+        },
+      });
+      //for radix ui to be able to style for keyboard navigation only (data-highlighted but not hovering)
+      addVariant("data-highlighted-but-not-hover", ["&[data-highlighted]:not(:hover)"]);
+      addVariant("aria-selected-but-not-hover", ['&[aria-selected="true"]:not(:hover)']);
+    }),
+  ],
 } satisfies Config;

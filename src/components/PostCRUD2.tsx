@@ -89,7 +89,6 @@ export function PostCRUD2({ initialPost, className }: Props) {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem
-              asChild
               onSelect={() => {
                 setText(postInfo.text ?? "");
                 setIsEditing(true);
@@ -99,7 +98,7 @@ export function PostCRUD2({ initialPost, className }: Props) {
                 <Edit /> Edit
               </Button>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild disabled={postDelete.isLoading} onSelect={() => postDelete.mutate({ postId })}>
+            <DropdownMenuItem disabled={postDelete.isLoading} onSelect={() => postDelete.mutate({ postId })}>
               <Button variant="danger" className="my-2 w-full">
                 <Trash /> Delete
               </Button>

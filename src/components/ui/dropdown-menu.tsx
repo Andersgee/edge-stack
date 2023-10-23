@@ -5,7 +5,6 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 
 import { cn } from "#src/utils/cn";
 import { Check, ChevronRight, Circle } from "../Icons";
-import { focusStyles } from "./styles";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -34,7 +33,6 @@ const DropdownMenuSubTrigger = React.forwardRef<
       "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none ",
       inset && "pl-8",
       stateOpenStyles,
-      //focusStyles,
       className
     )}
     {...props}
@@ -93,11 +91,12 @@ const DropdownMenuItem = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
+    //radix ui only have [data-highlighted] state (regardless of if keyboard or mouse)
+    //https://www.radix-ui.com/primitives/docs/components/dropdown-menu#item
+    //so custom "&[data-highlighted]:not(:hover)" variant for when using keyboard aka not hovering to highlight
     className={cn(
-      "select-none outline-none",
-      //"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "data-highlighted-but-not-hover:focusring select-none rounded-md outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
-      //focusStyles,
       className
     )}
     {...props}
@@ -113,7 +112,6 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      //focusStyles,
       className
     )}
     checked={checked}
@@ -137,7 +135,6 @@ const DropdownMenuRadioItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      //focusStyles,
       className
     )}
     {...props}
