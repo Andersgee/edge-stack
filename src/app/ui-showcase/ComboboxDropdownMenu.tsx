@@ -33,10 +33,10 @@ export function ComboboxDropdownMenu() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className="flex flex-col items-start justify-between rounded-md border bg-theme-neutral-50 px-4 py-3 sm:flex-row sm:items-center">
+    <div className="bg-color-neutral-50 flex flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
       <p className="mr-2 text-sm font-medium">
-        <span className="mr-2 rounded-lg bg-theme-accent-highlight-500 px-2 py-1 text-xs">{label}</span>
-        <span className="text-theme-neutral-500">Create a new project</span>
+        <span className="bg-color-accent-highlight-500 mr-2 rounded-lg px-2 py-1 text-xs">{label}</span>
+        <span className="text-color-neutral-500">Create a new project</span>
       </p>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
@@ -84,7 +84,7 @@ export function ComboboxDropdownMenu() {
               </DropdownMenuSubContent>
             </DropdownMenuSub>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-theme-accent-danger-600">
+            <DropdownMenuItem className="text-color-accent-danger-600">
               <Trash className="mr-2 h-4 w-4" />
               Delete
               <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>

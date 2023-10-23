@@ -13,16 +13,16 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-theme-primary-200 px-4 py-2 text-theme-primary-700 hover:bg-theme-primary-300 hover:text-theme-primary-800",
+          "bg-color-primary-200 text-color-primary-700 hover:bg-color-primary-300 hover:text-color-primary-800 px-4 py-2",
         danger:
-          "bg-theme-accent-danger-100 px-4 py-2 text-theme-accent-danger-700 hover:bg-theme-accent-danger-200 hover:text-theme-accent-danger-800",
+          "bg-color-accent-danger-100 text-color-accent-danger-700 hover:bg-color-accent-danger-200 hover:text-color-accent-danger-800 px-4 py-2",
         warning:
-          "bg-theme-accent-warning-100 px-4 py-2 text-theme-accent-warning-700 hover:bg-theme-accent-warning-200 hover:text-theme-accent-warning-800",
+          "bg-color-accent-warning-100 text-color-accent-warning-700 hover:bg-color-accent-warning-200 hover:text-color-accent-warning-800 px-4 py-2",
         positive:
-          "bg-theme-accent-positive-200 px-4 py-2 text-theme-accent-positive-700 hover:bg-theme-accent-positive-300 hover:text-theme-accent-positive-800",
+          "bg-color-accent-positive-200 text-color-accent-positive-700 hover:bg-color-accent-positive-300 hover:text-color-accent-positive-800 px-4 py-2",
         outline:
-          "border border-theme-neutral-300 bg-theme-neutral-50 p-[10px] text-theme-neutral-900 hover:bg-theme-neutral-200 hover:text-theme-neutral-1000",
-        icon: "rounded-full bg-theme-neutral-100 p-[10px] text-theme-neutral-900 hover:bg-theme-neutral-200 hover:text-theme-neutral-1000",
+          "border-color-neutral-300 bg-color-neutral-50 text-color-neutral-900 hover:bg-color-neutral-200 hover:text-color-neutral-1000 border p-[10px]",
+        icon: "bg-color-neutral-100 text-color-neutral-900 hover:bg-color-neutral-200 hover:text-color-neutral-1000 rounded-full p-[10px]",
       },
     },
     defaultVariants: {
