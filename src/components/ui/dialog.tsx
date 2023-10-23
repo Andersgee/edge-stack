@@ -45,7 +45,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className={cn(buttonVariants({ variant: "icon" }), "absolute right-2 top-2")}>
+      <DialogPrimitive.Close className={buttonVariants({ variant: "icon", className: "absolute right-2 top-2" })}>
         <X />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>

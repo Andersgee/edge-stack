@@ -30,12 +30,16 @@ export default {
       serif: [...defaultTheme.fontFamily.serif],
       mono: [...defaultTheme.fontFamily.mono],
     },
-    colors: {
+    colors: ({ colors }) => ({
+      "red": colors.red, //debug :p
       "color-inherit": "inherit",
       "color-current": "currentColor",
       "color-transparent": "transparent",
-      "color-black": "#000",
-      "color-white": "#fff",
+      "color-unthemed-neutral": {
+        "0": "#fff",
+        ...colors.neutral,
+        "1000": "#000",
+      },
       "color-neutral": {
         "0": "hsl(var(--color-neutral-0))",
         "50": "hsl(var(--color-neutral-50))",
@@ -129,6 +133,22 @@ export default {
         "900": "hsl(var(--color-accent-focus-900))",
         "950": "hsl(var(--color-accent-focus-950))",
       },
+    }),
+    ringColor: ({ theme }) => ({
+      DEFAULT: theme("colors.color-accent-focus.500"),
+      ...theme("colors"),
+    }),
+    borderColor: ({ theme }) => ({
+      ...theme("colors"),
+      DEFAULT: theme("colors.color-neutral.200"),
+    }),
+    borderRadius: {
+      none: "0px",
+      sm: "calc(var(--radius) - 4px)",
+      DEFAULT: "calc(var(--radius) - 4px)",
+      md: "calc(var(--radius) - 2px)",
+      lg: `var(--radius)`,
+      full: "9999px",
     },
     // UNTOUCHED BELOW HERE
     accentColor: ({ theme }) => ({
@@ -207,22 +227,9 @@ export default {
       "2xl": "40px",
       "3xl": "64px",
     },
-    borderColor: ({ theme }) => ({
-      ...theme("colors"),
-      DEFAULT: theme("colors.gray.200", "currentColor"),
-    }),
+
     borderOpacity: ({ theme }) => theme("opacity"),
-    borderRadius: {
-      "none": "0px",
-      "sm": "0.125rem",
-      "DEFAULT": "0.25rem",
-      "md": "0.375rem",
-      "lg": "0.5rem",
-      "xl": "0.75rem",
-      "2xl": "1rem",
-      "3xl": "1.5rem",
-      "full": "9999px",
-    },
+
     borderSpacing: ({ theme }) => ({
       ...theme("spacing"),
     }),
@@ -793,10 +800,7 @@ export default {
     padding: ({ theme }) => theme("spacing"),
     placeholderColor: ({ theme }) => theme("colors"),
     placeholderOpacity: ({ theme }) => theme("opacity"),
-    ringColor: ({ theme }) => ({
-      DEFAULT: theme("colors.blue.500", "#3b82f6"),
-      ...theme("colors"),
-    }),
+
     ringOffsetColor: ({ theme }) => theme("colors"),
     ringOffsetWidth: {
       0: "0px",

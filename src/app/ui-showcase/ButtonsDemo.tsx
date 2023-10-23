@@ -11,6 +11,11 @@ export function ButtonsDemo() {
         <Button variant="warning">Warning</Button>
       </div>
       <div>
+        <Button variant="warning" disabled>
+          Disabled
+        </Button>
+      </div>
+      <div>
         <Button variant="danger">
           <Trash /> Danger
         </Button>

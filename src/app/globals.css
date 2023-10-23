@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --color-neutral-0: 0 0% 100%; /* ffffff */
+    --color-neutral-0: 0 0% 100%; /* #ffffff */
     --color-neutral-50: 210 40% 98.04%; /* #f8fafc */
     --color-neutral-100: 210 40% 96.08%; /* #f1f5f9 */
     --color-neutral-200: 214.29 31.82% 91.37%; /* #e2e8f0 */
@@ -89,7 +89,7 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-neutral-0: 0 0% 0%; /* 000000 */
+      --color-neutral-0: 0 0% 0%; /* #000000 */
       --color-neutral-50: 228.57 84% 4.9%; /* #020617 */
       --color-neutral-100: 222.22 47.37% 11.18%; /* #0f172a */
       --color-neutral-200: 217.24 32.58% 17.45%; /* #1e293b */
