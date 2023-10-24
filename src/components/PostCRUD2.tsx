@@ -85,7 +85,7 @@ export function PostCRUD2({ initialPost, className }: Props) {
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="px-3 py-2">
+        <DropdownMenuContent align="end" className="">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem
@@ -93,15 +93,16 @@ export function PostCRUD2({ initialPost, className }: Props) {
                 setText(postInfo.text ?? "");
                 setIsEditing(true);
               }}
+              className="py-3"
             >
-              <Button variant="icon" className="my-2 w-full">
-                <Edit /> Edit
-              </Button>
+              <Edit /> Edit
             </DropdownMenuItem>
-            <DropdownMenuItem disabled={postDelete.isLoading} onSelect={() => postDelete.mutate({ postId })}>
-              <Button variant="danger" className="my-2 w-full">
-                <Trash /> Delete
-              </Button>
+            <DropdownMenuItem
+              disabled={postDelete.isLoading}
+              onSelect={() => postDelete.mutate({ postId })}
+              className="py-3"
+            >
+              <Trash /> Delete
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
