@@ -7,7 +7,6 @@ import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "#src/utils/cn";
 import { Dialog, DialogContent } from "#src/components/ui/dialog";
 import { Search } from "../Icons";
-import { commandItemHoverStyles } from "./styles";
 import { inputElementStyles } from "./input";
 
 const Command = React.forwardRef<
@@ -45,7 +44,15 @@ const CommandInput = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div className="flex items-center px-3" cmdk-input-wrapper="">
     <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-    <CommandPrimitive.Input ref={ref} className={cn(inputElementStyles, className)} {...props} />
+    {/*<CommandPrimitive.Input ref={ref} className={cn(inputElementStyles, className)} {...props} /> */}
+    <CommandPrimitive.Input
+      ref={ref}
+      className={cn(
+        "flex h-10 w-full rounded-md border border-color-neutral-400 bg-color-neutral-0 px-3 py-6 text-sm text-color-neutral-1000 outline-none placeholder:text-color-neutral-500 disabled:cursor-not-allowed disabled:bg-color-neutral-200 disabled:text-color-neutral-400",
+        className
+      )}
+      {...props}
+    />
   </div>
 ));
 
@@ -67,7 +74,7 @@ CommandList.displayName = CommandPrimitive.List.displayName;
 const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->((props, ref) => <CommandPrimitive.Empty ref={ref} className="py-6 text-center text-sm" {...props} />);
+>((props, ref) => <CommandPrimitive.Empty ref={ref} className="select-none py-6 text-center text-sm" {...props} />);
 
 CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
 
@@ -102,9 +109,10 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:text-color-neutral-500",
-      //commandItemHoverStyles,
-      "aria-selected:bg-red-500",
+      //"aria-selected:nothover:focusring cursor-pointer hover:bg-color-neutral-200",
+      "cursor-pointer aria-selected:bg-color-neutral-200",
+      //"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:text-color-neutral-500",
+      //"aria-selected:bg-color-neutral-200",
       className
     )}
     {...props}

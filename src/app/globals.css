@@ -175,12 +175,19 @@
 }
 
 @layer base {
-  * {
-    @apply border-color-neutral-200;
+  /* 
+  "@tailwind base" looks like this: https://unpkg.com/tailwindcss@3.3.3/src/css/preflight.css
+
+  it sets 
+  @tailwind base preflight sets border-color: theme('borderColor.DEFAULT', currentColor);
+  */
+
+  html {
+    @apply font-sans;
   }
 
   body {
-    @apply bg-color-neutral-50 font-sans text-color-neutral-900 antialiased;
+    @apply bg-color-neutral-50 text-color-neutral-900 antialiased;
   }
 
   h1,

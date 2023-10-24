@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={fontSans.variable}>
+    <html lang="en" className={fontSans.variable}>
+      <body>
         <Providers>
           <Topnav />
           {children}

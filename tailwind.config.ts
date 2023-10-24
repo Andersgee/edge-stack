@@ -136,8 +136,8 @@ export default {
       },
     }),
     ringColor: ({ theme }) => ({
-      DEFAULT: theme("colors.color-accent-focus.500"),
       ...theme("colors"),
+      DEFAULT: theme("colors.color-accent-focus.500"),
     }),
     borderColor: ({ theme }) => ({
       ...theme("colors"),
@@ -151,6 +151,36 @@ export default {
       lg: `var(--radius)`,
       full: "9999px",
     },
+    //https://tailwindcss.com/docs/hover-focus-and-other-states#aria-states
+    aria: {
+      busy: 'busy="true"',
+      checked: 'checked="true"',
+      disabled: 'disabled="true"',
+      expanded: 'expanded="true"',
+      hidden: 'hidden="true"',
+      pressed: 'pressed="true"',
+      readonly: 'readonly="true"',
+      required: 'required="true"',
+      selected: 'selected="true"',
+    },
+    //https://tailwindcss.com/docs/hover-focus-and-other-states#data-attributes
+    data: {
+      //https://www.radix-ui.com/primitives/docs/components/dropdown-menu
+      "orientation-vertical": 'orientation="vertical"',
+      "orientation-horizontal": 'orientation="horizontal"',
+      "highlighted": "highlighted",
+      "disabled": "disabled",
+      "state-open": 'state="open"',
+      "state-closed": 'state="closed"',
+      "side-left": 'side="left"',
+      "side-right": 'side="right"',
+      "side-bottom": 'side="bottom"',
+      "side-top": 'side="top"',
+      "align-start": 'align="start"',
+      "align-end": 'align="end"',
+      "align-center": 'align="center"',
+      //https://github.com/pacocoursey/cmdk#parts-and-styling
+    },
     // UNTOUCHED BELOW HERE
     accentColor: ({ theme }) => ({
       ...theme("colors"),
@@ -162,17 +192,6 @@ export default {
       ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
       pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       bounce: "bounce 1s infinite",
-    },
-    aria: {
-      busy: 'busy="true"',
-      checked: 'checked="true"',
-      disabled: 'disabled="true"',
-      expanded: 'expanded="true"',
-      hidden: 'hidden="true"',
-      pressed: 'pressed="true"',
-      readonly: 'readonly="true"',
-      required: 'required="true"',
-      selected: 'selected="true"',
     },
     aspectRatio: {
       auto: "auto",
@@ -919,7 +938,7 @@ export default {
       2: "2",
     },
     supports: {},
-    data: {},
+
     textColor: ({ theme }) => theme("colors"),
     textDecorationColor: ({ theme }) => theme("colors"),
     textDecorationThickness: {
@@ -1059,20 +1078,17 @@ export default {
   plugins: [
     require("tailwindcss-animate"),
     plugin(({ addUtilities, addVariant }) => {
-      addUtilities({
-        ".focusvisiblering": {
-          "@apply ring-color-accent-focus-300 outline-none focus-visible:outline-none focus-visible:ring-offset-2 ring-offset-color-neutral-0 focus-visible:ring-4":
-            {},
-        },
-      });
-      addUtilities({
-        ".focusring": {
-          "@apply ring-color-accent-focus-300 outline-none ring-offset-2 ring-offset-color-neutral-0 ring-4": {},
-        },
-      });
       //for radix ui to be able to style for keyboard navigation only (data-highlighted but not hovering)
-      addVariant("data-highlighted-but-not-hover", ["&[data-highlighted]:not(:hover)"]);
-      addVariant("aria-selected-but-not-hover", ['&[aria-selected="true"]:not(:hover)']);
+      addVariant("nothover", ["&:not(:hover)"]);
+      addUtilities({
+        //https://tailwindcss.com/docs/outline-style#removing-outlines
+        //set "outline-none" and use this instead in relevant places
+        //for example "outline-none focus-visible:focusring"
+        //or "outline-none data-highlighted:nothover:focusring"
+        ".focusring": {
+          "@apply ring-color-accent-focus-300 ring-offset-2 ring-offset-color-neutral-0 ring-2": {},
+        },
+      });
     }),
   ],
 } satisfies Config;

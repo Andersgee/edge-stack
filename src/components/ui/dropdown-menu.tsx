@@ -18,9 +18,6 @@ const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
-/** DropdownMenuSubTrigger when in opened state */
-const stateOpenStyles = "data-[state=open]:bg-color-neutral-200";
-
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
@@ -30,9 +27,8 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none ",
+      "data-state-open:bg-color-neutral-200 flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none",
       inset && "pl-8",
-      stateOpenStyles,
       className
     )}
     {...props}
@@ -43,8 +39,11 @@ const DropdownMenuSubTrigger = React.forwardRef<
 ));
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
 
-const menuContentStyles =
+const menuContentStylesOlD =
   "bg-color-neutral-0 text-color-neutral-900 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 overflow-hidden rounded-md border p-1";
+
+const menuContentStyles =
+  "bg-color-neutral-0 text-color-neutral-900 data-state-open:animate-in data-state-closed:animate-out data-state-closed:fade-out-0 data-state-open:fade-in-0 data-state-closed:zoom-out-95 data-state-open:zoom-in-95 data-side-bottom:slide-in-from-top-2 data-side-left:slide-in-from-right-2 data-side-right:slide-in-from-left-2 data-side-top:slide-in-from-bottom-2 z-50 overflow-hidden rounded-md border p-1";
 
 const DropdownMenuSubContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
@@ -91,11 +90,8 @@ const DropdownMenuItem = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
-    //radix ui only have [data-highlighted] state (regardless of if keyboard or mouse)
-    //https://www.radix-ui.com/primitives/docs/components/dropdown-menu#item
-    //so custom "&[data-highlighted]:not(:hover)" variant for when using keyboard aka not hovering to highlight
     className={cn(
-      "data-highlighted-but-not-hover:focusring select-none rounded-md outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:nothover:focusring select-none rounded-md outline-none",
       inset && "pl-8",
       className
     )}
