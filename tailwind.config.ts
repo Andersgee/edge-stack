@@ -179,6 +179,11 @@ export default {
       "align-start": 'align="start"',
       "align-end": 'align="end"',
       "align-center": 'align="center"',
+      //https://www.radix-ui.com/primitives/docs/components/checkbox
+      "state-checked": 'state="checked"',
+      "state-unchecked": 'state="unchecked"',
+      "state-indeterminate": 'state="indeterminate"',
+
       //https://github.com/pacocoursey/cmdk#parts-and-styling
     },
     // UNTOUCHED BELOW HERE

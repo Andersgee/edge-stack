@@ -2,7 +2,7 @@
 
 import { type RouterOutputs, api } from "#src/hooks/api";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Check, Edit, MoreHorizontal, Trash, X } from "./Icons";
@@ -39,6 +39,7 @@ export function Posts({
 }
 
 export function PostCRUD({ initialPost }: { initialPost: NonNullable<RouterOutputs["post"]["getById"]> }) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const postId = initialPost.id;
@@ -98,13 +99,24 @@ export function PostCRUD({ initialPost }: { initialPost: NonNullable<RouterOutpu
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="">
+        <DropdownMenuContent
+          align="end"
+          className=""
+          onCloseAutoFocus={(e) => {
+            if (isEditing) {
+              e.preventDefault();
+              inputRef.current?.focus();
+            }
+          }}
+        >
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem
-              onSelect={() => {
+              onSelect={(e) => {
                 setText(postInfo.text ?? "");
                 setIsEditing(true);
+                //e.preventDefault();
+                //setOpen(false);
               }}
               className="py-3"
             >
@@ -112,7 +124,10 @@ export function PostCRUD({ initialPost }: { initialPost: NonNullable<RouterOutpu
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled={postDelete.isLoading}
-              onSelect={() => postDelete.mutate({ postId })}
+              onSelect={(e) => {
+                //e.preventDefault(); //prevent autofocus on DropdownMenuTrigger, aka allow autofocus on <Input>
+                postDelete.mutate({ postId });
+              }}
               className="py-3"
             >
               <Trash /> Delete
@@ -122,19 +137,26 @@ export function PostCRUD({ initialPost }: { initialPost: NonNullable<RouterOutpu
       </DropdownMenu>
 
       {isEditing ? (
-        <div className="flex gap-2">
-          <Input autoFocus type="text" onChange={(e) => setText(e.target.value)} value={text} />
-          <Button variant="icon" onClick={() => setIsEditing(false)}>
-            <X /> Cancel
-          </Button>
+        <form
+          className="flex gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            postUpdate.mutate({ postId, text });
+          }}
+        >
+          <Input ref={inputRef} autoFocus type="text" onChange={(e) => setText(e.target.value)} value={text} />
           <Button
+            type="submit"
             variant="positive"
             disabled={postUpdate.isLoading}
-            onClick={() => postUpdate.mutate({ postId, text })}
+            //onClick={() => postUpdate.mutate({ postId, text })}
           >
             <Check /> Save
           </Button>
-        </div>
+          <Button variant="icon" onClick={() => setIsEditing(false)}>
+            <X /> Cancel
+          </Button>
+        </form>
       ) : (
         <PostInfo post={postInfo} />
       )}
