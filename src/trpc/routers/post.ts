@@ -62,6 +62,12 @@ export const postRouter = createTRPCRouter({
     return posts;
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
+    await wait(4000);
+    //throw "debug throw here";
+    if (Math.random() > 0.5) {
+      throw "debug throw here";
+    }
+
     const { insertId: postId } = await db
       .insertInto("Post")
       .values({

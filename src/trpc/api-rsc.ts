@@ -12,7 +12,7 @@ import { transformer } from "./transformer";
  *
  * ```ts
  * const { api, user } = await apiRsc();
- * const event = await api.event.info.fetch({ eventId });
+ * const event = await api.post.getById.fetch({ postId });
  * ```
  *
  * relies on `cookies()` from `"next/headers"` which makes route opt into dynamic rendering at request time.

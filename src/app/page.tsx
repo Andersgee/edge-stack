@@ -1,6 +1,6 @@
+import { Posts } from "#src/components/Post";
 import { SigninButtons } from "#src/components/SigninButtons";
 import { apiRsc } from "#src/trpc/api-rsc";
-import { Posts } from "./Posts";
 
 export default async function Page() {
   const { api, user } = await apiRsc();
@@ -18,5 +18,5 @@ export default async function Page() {
     );
   }
 
-  return <Posts user={user} initialData={myLatest10} />;
+  return <Posts initialData={myLatest10} />;
 }
