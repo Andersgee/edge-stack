@@ -11,12 +11,15 @@ datasource db {
 
 model User {
     id            Int     @id @default(autoincrement())
+    //auth
     email         String  @unique //allow multiple sign in methods, but same email would be same user.
     googleUserSub String? @unique
     discordUserId String? @unique
     githubUserId  Int?    @unique
     image         String?
     name          String
+
+    createdAt DateTime @default(now())
 
     //app
     posts UserPostPivot[]

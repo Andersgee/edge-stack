@@ -124,4 +124,57 @@ export const postRouter = createTRPCRouter({
     revalidateTag(tagsPostRouter.getById({ postId: input.postId }));
     return true;
   }),
+
+  infinitePosts: publicProcedure
+    .input(
+      z.object({
+        cursor: z.number().optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      await wait(4000);
+      //throw "debug throw here";
+
+      const limit = 5;
+
+      let query = db
+        .selectFrom("Post")
+        .selectAll()
+        .orderBy("id", "desc")
+        .limit(limit + 1); //one extra to know where next page starts
+
+      if (input.cursor !== undefined) {
+        query = query.where("id", "<", input.cursor);
+      }
+
+      const items = await query.get();
+
+      let nextCursor: number | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.id;
+      }
+      return { items, nextCursor };
+    }),
+
+  initialInfinitePosts: publicProcedure.query(async () => {
+    //await wait(4000);
+    //throw "debug throw here";
+
+    const limit = 5;
+
+    const items = await db
+      .selectFrom("Post")
+      .selectAll()
+      .orderBy("id", "desc")
+      .limit(limit + 1) //one extra to know where next page starts
+      .get();
+
+    let nextCursor: number | undefined = undefined;
+    if (items.length > limit) {
+      const nextItem = items.pop(); //dont return the one extra
+      nextCursor = nextItem?.id;
+    }
+    return { items, nextCursor };
+  }),
 });

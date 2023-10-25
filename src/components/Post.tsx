@@ -19,6 +19,27 @@ import { useStore } from "#src/store";
 import { cn } from "#src/utils/cn";
 import { randomUint } from "#src/utils/random";
 
+/*
+function useInfinitePosts() {
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.explore.tweets.useInfiniteQuery(
+    {},
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+  const tweets = useMemo(() => data?.pages.map((page) => page.items).flat() || [], [data]);
+
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
+      fetchNextPage();
+    }
+  });
+
+  return { tweets, ref, isFetchingNextPage, hasNextPage };
+}
+*/
+
 export function Posts({
   className,
   initialData,
