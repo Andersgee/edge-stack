@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IconDiscord, IconGithub, IconGoogle } from "./IconsSpecial";
 
-function useBrowserIsConsideredSafeForOauth() {
+function useBrowserInfo() {
   const [browserInfo, setBrowserInfo] = useState({ userAgent: "unkown", isConsideredSafeForOauth: true });
 
   useEffect(() => {
@@ -28,15 +28,15 @@ const linkStyles =
 
 export function SigninButtons() {
   const pathname = usePathname();
-  const browserInfo = useBrowserIsConsideredSafeForOauth();
+  const browserInfo = useBrowserInfo();
 
   if (!browserInfo.isConsideredSafeForOauth) {
     return (
       <div className="bg-color-unthemed-neutral-0 p-4">
-        <p className="text-color-unthemed-neutral-800 mb-2 text-sm font-semibold">
+        <p className="mb-2 text-sm font-semibold text-color-unthemed-neutral-800">
           Cant sign in with Facebook in-app browser
         </p>
-        <p className="text-color-unthemed-neutral-800 text-sm">
+        <p className="text-sm text-color-unthemed-neutral-800">
           Please use a normal browser like Chrome, Safari, Firefox etc.
         </p>
       </div>
@@ -63,17 +63,17 @@ export function SigninButtons() {
           <span>Sign in with Github</span>
         </a>
       </div>
-      <p className="text-color-unthemed-neutral-600 mt-3 w-64 text-center font-serif text-sm">
+      <p className="mt-3 w-64 text-center font-serif text-sm text-color-unthemed-neutral-600">
         By signing in, you agree to our <br />
         <Link
-          className="text-color-unthemed-neutral-600 hover:text-color-unthemed-neutral-500 underline decoration-solid"
+          className="text-color-unthemed-neutral-600 underline decoration-solid hover:text-color-unthemed-neutral-500"
           href="/terms"
         >
           Terms of Service
         </Link>{" "}
         and{" "}
         <Link
-          className="text-color-unthemed-neutral-600 hover:text-color-unthemed-neutral-500 underline decoration-solid"
+          className="text-color-unthemed-neutral-600 underline decoration-solid hover:text-color-unthemed-neutral-500"
           href="/privacy"
         >
           Privacy Policy

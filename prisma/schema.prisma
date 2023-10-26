@@ -22,16 +22,7 @@ model User {
     createdAt DateTime @default(now())
 
     //app
-    posts UserPostPivot[]
-}
-
-model UserPostPivot {
-    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId Int
-    post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-    postId Int
-
-    @@id([userId, postId])
+    posts Post[]
 }
 
 model Post {
@@ -39,5 +30,6 @@ model Post {
     text      String
     createdAt DateTime @default(now())
 
-    users UserPostPivot[]
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int
 }

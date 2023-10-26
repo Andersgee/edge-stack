@@ -274,6 +274,8 @@ export default {
       "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
       "inner": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)",
       "none": "none",
+      "imageborder": "inset 0 2px 4px 0 hsla(0, 0%, 0%, .2)",
+      //"imageborder": "inset 0 0 0 1px hsla(0, 0%, 0%, .1)",
     },
     boxShadowColor: ({ theme }) => theme("colors"),
     brightness: {

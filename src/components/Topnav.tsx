@@ -1,23 +1,18 @@
 import { apiRsc } from "#src/trpc/api-rsc";
 import Link from "next/link";
-import { SignoutButton } from "./SignoutButton";
 import { Button } from "./ui/button";
+import { ProfileButton } from "./ProfileButton";
 
 export default async function Topnav() {
   const { user } = await apiRsc();
 
   return (
-    <div className="m-2 flex justify-between">
-      <Button asChild variant="primary">
+    <div className="m-2 flex items-center justify-between">
+      <Button asChild variant="outline">
         <Link href="/">Home</Link>
       </Button>
-      <div className="flex items-center">
-        {user && (
-          <>
-            <p className="mr-2">{user.name}</p>
-            <SignoutButton>Sign out</SignoutButton>
-          </>
-        )}
+      <div>
+        <ProfileButton user={user} />
       </div>
     </div>
   );

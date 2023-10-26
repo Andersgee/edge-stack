@@ -8,6 +8,7 @@ export type Post = {
   id: Generated<number>;
   text: string;
   createdAt: Generated<Timestamp>;
+  userId: number;
 };
 export type User = {
   id: Generated<number>;
@@ -17,13 +18,9 @@ export type User = {
   githubUserId: number | null;
   image: string | null;
   name: string;
-};
-export type UserPostPivot = {
-  userId: number;
-  postId: number;
+  createdAt: Generated<Timestamp>;
 };
 export type DB = {
   Post: Post;
   User: User;
-  UserPostPivot: UserPostPivot;
 };

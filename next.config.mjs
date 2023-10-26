@@ -12,7 +12,6 @@ const nextConfig = {
     imageSizes: IMAGE_SIZES,
     deviceSizes: DEVICE_SIZES,
     remotePatterns: [
-      /*
       {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
@@ -33,7 +32,6 @@ const nextConfig = {
         hostname: "storage.googleapis.com",
         pathname: "/some-bucket-name/**",
       },
-      */
     ],
   },
   experimental: {

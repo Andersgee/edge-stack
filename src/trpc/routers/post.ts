@@ -2,69 +2,17 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { db } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/mysql";
 import { wait } from "#src/utils/wait";
-
-export const tagsPostRouter = {
-  getById: (p: { postId: number }) => `post-info-${p.postId}`,
-  myLatest10: (p: { userId: number }) => `post-myLatest10-${p.userId}`,
-};
-
-function postInfoQuery(postId: number) {
-  return db
-    .selectFrom("Post")
-    .where("id", "=", postId)
-    .select((eb) => [
-      "Post.id",
-      "Post.text",
-      "Post.createdAt",
-      jsonArrayFrom(
-        eb
-          .selectFrom("UserPostPivot")
-          .select("UserPostPivot.userId")
-          .whereRef("UserPostPivot.postId", "=", "Post.id")
-          .innerJoin("User", "User.id", "UserPostPivot.userId")
-          .select(["User.name", "User.image"])
-      ).as("editors"),
-    ]);
-}
-
-async function getByIdFromCache(postId: number) {
-  return postInfoQuery(postId).getFirst({
-    next: { tags: [tagsPostRouter.getById({ postId: postId })] },
-  });
-}
-
-async function getByIdFresh(postId: number) {
-  return postInfoQuery(postId).getFirst({
-    cache: "no-store",
-  });
-}
 
 export const postRouter = createTRPCRouter({
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
-    return getByIdFromCache(input.postId);
-  }),
-  latest10whereImEditor: protectedProcedure.query(async ({ ctx }) => {
-    const pivots = await db
-      .selectFrom("UserPostPivot")
-      .where("userId", "=", ctx.user.id)
-      .innerJoin("Post", "Post.id", "UserPostPivot.postId")
-      .select("Post.id as postId")
-      .orderBy("Post.id", "desc")
-      .limit(10)
-      .get({
-        cache: "no-store",
-      });
-
-    const posts = await Promise.all(pivots.map(({ postId }) => getByIdFromCache(postId)));
-
-    return posts;
+    return db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({
+      cache: "no-store",
+    });
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    await wait(4000);
-    //throw "debug throw here";
-    if (Math.random() > 0.5) {
+    if (Math.random() < 0.25) {
+      await wait(2000);
       throw "debug throw here";
     }
 
@@ -72,56 +20,33 @@ export const postRouter = createTRPCRouter({
       .insertInto("Post")
       .values({
         text: input.text,
-      })
-      .postOrThrow();
-
-    await db
-      .insertInto("UserPostPivot")
-      .values({
-        postId: postId,
         userId: ctx.user.id,
       })
       .postOrThrow();
 
-    revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
-    revalidateTag(tagsPostRouter.getById({ postId }));
-    return getByIdFromCache(postId);
+    return db.selectFrom("Post").selectAll().where("id", "=", postId).getFirst({ cache: "no-store" });
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.number(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      //await wait(4000);
-      //throw "debug throw here";
-
       await db
         .updateTable("Post")
+        .where("id", "=", input.postId)
         .set({
           text: input.text,
         })
-        .where("id", "=", input.postId)
         .postOrThrow();
 
-      revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
-      revalidateTag(tagsPostRouter.getById({ postId: input.postId }));
-
-      return getByIdFresh(input.postId);
+      return db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({ cache: "no-store" });
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
-    //await wait(4000);
-    //throw "debug throw here";
+    //if (Math.random() < 0.5) {
+    await wait(4000);
+    throw "debug throw here";
+    //}
 
-    const isEditor = await db
-      .selectFrom("UserPostPivot")
-      .selectAll()
-      .where("userId", "=", ctx.user.id)
-      .where("postId", "=", input.postId)
-      .getFirst();
-    if (!isEditor) return false;
-
-    await db.deleteFrom("Post").where("id", "=", input.postId).postOrThrow();
-    revalidateTag(tagsPostRouter.myLatest10({ userId: ctx.user.id }));
-    revalidateTag(tagsPostRouter.getById({ postId: input.postId }));
+    await db.deleteFrom("Post").where("userId", "=", ctx.user.id).where("id", "=", input.postId).postOrThrow();
     return true;
   }),
 
@@ -132,10 +57,10 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      await wait(4000);
+      //await wait(4000);
       //throw "debug throw here";
 
-      const limit = 5;
+      const limit = 3;
 
       let query = db
         .selectFrom("Post")
@@ -147,7 +72,7 @@ export const postRouter = createTRPCRouter({
         query = query.where("id", "<", input.cursor);
       }
 
-      const items = await query.get();
+      const items = await query.get({ cache: "no-store" });
 
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
@@ -156,25 +81,4 @@ export const postRouter = createTRPCRouter({
       }
       return { items, nextCursor };
     }),
-
-  initialInfinitePosts: publicProcedure.query(async () => {
-    //await wait(4000);
-    //throw "debug throw here";
-
-    const limit = 5;
-
-    const items = await db
-      .selectFrom("Post")
-      .selectAll()
-      .orderBy("id", "desc")
-      .limit(limit + 1) //one extra to know where next page starts
-      .get();
-
-    let nextCursor: number | undefined = undefined;
-    if (items.length > limit) {
-      const nextItem = items.pop(); //dont return the one extra
-      nextCursor = nextItem?.id;
-    }
-    return { items, nextCursor };
-  }),
 });

@@ -1,5 +1,5 @@
-import { apiRscPublic } from "#src/trpc/api-rsc";
-import { InfinitePosts } from "./InfinitePosts";
+import { apiRsc } from "#src/trpc/api-rsc";
+import { PostCreate, PostList } from "./Post";
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -8,11 +8,19 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-  const initialData = await apiRscPublic.post.initialInfinitePosts.fetch();
+  const { api, user } = await apiRsc();
+  const initialData = await api.post.infinitePosts.fetch({});
   return (
-    <div>
-      <div>page</div>
-      <InfinitePosts initialData={initialData} />
+    <div className="flex justify-center px-4">
+      <div className="">
+        <h1>Optimistic infinite CRUD</h1>
+        <p>Create, read, update and delete posts without loading states.</p>
+        <p className="my-1 text-sm font-semibold italic">
+          note: To show error handlng rollback the Create button will error afer 2 seconds 25% of the time.
+        </p>
+        <PostCreate user={user} />
+        <PostList initialData={initialData} user={user} />
+      </div>
     </div>
   );
 }

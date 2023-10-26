@@ -121,7 +121,7 @@ export function IconBellWithNumber({ number, className, ...props }: { number: nu
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-12 w-12 text-xs font-thin hover:rounded-full hover:bg-secondary", className)}
+      className={cn("hover:bg-secondary h-12 w-12 text-xs font-thin hover:rounded-full", className)}
       {...props}
     >
       <path transform="translate(12,12)" d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9 M10.3 21a1.94 1.94 0 0 0 3.4 0" />
@@ -148,7 +148,7 @@ export function IconChatWithNumber({ number, className, ...props }: { number: nu
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-12 w-12 text-xs font-thin hover:rounded-full hover:bg-secondary", className)}
+      className={cn("hover:bg-secondary h-12 w-12 text-xs font-thin hover:rounded-full", className)}
       {...props}
     >
       <g transform="translate(12,12)">
@@ -171,7 +171,7 @@ export function IconChatWithNumber({ number, className, ...props }: { number: nu
 export function IconLoadingSpinner({ className, ...props }: Props) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className={cn("h-6 w-6", className)} {...props}>
-      <circle cx="250" cy="250" r="230" fill="none" stroke="#737373" strokeWidth="40" />
+      <circle cx="250" cy="250" r="230" fill="none" stroke="#64748b" strokeWidth="40" />
       <path
         fill="none"
         stroke="currentColor"

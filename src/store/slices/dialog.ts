@@ -1,7 +1,7 @@
 import type { StateCreator } from "zustand";
 
 type Type = "show" | "hide" | "toggle";
-type Name = "signin" | "notifications" | "warning";
+type Name = "profilebutton" | "notifications" | "warning";
 type Value = "none" | Name;
 type Action = { type: Type; name: Name };
 
@@ -10,19 +10,11 @@ export type DialogSlice = {
   dialogAction: (action: Action) => void;
 };
 
-export const createDialogSlice: StateCreator<
-  DialogSlice,
-  [],
-  [],
-  DialogSlice
-> = (set, _get) => ({
+export const createDialogSlice: StateCreator<DialogSlice, [], [], DialogSlice> = (set, _get) => ({
   dialogValue: "none",
   dialogAction: (action) =>
     set((state) => {
-      if (
-        action.type === "show" ||
-        (action.type === "toggle" && action.name !== state.dialogValue)
-      ) {
+      if (action.type === "show" || (action.type === "toggle" && action.name !== state.dialogValue)) {
         return { dialogValue: action.name };
       } else {
         return { dialogValue: "none" };
