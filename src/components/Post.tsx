@@ -21,6 +21,7 @@ import {
 } from "#src/components/ui/dropdown-menu";
 import { Check, Edit, MoreHorizontal, Trash, X } from "#src/components/Icons";
 import { useIntersectionObserver } from "#src/hooks/useIntersectionObserver";
+import { useEventListener } from "#src/hooks/useEventListener";
 
 export function PostList({
   initialData,
@@ -62,17 +63,17 @@ export function PostList({
             <PostListItem key={post.id} post={post} />
           );
         })}
-      <div className="flex h-8 items-center justify-center" ref={ref}>
+      <div className="flex h-7 items-center justify-center" ref={ref}>
         {hasNextPage ? (
           isFetchingNextPage ? (
             <>
-              <IconLoadingSpinner className="mr-2 h-8 w-8" /> loading more...
+              <IconLoadingSpinner className="mr-2 h-7 w-7" /> loading more...
             </>
           ) : (
             ""
           )
         ) : (
-          "nothing more to see"
+          "You have reached the end"
         )}
       </div>
     </div>
@@ -104,7 +105,21 @@ function PostListItemForCreator({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
   const [text, setText] = useState("");
+
+  useEventListener(
+    "keydown",
+    (e) => {
+      if (isEditing && e.key === "Escape") {
+        e.preventDefault();
+        setIsEditing(false);
+        triggerRef.current?.focus();
+      }
+    },
+    inputRef
+  );
 
   const apiUtils = api.useUtils();
 
@@ -217,7 +232,7 @@ function PostListItemForCreator({
     <div className="my-4 flex gap-2">
       <div className="h-11 w-11 shrink-0">
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild ref={triggerRef}>
             <Button variant="icon">
               <MoreHorizontal />
             </Button>
@@ -270,6 +285,7 @@ function PostListItemForCreator({
               e.preventDefault();
               postUpdate.mutate({ postId: post.id, text });
               setIsEditing(false);
+              triggerRef.current?.focus();
             }}
           >
             <Input ref={inputRef} autoFocus type="text" onChange={(e) => setText(e.target.value)} value={text} />
@@ -277,7 +293,14 @@ function PostListItemForCreator({
               <Button type="submit" variant="positive" disabled={postUpdate.isLoading}>
                 <Check /> Save
               </Button>
-              <Button type="button" variant="icon" onClick={() => setIsEditing(false)}>
+              <Button
+                type="button"
+                variant="icon"
+                onClick={() => {
+                  setIsEditing(false);
+                  triggerRef.current?.focus();
+                }}
+              >
                 <X /> Cancel
               </Button>
             </div>
