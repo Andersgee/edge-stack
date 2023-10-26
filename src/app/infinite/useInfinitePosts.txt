@@ -1,5 +1,6 @@
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { useIntersectionObserver } from "#src/hooks/useIntersectionObserver";
+import { useMemo } from "react";
 
 export function useInfinitePosts(initialData: RouterOutputs["post"]["infinitePosts"]) {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = api.post.infinitePosts.useInfiniteQuery(
@@ -9,7 +10,7 @@ export function useInfinitePosts(initialData: RouterOutputs["post"]["infinitePos
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
-  //const infinitePosts = useMemo(() => data?.pages.map((page) => page.items).flat() ?? [], [data]);
+  const infinitePosts = useMemo(() => data?.pages.map((page) => page.items).flat() ?? [], [data]);
 
   const refFetchNextPage = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
@@ -20,5 +21,5 @@ export function useInfinitePosts(initialData: RouterOutputs["post"]["infinitePos
     }
   });
 
-  return { data, refFetchNextPage, isFetchingNextPage, hasNextPage };
+  return { infinitePosts, refFetchNextPage, isFetchingNextPage, hasNextPage };
 }

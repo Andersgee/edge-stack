@@ -5,8 +5,7 @@ import { PrettyDate } from "#src/components/PrettyDate";
 import { Input } from "#src/components/ui/input";
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { type TokenUser } from "#src/utils/jwt/schema";
-import { useState } from "react";
-import { useInfinitePosts } from "./useInfinitePosts";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "#src/components/ui/button";
 import { randomUint } from "#src/utils/random";
 import { cn } from "#src/utils/cn";
@@ -20,7 +19,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "#src/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal, Trash } from "#src/components/Icons";
+import { Check, Edit, MoreHorizontal, Trash, X } from "#src/components/Icons";
+import { useIntersectionObserver } from "#src/hooks/useIntersectionObserver";
 
 export function PostList({
   initialData,
@@ -29,40 +29,51 @@ export function PostList({
   initialData: RouterOutputs["post"]["infinitePosts"];
   user: TokenUser | null;
 }) {
-  const { data: infinitePosts, refFetchNextPage, isFetchingNextPage, hasNextPage } = useInfinitePosts(initialData);
+  const ref = useRef<HTMLDivElement>(null);
+  const entry = useIntersectionObserver(ref, {});
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = api.post.infinitePosts.useInfiniteQuery(
+    {},
+    {
+      initialData: { pages: [initialData], pageParams: [] },
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+
+  useEffect(() => {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage) {
+      fetchNextPage()
+        .then(() => void {})
+        .catch(() => void {});
+    }
+  }, [entry, hasNextPage, fetchNextPage]);
+
   return (
     <div>
-      {infinitePosts?.pages
+      {data?.pages
         .map((page) => page.items)
         .flat()
         .map((post) => {
+          const isCreator = post.userId === user?.id;
           const isOptimistic = post.id < 0;
-
-          return !!user && post.userId === user.id && !isOptimistic ? (
+          return !!user && isCreator && !isOptimistic ? (
             <PostListItemForCreator key={post.id} post={post} user={user} />
           ) : (
             <PostListItem key={post.id} post={post} />
           );
-          /*
-          return (
-            <div
-              key={post.id}
-              className={cn("my-4 flex gap-2", isOptimistic && "duration-75 animate-in slide-in-from-top")}
-            >
-              <div className="h-11 w-11">{isCreator && !isOptimistic && <PostActions postId={post.id} />}</div>
-              <UserImage32x32ById userId={post.userId} />
-              <div>
-                <div className="text-sm text-color-neutral-700">
-                  <PrettyDate date={post.createdAt} />
-                </div>
-                <p className="text-color-neutral-900">{post.text}</p>
-              </div>
-            </div>
-          );
-          */
         })}
-      <div className="h-6" ref={refFetchNextPage}>
-        {hasNextPage ? isFetchingNextPage ? <IconLoadingSpinner /> : "" : "nothing more to see"}
+      <div className="flex h-8 items-center justify-center" ref={ref}>
+        {hasNextPage ? (
+          isFetchingNextPage ? (
+            <>
+              <IconLoadingSpinner className="mr-2 h-8 w-8" /> loading more...
+            </>
+          ) : (
+            ""
+          )
+        ) : (
+          "nothing more to see"
+        )}
       </div>
     </div>
   );
@@ -92,20 +103,11 @@ function PostListItemForCreator({
   user: TokenUser;
 }) {
   const [open, setOpen] = useState(false);
-  const apiUtils = api.useUtils();
+  const [isEditing, setIsEditing] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [text, setText] = useState("");
 
-  const findPostByIdFromInfinitePostsQueryCache = (id: number) => {
-    const data = apiUtils.post.infinitePosts.getInfiniteData({});
-    if (!data) return null;
-    for (const page of data.pages) {
-      for (const item of page.items) {
-        if (item.id === id) {
-          return structuredClone(item);
-        }
-      }
-    }
-    return null;
-  };
+  const apiUtils = api.useUtils();
 
   const postDelete = api.post.delete.useMutation({
     onMutate: (variables) => {
@@ -134,7 +136,7 @@ function PostListItemForCreator({
 
       return context;
     },
-    onError: (_err, variables, context) => {
+    onError: (_err, _variables, context) => {
       //rollback, insert post again at proper place
       const deletedPost = context?.deletedPost;
       if (!deletedPost) return;
@@ -159,10 +161,63 @@ function PostListItemForCreator({
     },
   });
 
+  const postUpdate = api.post.update.useMutation({
+    onMutate: (variables) => {
+      const context: { postBeforeUpdate: RouterOutputs["post"]["infinitePosts"]["items"][number] | undefined } = {
+        postBeforeUpdate: undefined,
+      };
+
+      apiUtils.post.infinitePosts.setInfiniteData({}, (prev) => {
+        if (!prev) return prev;
+        const data = structuredClone(prev); //dont mutate prev
+
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        outer: for (let i = 0; i < data.pages.length; i++) {
+          // eslint-disable-next-line @typescript-eslint/prefer-for-of
+          for (let j = 0; j < data.pages[i]!.items.length; j++) {
+            const item = data.pages[i]!.items[j]!;
+            if (item.id === variables.postId) {
+              context.postBeforeUpdate = structuredClone(item);
+              item.text = variables.text;
+              //item.lastEditedAt = new Date()
+              break outer;
+            }
+          }
+        }
+        return data;
+      });
+
+      return context;
+    },
+    onError: (_err, _variables, context) => {
+      //rollback, insert post again at proper place
+      const postBeforeUpdate = context?.postBeforeUpdate;
+      if (!postBeforeUpdate) return;
+
+      apiUtils.post.infinitePosts.setInfiniteData({}, (prev) => {
+        if (!prev) return prev;
+        const data = structuredClone(prev); //dont mutate prev
+
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        outer: for (let i = 0; i < data.pages.length; i++) {
+          for (let j = 0; j < data.pages[i]!.items.length; j++) {
+            const item = data.pages[i]!.items[j]!;
+            if (item.id === postBeforeUpdate.id) {
+              data.pages[i]!.items.splice(j, 1, postBeforeUpdate);
+              break outer;
+            }
+          }
+        }
+
+        return data;
+      });
+    },
+  });
+
   return (
     <div className="my-4 flex gap-2">
       <div className="h-11 w-11">
-        <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="icon">
               <MoreHorizontal />
@@ -171,22 +226,22 @@ function PostListItemForCreator({
           <DropdownMenuContent
             align="end"
             className=""
-            //onCloseAutoFocus={(e) => {
-            //  if (isEditing) {
-            //    e.preventDefault();
-            //    inputRef.current?.focus();
-            //  }
-            //}}
+            onCloseAutoFocus={(e) => {
+              if (isEditing) {
+                e.preventDefault();
+                inputRef.current?.focus();
+              }
+            }}
           >
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuGroup>
               <DropdownMenuItem
-                //onSelect={(e) => {
-                //  setText(postInfo.text ?? "");
-                //  setIsEditing(true);
-                //  //e.preventDefault();
-                //  //setOpen(false);
-                //}}
+                onSelect={(e) => {
+                  setText(post.text);
+                  setIsEditing(true);
+                  //e.preventDefault();
+                  //setOpen(false);
+                }}
                 className="py-3"
               >
                 <Edit /> Edit
@@ -210,7 +265,27 @@ function PostListItemForCreator({
         <div className="text-sm text-color-neutral-700">
           <PrettyDate date={post.createdAt} />
         </div>
-        <p className="text-color-neutral-900">{post.text}</p>
+        {isEditing ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              postUpdate.mutate({ postId: post.id, text });
+              setIsEditing(false);
+            }}
+          >
+            <Input ref={inputRef} autoFocus type="text" onChange={(e) => setText(e.target.value)} value={text} />
+            <div className="flex gap-2">
+              <Button type="submit" variant="positive" disabled={postUpdate.isLoading}>
+                <Check /> Save
+              </Button>
+              <Button type="button" variant="icon" onClick={() => setIsEditing(false)}>
+                <X /> Cancel
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <p className="text-color-neutral-900">{post.text}</p>
+        )}
       </div>
     </div>
   );
