@@ -31,7 +31,7 @@ export function PostList({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const entry = useIntersectionObserver(ref, {});
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = api.post.infinitePosts.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, fetchStatus } = api.post.infinitePosts.useInfiniteQuery(
     {},
     {
       initialData: { pages: [initialData], pageParams: [] },
@@ -41,12 +41,12 @@ export function PostList({
 
   useEffect(() => {
     const isVisible = !!entry?.isIntersecting;
-    if (isVisible && hasNextPage) {
+    if (isVisible && hasNextPage && fetchStatus === "idle") {
       fetchNextPage()
         .then(() => void {})
         .catch(() => void {});
     }
-  }, [entry, hasNextPage, fetchNextPage]);
+  }, [entry, hasNextPage, fetchNextPage, fetchStatus]);
 
   return (
     <div>
@@ -82,8 +82,8 @@ export function PostList({
 function PostListItem({ post }: { post: RouterOutputs["post"]["infinitePosts"]["items"][number] }) {
   const isOptimistic = post.id < 0;
   return (
-    <div className={cn("my-4 flex gap-2", isOptimistic && "duration-75 animate-in slide-in-from-top")}>
-      <div className="h-11 w-11"></div>
+    <div className={cn("my-4 flex gap-2", isOptimistic && "duration-100 animate-in slide-in-from-top")}>
+      <div className="h-11 w-11 shrink-0"></div>
       <UserImage32x32ById userId={post.userId} />
       <div>
         <div className="text-sm text-color-neutral-700">
@@ -102,7 +102,6 @@ function PostListItemForCreator({
   post: RouterOutputs["post"]["infinitePosts"]["items"][number];
   user: TokenUser;
 }) {
-  const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
@@ -216,7 +215,7 @@ function PostListItemForCreator({
 
   return (
     <div className="my-4 flex gap-2">
-      <div className="h-11 w-11">
+      <div className="h-11 w-11 shrink-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="icon">
@@ -358,7 +357,7 @@ export function PostCreate({ user }: { user: TokenUser | null }) {
       }}
       className="my-10 flex items-center"
     >
-      <Input type="text" placeholder="some text" value={text} onChange={(e) => setText(e.target.value)} />
+      <Input type="text" placeholder="Your message..." value={text} onChange={(e) => setText(e.target.value)} />
       <Button variant="primary" type="submit" className="ml-4" disabled={!text}>
         Create
       </Button>
