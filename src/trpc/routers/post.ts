@@ -1,4 +1,3 @@
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { db } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
@@ -67,10 +66,10 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      await wait(2000);
+      //await wait(2000);
       //throw "debug throw here";
 
-      const limit = 3;
+      const limit = 30;
 
       let query = db
         .selectFrom("Post")
