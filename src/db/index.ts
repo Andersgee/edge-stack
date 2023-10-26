@@ -58,7 +58,7 @@ declare module "kysely" {
 
 //select
 SelectQueryBuilder.prototype.get = async function <O>(init?: RequestInitLimited): Promise<Simplify<O>[]> {
-  return executeWithFetchGet(this.compile(), init);
+  return (await executeWithFetchGet(this.compile(), init)) as Simplify<O>[];
 };
 
 SelectQueryBuilder.prototype.getFirst = async function <O>(init?: RequestInitLimited): Promise<Simplify<O> | null> {
