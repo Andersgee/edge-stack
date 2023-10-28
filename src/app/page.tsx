@@ -1,5 +1,5 @@
 import { apiRsc } from "#src/trpc/api-rsc";
-import { PostCreate, PostList } from "#src/components/Post";
+import { LoadMorePosts, PostCreate, PostList } from "#src/components/Post";
 
 export default async function Page() {
   const { api, user } = await apiRsc();
@@ -14,6 +14,7 @@ export default async function Page() {
           of the time.
         </p>
         <PostCreate user={user} />
+        <LoadMorePosts />
         <PostList initialData={initialData} user={user} />
       </main>
     </div>

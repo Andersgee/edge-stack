@@ -2,13 +2,31 @@ import { z } from "zod";
 import { db } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { wait } from "#src/utils/wait";
+import { revalidateTag } from "next/cache";
 
 const DEBUG_ERROR_MS = 2000;
 const DEBUG_ERROR_FRACTION = 0.5;
 
+export const tagsPostRouter = {
+  latest: () => `post-latest`,
+};
+
+const LIMIT = 30;
+
 export const postRouter = createTRPCRouter({
+  latest: publicProcedure.query(async ({ input }) => {
+    return await db
+      .selectFrom("Post")
+      .selectAll()
+      .orderBy("id", "desc")
+      .limit(LIMIT)
+      .get({
+        cache: "force-cache", //"force-cache" is default
+        next: { tags: [tagsPostRouter.latest()] },
+      });
+  }),
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
-    return db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({
+    return await db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({
       cache: "no-store",
     });
   }),
@@ -26,7 +44,9 @@ export const postRouter = createTRPCRouter({
       })
       .postOrThrow();
 
-    return db.selectFrom("Post").selectAll().where("id", "=", postId).getFirst({ cache: "no-store" });
+    revalidateTag(tagsPostRouter.latest());
+
+    return await db.selectFrom("Post").selectAll().where("id", "=", postId).getFirst({ cache: "no-store" });
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.number(), text: z.string() }))
@@ -45,7 +65,7 @@ export const postRouter = createTRPCRouter({
         })
         .postOrThrow();
 
-      return db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({ cache: "no-store" });
+      return await db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({ cache: "no-store" });
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
@@ -69,7 +89,7 @@ export const postRouter = createTRPCRouter({
       //await wait(2000);
       //throw "debug throw here";
 
-      const limit = 30;
+      const limit = LIMIT;
 
       let query = db
         .selectFrom("Post")

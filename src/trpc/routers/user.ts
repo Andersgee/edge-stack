@@ -9,7 +9,7 @@ export const tagsUserRouter = {
 
 export const userRouter = createTRPCRouter({
   info: protectedProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
-    return db
+    return await db
       .selectFrom("User")
       .selectAll()
       .where("User.id", "=", input.userId)
@@ -18,7 +18,7 @@ export const userRouter = createTRPCRouter({
       });
   }),
   infoPublic: publicProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
-    return db
+    return await db
       .selectFrom("User")
       .select(["id", "name", "image"])
       .where("User.id", "=", input.userId)

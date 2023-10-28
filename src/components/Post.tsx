@@ -5,7 +5,7 @@ import { PrettyDate } from "#src/components/PrettyDate";
 import { Input } from "#src/components/ui/input";
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { type TokenUser } from "#src/utils/jwt/schema";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "#src/components/ui/button";
 import { randomUint } from "#src/utils/random";
 import { cn } from "#src/utils/cn";
@@ -385,5 +385,56 @@ export function PostCreate({ user }: { user: TokenUser | null }) {
         Create
       </Button>
     </form>
+  );
+}
+
+export function LoadMorePosts() {
+  const { data: latestPosts } = api.post.latest.useQuery(undefined, {
+    refetchOnWindowFocus: true,
+    refetchInterval: 10000,
+    refetchOnReconnect: true,
+    refetchIntervalInBackground: false,
+    refetchOnMount: "always",
+  });
+  const [unseenPosts, setUnseenPosts] = useState<RouterOutputs["post"]["latest"]>([]);
+
+  const apiUtils = api.useUtils();
+
+  useEffect(() => {
+    if (!latestPosts || latestPosts.length < 1) return;
+    const infinitePosts = apiUtils.post.infinitePosts.getInfiniteData({});
+    //const postIds = infinitePosts?.pages[0]?.items.map(item=>item.id) //only check first page
+    const postIds = infinitePosts?.pages.map((page) => page.items.map((item) => item.id)).flat();
+
+    if (!postIds || postIds.length < 1) return;
+
+    let unseen = latestPosts.filter((post) => !postIds.includes(post.id));
+    if (unseen.length > 0) {
+      setUnseenPosts(unseen);
+    }
+    return () => {
+      unseen = [];
+    };
+  }, [latestPosts, apiUtils]);
+
+  if (unseenPosts.length < 1) return null;
+
+  return (
+    <div className="flex justify-center duration-200 animate-in slide-in-from-top">
+      <Button
+        variant="primary"
+        onClick={() => {
+          apiUtils.post.infinitePosts.setInfiniteData({}, (prev) => {
+            if (!prev) return;
+            const data = structuredClone(prev); //dont mutate prev
+            data.pages[0]?.items.unshift(...unseenPosts);
+            return data;
+          });
+          setUnseenPosts([]);
+        }}
+      >
+        show {unseenPosts.length} new
+      </Button>
+    </div>
   );
 }
