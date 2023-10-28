@@ -390,8 +390,8 @@ export function PostCreate({ user }: { user: TokenUser | null }) {
 
 export function LoadMorePosts() {
   const { data: latestPosts } = api.post.latest.useQuery(undefined, {
-    refetchOnWindowFocus: true,
-    refetchInterval: 10000,
+    refetchOnWindowFocus: "always",
+    refetchInterval: 30000,
     refetchOnReconnect: true,
     refetchIntervalInBackground: false,
     refetchOnMount: "always",

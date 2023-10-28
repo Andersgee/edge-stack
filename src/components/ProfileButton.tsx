@@ -2,11 +2,9 @@
 
 import { useStore } from "#src/store";
 import type { TokenUser } from "#src/utils/jwt/schema";
-import Image from "next/image";
 import { SigninButtons } from "./SigninButtons";
 import { SignoutButton } from "./SignoutButton";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { imageSizes } from "#src/utils/image-sizes";
 import { Button } from "./ui/button";
 import { UserImage32x32 } from "./UserImage";
 
@@ -26,27 +24,29 @@ export function ProfileButton({ user }: { user: TokenUser | null }) {
       }}
     >
       {user ? (
-        <PopoverTrigger className="p-[6px]">
-          <UserImage32x32 image={user.image} alt={user.image} />
-        </PopoverTrigger>
+        <>
+          <PopoverTrigger className="rounded-md p-[6px] outline-none hover:bg-color-neutral-200 focus-visible:focusring">
+            <UserImage32x32 image={user.image} alt={user.image} />
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="p-4">
+              <div className="mb-2">{user.name}</div>
+              <SignoutButton>Sign out</SignoutButton>
+            </div>
+          </PopoverContent>
+        </>
       ) : (
-        <PopoverTrigger asChild>
-          <Button variant="outline">Sign in</Button>
-        </PopoverTrigger>
+        <>
+          <PopoverTrigger asChild>
+            <Button variant="outline">Sign in</Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div>
+              <SigninButtons />
+            </div>
+          </PopoverContent>
+        </>
       )}
-
-      <PopoverContent>
-        {user ? (
-          <div className="p-4">
-            <div className="mb-2">{user.name}</div>
-            <SignoutButton>sign out</SignoutButton>
-          </div>
-        ) : (
-          <div>
-            <SigninButtons />
-          </div>
-        )}
-      </PopoverContent>
     </Popover>
   );
 }
