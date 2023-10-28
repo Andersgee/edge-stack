@@ -5,8 +5,8 @@ import { Providers } from "#src/context/Providers";
 import Topnav from "#src/components/Topnav";
 
 export const metadata: Metadata = {
-  title: "cache stack template",
-  description: "cache stack template",
+  title: "Optimistic infinite CRUD example",
+  description: "Optimistic infinite CRUD example",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
