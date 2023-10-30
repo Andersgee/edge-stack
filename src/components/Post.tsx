@@ -5,7 +5,7 @@ import { PrettyDate } from "#src/components/PrettyDate";
 import { Input } from "#src/components/ui/input";
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { type TokenUser } from "#src/utils/jwt/schema";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "#src/components/ui/button";
 import { randomUint } from "#src/utils/random";
 import { cn } from "#src/utils/cn";
@@ -73,7 +73,7 @@ export function PostList({
             ""
           )
         ) : (
-          "You have reached the end"
+          "No more posts to see"
         )}
       </div>
     </div>
