@@ -1,12 +1,25 @@
 # boilerplate
 
-nextjs14 project boilerplate
+nextjs project boilerplate
 
 - oauth boilerplate
-- call trpc procedures in both server and client components
-- kysely query builder with http GET for select and http POST for others
-- tailwind with auto themed colors via css variables eg "color-primary-700" instead of "color-primary-700 dark:color-primary-300". generate theme color variables here: [todo create repo]()
-- other utils
+- bunch utility functions
+- trpc edge runtime for client components
+  - eg `const {data} = api.post.getById.useQuery({postId})`
+- call trpc procedures directly as regular functions in server components
+  - eg `const data = await api.post.getById.fetch({postId})`
+  - note that calling protected procedures `{ api, user } = await apiRsc()` in server components will opt route into dynamic rendering at request time
+  - there is also `const api = apiRscPublic()` that does _not_ require dynamic rendering at request time, only for publicProcedures
+- prisma for db schema handling only
+  - `pnpm prisma generate` `pnpm prisma db push`
+- kysely query builder with get() and post() instead of execute()
+  - nextjs http cache compatible db queries
+    - eg `db.selectFrom("Post").selectAll().get({cache: "force-cache"})`
+    - or `db.selectFrom("Post").selectAll().get({next:{revalidate: 10}})`
+- tailwind with themed colors via css variables
+  - eg `bg-some-color-700` instead of `bg-some-color-700 dark:bg-some-other-color`.
+  - generate css variables from theme colors here: [todo create repo]()
+- bunch of more specific configurations eslint, tailwind, next
 
 # steps
 

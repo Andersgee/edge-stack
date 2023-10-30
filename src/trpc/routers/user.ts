@@ -14,6 +14,7 @@ export const userRouter = createTRPCRouter({
       .selectAll()
       .where("User.id", "=", input.userId)
       .getFirst({
+        cache: "force-cache",
         next: { tags: [tagsUserRouter.info(input)] },
       });
   }),
@@ -23,6 +24,7 @@ export const userRouter = createTRPCRouter({
       .select(["id", "name", "image"])
       .where("User.id", "=", input.userId)
       .getFirst({
+        cache: "force-cache",
         next: { tags: [tagsUserRouter.info(input)] },
       });
   }),

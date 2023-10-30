@@ -1,6 +1,9 @@
 /*
 utility for fixed (but maybe different) image sizes at different tailwind breakpoints
-make sure these values match what is in next.config.mjs
+make sure these values match what is in next.config.mjs and tailwind.config.ts
+eg 
+deviceSizes and imageSizes in next.config.mjs
+and screens in tailwind.config.ts
 */
 
 const DEVICE_SIZES = {

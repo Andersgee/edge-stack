@@ -20,7 +20,6 @@ export async function executeWithFetchGet(compiledQuery: CompiledQuery, init?: R
     headers: {
       Authorization: process.env.DATABASE_HTTP_AUTH_HEADER,
     },
-    cache: "force-cache",
     ...init,
   });
 
@@ -44,11 +43,11 @@ export async function executeWithFetchPost(compiledQuery: CompiledQuery) {
   const url = process.env.DATABASE_HTTP_URL;
   const res = await fetch(url, {
     method: "POST",
-    cache: "no-store",
     headers: {
       "Content-Type": "text/plain",
       "Authorization": process.env.DATABASE_HTTP_AUTH_HEADER,
     },
+    cache: "no-store",
     body: stringify(body),
   });
 
