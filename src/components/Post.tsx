@@ -98,7 +98,6 @@ function PostListItem({ post }: { post: RouterOutputs["post"]["infinitePosts"]["
 
 function PostListItemForCreator({
   post,
-  user,
 }: {
   post: RouterOutputs["post"]["infinitePosts"]["items"][number];
   user: TokenUser;
@@ -250,11 +249,9 @@ function PostListItemForCreator({
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuGroup>
               <DropdownMenuItem
-                onSelect={(e) => {
+                onSelect={() => {
                   setText(post.text);
                   setIsEditing(true);
-                  //e.preventDefault();
-                  //setOpen(false);
                 }}
                 className="py-3"
               >
@@ -262,8 +259,7 @@ function PostListItemForCreator({
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={postDelete.isLoading}
-                onSelect={(e) => {
-                  //e.preventDefault(); //prevent autofocus on DropdownMenuTrigger, aka allow autofocus on <Input>
+                onSelect={() => {
                   postDelete.mutate({ postId: post.id });
                 }}
                 className="py-3"

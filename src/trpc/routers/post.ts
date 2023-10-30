@@ -14,7 +14,7 @@ export const tagsPostRouter = {
 const LIMIT = 30;
 
 export const postRouter = createTRPCRouter({
-  latest: publicProcedure.query(async ({ input }) => {
+  latest: publicProcedure.query(async () => {
     return await db
       .selectFrom("Post")
       .selectAll()
@@ -85,7 +85,7 @@ export const postRouter = createTRPCRouter({
         cursor: z.number().optional(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       //await wait(2000);
       //throw "debug throw here";
 
