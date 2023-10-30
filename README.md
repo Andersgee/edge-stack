@@ -12,13 +12,14 @@ nextjs project boilerplate
   - there is also `const api = apiRscPublic()` that does _not_ require dynamic rendering at request time, only for publicProcedures
 - prisma for db schema handling only
   - `pnpm prisma generate` `pnpm prisma db push`
-- kysely query builder with get() and post() instead of execute()
-  - nextjs http cache compatible db queries
-    - eg `db.selectFrom("Post").selectAll().get({cache: "force-cache"})`
-    - or `db.selectFrom("Post").selectAll().get({next:{revalidate: 10}})`
+- kysely query builder with get() and post() for nextjs http cache compatible db queries
+  - eg `db.selectFrom("Post").selectAll().get({cache: "force-cache"})`
+  - or `db.selectFrom("Post").selectAll().get({cache: "force-cache", {next: {tags: ["some-tag"]}}})`
+    - somewhere else: `revalidateTag("some-tag")`
+  - or `db.selectFrom("Post").selectAll().get({next:{revalidate: 10}})`
 - tailwind with themed colors via css variables
-  - eg `bg-some-color-700` instead of `bg-some-color-700 dark:bg-some-other-color`.
-  - generate css variables from theme colors here: [todo create repo]()
+  - eg `bg-some-color-700` instead of `bg-some-color-700 dark:bg-some-other-color-300`.
+  - utility for generating css variables / config object from theme colors here: [todo create repo]()
 - bunch of more specific configurations eslint, tailwind, next
 
 # steps
