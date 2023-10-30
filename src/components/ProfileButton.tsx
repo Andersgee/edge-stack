@@ -15,13 +15,7 @@ export function ProfileButton({ user }: { user: TokenUser | null }) {
   return (
     <Popover
       open={dialogValue === "profilebutton"}
-      onOpenChange={(open) => {
-        if (open) {
-          dialogAction({ type: "show", name: "profilebutton" });
-        } else {
-          dialogAction({ type: "hide", name: "profilebutton" });
-        }
-      }}
+      onOpenChange={(open) => dialogAction({ type: open ? "show" : "hide", name: "profilebutton" })}
     >
       {user ? (
         <>

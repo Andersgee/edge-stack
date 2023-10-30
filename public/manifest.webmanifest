@@ -1,0 +1,23 @@
+{
+  "name": "Optimistic Infinite Crud",
+  "short_name": "Optimistic Infinite Crud",
+  "description": "Optimistic Infinite Crud Example.",
+  "display": "standalone",
+  "orientation": "any",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/favicon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
