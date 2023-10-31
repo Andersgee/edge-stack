@@ -5,6 +5,8 @@ import { ComboboxDemo } from "./ComboBoxDemo";
 import { ComboboxDropdownMenu } from "./ComboboxDropdownMenu";
 import { DialogDemo } from "./DialogDemo";
 import { InputDemo } from "./InputDemo";
+import AccordionDemo from "./AccordionDemo";
+import { HovercardDemo } from "./HovercardDemo";
 
 export default function Page() {
   return (
@@ -16,16 +18,13 @@ export default function Page() {
         </div>
 
         <div>
-          <div>
-            <h2>2. ComboboxDemo</h2>
-            <ComboboxDemo />
-          </div>
-          <div>
-            <h2>3. ComboboxDropdownMenu</h2>
-            <ComboboxDropdownMenu />
-          </div>
+          <h2>2. ComboboxDemo</h2>
+          <ComboboxDemo />
         </div>
-
+        <div>
+          <h2>3. ComboboxDropdownMenu</h2>
+          <ComboboxDropdownMenu />
+        </div>
         <div>
           <h2>4. ButtonsDemo</h2>
           <ButtonsDemo />
@@ -35,6 +34,14 @@ export default function Page() {
           <DialogDemo />
           <h2>6. InputDemo</h2>
           <InputDemo />
+        </div>
+        <div>
+          <h2>7. AccordionDemo</h2>
+          <AccordionDemo />
+        </div>
+        <div>
+          <h2>8. HovercardDemo</h2>
+          <HovercardDemo />
         </div>
         <div>
           <h2>Some heading</h2>

@@ -36,6 +36,14 @@ export function ChevronRight({ className, ...props }: Props) {
   );
 }
 
+export function ChevronDown({ className, ...props }: Props) {
+  return (
+    <Svg className={className} {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </Svg>
+  );
+}
+
 export function Search({ className, ...props }: Props) {
   return (
     <Svg className={className} {...props}>

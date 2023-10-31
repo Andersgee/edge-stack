@@ -200,18 +200,31 @@ export default {
       //"button": "0 1px 3px hsl(var(--color-neutral-1000))",
       //"button": "0 1px 3px hsla(0, 0%, 0%, .2)",
     },
+    animation: {
+      "none": "none",
+      "spin": "spin 1s linear infinite",
+      "ping": "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
+      "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      "bounce": "bounce 1s infinite",
+      "accordion-down": "accordion-down 0.2s ease-out",
+      "accordion-up": "accordion-up 0.2s ease-out",
+    },
+    keyframes: {
+      "spin": { to: { transform: "rotate(360deg)" } },
+      "ping": { "75%, 100%": { transform: "scale(2)", opacity: "0" } },
+      "pulse": { "50%": { opacity: ".5" } },
+      "bounce": {
+        "0%, 100%": { transform: "translateY(-25%)", animationTimingFunction: "cubic-bezier(0.8,0,1,1)" },
+        "50%": { transform: "none", animationTimingFunction: "cubic-bezier(0,0,0.2,1)" },
+      },
+      "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
+      "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" } },
+    },
     // UNTOUCHED BELOW HERE
     accentColor: ({ theme }) => ({
       ...theme("colors"),
       auto: "auto",
     }),
-    animation: {
-      none: "none",
-      spin: "spin 1s linear infinite",
-      ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
-      pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-      bounce: "bounce 1s infinite",
-    },
     aspectRatio: {
       auto: "auto",
       square: "1 / 1",
@@ -648,34 +661,6 @@ export default {
     invert: {
       0: "0",
       DEFAULT: "100%",
-    },
-    keyframes: {
-      spin: {
-        to: {
-          transform: "rotate(360deg)",
-        },
-      },
-      ping: {
-        "75%, 100%": {
-          transform: "scale(2)",
-          opacity: "0",
-        },
-      },
-      pulse: {
-        "50%": {
-          opacity: ".5",
-        },
-      },
-      bounce: {
-        "0%, 100%": {
-          transform: "translateY(-25%)",
-          animationTimingFunction: "cubic-bezier(0.8,0,1,1)",
-        },
-        "50%": {
-          transform: "none",
-          animationTimingFunction: "cubic-bezier(0,0,0.2,1)",
-        },
-      },
     },
     letterSpacing: {
       tighter: "-0.05em",
