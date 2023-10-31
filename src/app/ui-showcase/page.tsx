@@ -7,6 +7,7 @@ import { DialogDemo } from "./DialogDemo";
 import { InputDemo } from "./InputDemo";
 import AccordionDemo from "./AccordionDemo";
 import { HovercardDemo } from "./HovercardDemo";
+import { AlertDialogDemo } from "./AlertDialogDemo";
 
 export default function Page() {
   return (
@@ -16,7 +17,6 @@ export default function Page() {
           <h2 className="mx-auto">1. CardDemo</h2>
           <CardDemo />
         </div>
-
         <div>
           <h2>2. ComboboxDemo</h2>
           <ComboboxDemo />
@@ -32,6 +32,10 @@ export default function Page() {
         <div>
           <h2>5. DialogDemo</h2>
           <DialogDemo />
+
+          <h2>9. AlertDialogDemo</h2>
+          <AlertDialogDemo />
+
           <h2>6. InputDemo</h2>
           <InputDemo />
         </div>
@@ -43,6 +47,7 @@ export default function Page() {
           <h2>8. HovercardDemo</h2>
           <HovercardDemo />
         </div>
+
         <div>
           <h2>Some heading</h2>
           <p>
