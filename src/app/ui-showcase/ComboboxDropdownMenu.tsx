@@ -35,7 +35,7 @@ export function ComboboxDropdownMenu() {
   return (
     <div className="flex items-center justify-between">
       <p className="mr-2 text-sm font-medium">
-        <span className="mr-2 rounded-lg bg-color-accent-highlight-200 px-2 py-1 text-xs font-bold text-color-accent-highlight-900">
+        <span className="mr-2 rounded-lg bg-color-accent-highlight-200 px-3 py-1 text-xs font-bold text-color-accent-highlight-900">
           {label}
         </span>
         <span className="text-color-neutral-700">Create a new project</span>
