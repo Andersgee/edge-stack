@@ -9,10 +9,11 @@ export default function Page() {
   return (
     <main className="flex justify-center">
       <div className="container flex flex-wrap justify-center gap-12">
-        <div>
-          <h2>1. CardDemo</h2>
+        <div className="">
+          <h2 className="mx-auto">1. CardDemo</h2>
           <CardDemo />
         </div>
+
         <div>
           <div>
             <h2>2. ComboboxDemo</h2>

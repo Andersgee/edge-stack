@@ -63,7 +63,7 @@ type Options = {
  *
  * also for icons, this is nice : https://maskable.app/editor
  *
- * testing:
+ * testing appearance:
  * facebook: https://developers.facebook.com/tools/debug/
  * google: https://developers.google.com/search/docs/appearance/structured-data
  * twitter: https://cards-dev.twitter.com/validator (deprecated, recommended way is now to just paste into twitter and see how it looks)
@@ -84,11 +84,15 @@ export function seo({
   locale_alternatives,
 }: Options) {
   const metadata: Metadata = {
+    //as of nextjs14, they added auto relative->absolute conversion for convenience with metadataBase
+    //just put it here to avoid warning
+    //also moved viewport to special "export const viewport={...}" but defaults to
+    //viewport: "width=device-width, initial-scale=1",
+    metadataBase: new URL(absUrl()),
     title: title,
     description: description,
     applicationName: site_name,
     referrer: "origin-when-cross-origin",
-    viewport: "width=device-width, initial-scale=1",
     manifest: absUrl("/manifest.webmanifest"),
     icons: [
       { rel: "icon", type: "image/svg+xml", url: absUrl("/icons/favicon.svg") },

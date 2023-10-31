@@ -24,7 +24,7 @@ export default {
     screens: DEVICE_SIZES,
     container: {
       screens: DEVICE_SIZES,
-      center: true,
+      //center: true,
     },
     fontFamily: {
       sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],

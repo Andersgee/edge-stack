@@ -33,9 +33,9 @@ export function ComboboxDropdownMenu() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className="bg-color-neutral-50 flex flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
+    <div className="flex items-center justify-between">
       <p className="mr-2 text-sm font-medium">
-        <span className="bg-color-accent-highlight-200 text-color-accent-highlight-900 mr-2 rounded-lg px-2 py-1 text-xs font-bold">
+        <span className="mr-2 rounded-lg bg-color-accent-highlight-200 px-2 py-1 text-xs font-bold text-color-accent-highlight-900">
           {label}
         </span>
         <span className="text-color-neutral-700">Create a new project</span>

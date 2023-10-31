@@ -4,6 +4,7 @@ import { LoadMorePosts, PostCreate, PostList } from "#src/components/Post";
 export default async function Page() {
   const { api, user } = await apiRsc();
   const initialData = await api.post.infinitePosts.fetch({});
+
   return (
     <div className="mb-8 flex justify-center px-4">
       <main>

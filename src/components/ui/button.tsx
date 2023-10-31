@@ -18,6 +18,8 @@ const buttonVariants = cva(
         outline:
           "border border-color-neutral-300 bg-color-neutral-50 p-[10px] text-color-neutral-900 hover:bg-color-neutral-200 hover:text-color-neutral-1000",
         icon: "bg-color-neutral-100 p-[10px] text-color-neutral-900 hover:bg-color-neutral-200 hover:text-color-neutral-1000",
+        trigger:
+          "border border-color-neutral-300 bg-color-neutral-0 p-[10px] text-color-neutral-900 hover:bg-color-neutral-200 hover:text-color-neutral-1000",
       },
     },
     defaultVariants: {
