@@ -11,13 +11,14 @@ export function AlertDialogDemo({ className }: Props) {
   return (
     <div className={cn("", className)}>
       <ButtonWithConfirmDialog
-        variant="danger"
+        variant="primary"
+        //className="hover:bg-red-800"
         title="Are you absolutely sure?"
         description="This action cannot be undone."
-        actionLabel="Delete my account"
         cancelLabel="Cancel"
-        onAction={(didConfirm) => console.log(didConfirm)}
-        //className="hover:bg-red-800"
+        actionLabel="Delete my account"
+        actionVariant="danger"
+        onActionClick={() => console.log("confirmed")}
       >
         Delete account
       </ButtonWithConfirmDialog>
