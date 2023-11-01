@@ -2,11 +2,16 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { getUserFromCookie } from "#src/utils/jwt";
 import { trpcRouter } from ".";
 import { transformer } from "./transformer";
+import { headers } from "next/headers";
 
 //https://trpc.io/docs/client/nextjs/server-side-helpers#1-internal-router
 
 /**
  * trpc api for server components. calls the procedure directly without a fetch request
+ *
+ * makes route opt into dynamic rendering at request time.
+ *
+ * apiRscPublic instead if only calling publicProcedures
  *
  * ## Example
  *
@@ -15,7 +20,7 @@ import { transformer } from "./transformer";
  * const event = await api.post.getById.fetch({ postId });
  * ```
  *
- * relies on `cookies()` from `"next/headers"` which makes route opt into dynamic rendering at request time.
+ * relies on dynamic functions `cookies()` and `headers()`
  */
 export const apiRsc = async () => {
   const user = await getUserFromCookie();
@@ -24,7 +29,7 @@ export const apiRsc = async () => {
     api: createServerSideHelpers({
       transformer: transformer,
       router: trpcRouter,
-      ctx: { user },
+      ctx: { user, resHeaders: null, reqHeaders: headers() },
     }),
     user,
   };
@@ -33,10 +38,12 @@ export const apiRsc = async () => {
 /**
  * trpc api for server components. calls the procedure directly without a fetch request
  *
- * only for public procedures
+ * limited to publicProcedures
+ *
+ * should not make route opt into dynamic rendering at request time unlike apiRsc
  */
 export const apiRscPublic = createServerSideHelpers({
   transformer: transformer,
   router: trpcRouter,
-  ctx: { user: null },
+  ctx: { user: null, resHeaders: null, reqHeaders: null },
 });

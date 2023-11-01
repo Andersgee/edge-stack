@@ -5,13 +5,14 @@ import type { NextRequest } from "next/server";
 import { transformer } from "./transformer";
 import { getUserFromRequestCookie } from "#src/utils/jwt";
 
-export const createTRPCContext = async (
-  _opts: FetchCreateContextFnOptions,
-  nextRequest: NextRequest
-) => {
+export const createTRPCContext = async (opts: FetchCreateContextFnOptions, nextRequest: NextRequest) => {
   const user = await getUserFromRequestCookie(nextRequest);
 
-  return { user };
+  return {
+    user,
+    reqHeaders: nextRequest.headers as Headers | null,
+    resHeaders: opts.resHeaders as Headers | null,
+  };
 };
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
@@ -21,8 +22,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
     };
   },
