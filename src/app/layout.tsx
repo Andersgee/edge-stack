@@ -1,12 +1,13 @@
 import "./globals.css";
 import { fontSans } from "#src/utils/font";
 import { Providers } from "#src/context/Providers";
-import Topnav from "#src/components/Topnav";
+import { Topnav } from "#src/components/Topnav";
 import { seo } from "#src/utils/seo";
+import { BorderWithLabel } from "#src/components/BorderWithLabel";
 
 export const metadata = seo({
-  title: "Optimistic infinite CRUD example",
-  description: "Optimistic infinite CRUD example",
+  title: "Boilerplate app",
+  description: "Boilerplate app",
   url: "/",
   image: "/icons/favicon-512x512.png",
 });
@@ -16,8 +17,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en" className={fontSans.variable}>
       <body>
         <Providers>
-          <Topnav />
-          {children}
+          <BorderWithLabel label="/layout">
+            <Topnav />
+            {children}
+          </BorderWithLabel>
         </Providers>
       </body>
     </html>

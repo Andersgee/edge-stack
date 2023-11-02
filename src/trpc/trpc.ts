@@ -38,8 +38,6 @@ const t = initTRPC.context<typeof createTrpcContext>().create({
 
 export const createTRPCRouter = t.router;
 
-export const procedure = t.procedure;
-
 const middleware = t.middleware;
 
 const hasUser = middleware(({ ctx, next }) => {
@@ -57,5 +55,7 @@ const hasResHeaders = middleware(({ ctx, next }) => {
   return next({ ctx: { ...ctx, resHeaders: ctx.resHeaders } });
 });
 
+// for convenience
+export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(hasUser);
 export const procedureWithResHeaders = t.procedure.use(hasResHeaders);

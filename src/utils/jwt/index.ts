@@ -1,6 +1,5 @@
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
-import { headers } from "next/headers";
 import { type NextRequest } from "next/server";
 import { SESSION_COOKIE_NAME, USER_COOKIE_NAME } from "../auth/schema";
 import { TokenSessionSchema, TokenStateSchema, TokenUserSchema, type TokenUser } from "./schema";

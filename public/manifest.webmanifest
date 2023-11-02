@@ -1,7 +1,7 @@
 {
-  "name": "Optimistic Infinite Crud",
-  "short_name": "Optimistic Infinite Crud",
-  "description": "Optimistic Infinite Crud Example.",
+  "name": "Boilerplate app",
+  "short_name": "Boilerplate app",
+  "description": "Boilerplate app Example.",
   "display": "standalone",
   "orientation": "any",
   "scope": "/",

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { db } from "#src/db";
-import { createTRPCRouter, protectedProcedure, procedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { wait } from "#src/utils/wait";
 import { revalidateTag } from "next/cache";
 
@@ -14,7 +14,11 @@ export const tagsPostRouter = {
 const LIMIT = 30;
 
 export const postRouter = createTRPCRouter({
-  latest: procedure.query(async () => {
+  latest: publicProcedure.input(z.object({ slow: z.boolean().optional() })).query(async ({ input }) => {
+    if (input.slow) {
+      await wait(3000);
+    }
+
     return await db
       .selectFrom("Post")
       .selectAll()
@@ -25,7 +29,7 @@ export const postRouter = createTRPCRouter({
         next: { tags: [tagsPostRouter.latest()] },
       });
   }),
-  getById: procedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
+  getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
     return await db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({
       cache: "no-store",
     });
@@ -79,7 +83,7 @@ export const postRouter = createTRPCRouter({
     return true;
   }),
 
-  infinitePosts: procedure
+  infinitePosts: publicProcedure
     .input(
       z.object({
         cursor: z.number().optional(),

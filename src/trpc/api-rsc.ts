@@ -20,9 +20,9 @@ async function createTrpcContext(): Promise<Ctx> {
 /**
  * trpc api for server components. calls the procedure directly without a fetch request
  *
- * makes route opt into dynamic rendering at request time.
+ * makes route opt into dynamic rendering at request time since relies on dynamic functions `cookies()` and `headers()`
  *
- * apiRscPublic instead if only calling publicProcedures
+ * use apiRscPublic instead if only calling publicProcedures
  *
  * ## Example
  *
@@ -30,8 +30,6 @@ async function createTrpcContext(): Promise<Ctx> {
  * const { api, user } = await apiRsc();
  * const event = await api.post.getById.fetch({ postId });
  * ```
- *
- * relies on dynamic functions `cookies()` and `headers()`
  */
 export const apiRsc = async () => {
   const ctx = await createTrpcContext();
@@ -52,6 +50,12 @@ export const apiRsc = async () => {
  * for publicProcedures only
  *
  * should not make route opt into dynamic rendering at request time unlike apiRsc
+ *
+ * ## Example
+ *
+ * ```ts
+ * const api = apiRscPublic()
+ * ```
  */
 export const apiRscPublic = createServerSideHelpers({
   router: trpcRouter,
