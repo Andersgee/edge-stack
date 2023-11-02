@@ -4,6 +4,7 @@ import { Providers } from "#src/context/Providers";
 import { Topnav } from "#src/components/Topnav";
 import { seo } from "#src/utils/seo";
 import { BorderWithLabel } from "#src/components/BorderWithLabel";
+import { Counter } from "./Counter";
 
 export const metadata = seo({
   title: "Boilerplate app",
@@ -17,6 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en" className={fontSans.variable}>
       <body>
         <Providers>
+          <Counter />
           <BorderWithLabel label="/layout">
             <Topnav />
             {children}
