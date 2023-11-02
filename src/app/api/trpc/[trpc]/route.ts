@@ -1,7 +1,7 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 import { trpcRouter } from "#src/trpc";
-import { createTRPCContext } from "#src/trpc/trpc";
+import { createTrpcContext } from "#src/trpc/trpc";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ const handler = (req: NextRequest) =>
     endpoint: "/api/trpc",
     req,
     router: trpcRouter,
-    createContext: (opts) => createTRPCContext(opts, req),
+    createContext: (opts) => createTrpcContext(opts, req),
     onError:
       process.env.NODE_ENV === "development"
         ? ({ path, error }) => {

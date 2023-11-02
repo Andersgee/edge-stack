@@ -46,6 +46,12 @@ export async function getUserFromCookie() {
   return getUserFromToken(token);
 }
 
+/** for server component files (or in server actions) */
+export async function getSessionFromCookie() {
+  const token = cookies().get(SESSION_COOKIE_NAME)?.value;
+  return getUserFromToken(token);
+}
+
 export async function createTokenFromUser(user: TokenUser) {
   const jwt = await new SignJWT(user).setProtectedHeader({ alg: "HS256" }).sign(SECRET);
   return jwt;

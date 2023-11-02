@@ -35,9 +35,9 @@ type UpdateResult = {
 
 declare module "kysely" {
   interface SelectQueryBuilder<DB, TB extends keyof DB, O> {
-    get(init?: RequestInitLimited): Promise<Simplify<O>[]>;
-    getFirst(init?: RequestInitLimited): Promise<Simplify<O> | null>;
-    getFirstOrThrow(init?: RequestInitLimited): Promise<Simplify<O>>;
+    get(init: RequestInitLimited): Promise<Simplify<O>[]>;
+    getFirst(init: RequestInitLimited): Promise<Simplify<O> | null>;
+    getFirstOrThrow(init: RequestInitLimited): Promise<Simplify<O>>;
   }
 
   interface UpdateQueryBuilder<DB, UT extends keyof DB, TB extends keyof DB, O> {
@@ -57,16 +57,16 @@ declare module "kysely" {
 }
 
 //select
-SelectQueryBuilder.prototype.get = async function <O>(init?: RequestInitLimited): Promise<Simplify<O>[]> {
+SelectQueryBuilder.prototype.get = async function <O>(init: RequestInitLimited): Promise<Simplify<O>[]> {
   return (await executeWithFetchGet(this.compile(), init)) as Simplify<O>[];
 };
 
-SelectQueryBuilder.prototype.getFirst = async function <O>(init?: RequestInitLimited): Promise<Simplify<O> | null> {
+SelectQueryBuilder.prototype.getFirst = async function <O>(init: RequestInitLimited): Promise<Simplify<O> | null> {
   const [result] = await this.get(init);
   return (result as Simplify<O>) ?? null;
 };
 
-SelectQueryBuilder.prototype.getFirstOrThrow = async function <O>(init?: RequestInitLimited): Promise<Simplify<O>> {
+SelectQueryBuilder.prototype.getFirstOrThrow = async function <O>(init: RequestInitLimited): Promise<Simplify<O>> {
   const [result] = await this.get(init);
   if (result === undefined) {
     throw new Error("no result");

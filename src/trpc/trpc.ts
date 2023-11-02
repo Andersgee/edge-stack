@@ -4,18 +4,26 @@ import { ZodError } from "zod";
 import type { NextRequest } from "next/server";
 import { transformer } from "./transformer";
 import { getUserFromRequestCookie } from "#src/utils/jwt";
+import type { TokenUser } from "#src/utils/jwt/schema";
 
-export const createTRPCContext = async (opts: FetchCreateContextFnOptions, nextRequest: NextRequest) => {
+export type Ctx = {
+  user: TokenUser | null;
+  reqHeaders: Headers | null;
+  resHeaders: Headers | null;
+};
+
+export async function createTrpcContext(opts: FetchCreateContextFnOptions, nextRequest: NextRequest): Promise<Ctx> {
   const user = await getUserFromRequestCookie(nextRequest);
+  //const session = await getSessionFromRequestCookie(nextRequest)
 
   return {
     user,
-    reqHeaders: nextRequest.headers as Headers | null,
-    resHeaders: opts.resHeaders as Headers | null,
+    reqHeaders: nextRequest.headers,
+    resHeaders: opts.resHeaders,
   };
-};
+}
 
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<typeof createTrpcContext>().create({
   transformer: transformer,
   errorFormatter({ shape, error }) {
     return {
@@ -30,17 +38,24 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 
 export const createTRPCRouter = t.router;
 
-export const publicProcedure = t.procedure;
+export const procedure = t.procedure;
 
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+const middleware = t.middleware;
+
+const hasUser = middleware(({ ctx, next }) => {
   if (!ctx.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
-  return next({
-    ctx: {
-      user: ctx.user,
-    },
-  });
+  return next({ ctx: { ...ctx, user: ctx.user } });
 });
 
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+const hasResHeaders = middleware(({ ctx, next }) => {
+  if (ctx.resHeaders === null) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({ ctx: { ...ctx, resHeaders: ctx.resHeaders } });
+});
+
+export const protectedProcedure = t.procedure.use(hasUser);
+export const procedureWithResHeaders = t.procedure.use(hasResHeaders);
