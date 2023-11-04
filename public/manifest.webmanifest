@@ -1,6 +1,6 @@
 {
-  "name": "Boilerplate app",
-  "short_name": "Boilerplate app",
+  "name": "nextjs-boilerplate-app",
+  "short_name": "nextjs-boilerplate-app",
   "description": "Boilerplate app Example.",
   "display": "standalone",
   "orientation": "any",

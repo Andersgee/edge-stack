@@ -1,6 +1,77 @@
 import type { Metadata } from "next";
 import { absUrl } from "./url";
 
+/** meta tags for SEO, with sensible required fields. */
+export function seo({
+  type = "website",
+  site_name = "nextjs-boilerplate-app",
+  title,
+  url,
+  image,
+  description,
+  audio,
+  video,
+  determiner,
+  locale,
+  locale_alternatives,
+}: Options) {
+  const metadata: Metadata = {
+    //as of nextjs14 they added metadataBase to avoid doing absUrl() everywhere
+    //just put it here to prevent warning for now
+    metadataBase: new URL(absUrl()),
+    title: title,
+    description: description,
+    applicationName: site_name,
+    manifest: absUrl("/manifest.webmanifest"),
+    icons: [
+      { rel: "icon", type: "image/svg+xml", url: absUrl("/icons/favicon.svg") },
+      { rel: "icon", type: "image/png", url: absUrl("/icons/favicon-48x48.png"), sizes: "48x48" },
+      { rel: "icon", type: "image/png", url: absUrl("/icons/favicon-32x32.png"), sizes: "32x32" },
+      { rel: "apple-touch-icon", url: absUrl("/icons/favicon-maskable-512x512.png") },
+    ],
+    openGraph: {
+      type: type,
+      title: title,
+      description: description,
+      siteName: site_name,
+      url: absUrl(url),
+      images: [
+        {
+          url: absUrl(image),
+        },
+      ],
+      audio: audio,
+      videos: video,
+      determiner: determiner,
+      locale: locale,
+      alternateLocale: locale_alternatives,
+    },
+    twitter: {
+      title: title,
+      card: "summary_large_image",
+      description: description,
+      images: [absUrl(image)],
+    },
+  };
+
+  return metadata;
+}
+
+/*
+reference:
+https://ogp.me/
+https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/summary-card-with-large-image
+https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
+https://api.slack.com/robots
+
+also for icons, this is nice : https://maskable.app/editor
+
+testing appearance:
+facebook: https://developers.facebook.com/tools/debug/
+google: https://developers.google.com/search/docs/appearance/structured-data
+twitter: https://cards-dev.twitter.com/validator (deprecated, recommended way is now to just paste into twitter and see how it looks)
+slack: apparently uses same as twitter
+*/
 type Options = {
   /**
    * The title of your object as it should appear within the graph, e.g., "The Rock".
@@ -49,81 +120,3 @@ type Options = {
    */
   site_name?: string;
 };
-
-/**
- * meta tags for SEO, with sensible required fields although technically nothing is required.
- *
- * NOTE: for convenience, this function allows relative url such as `"/about"` instead of `"https://some.page.com/about"`
- *
- * reference:
- * https://ogp.me/
- * https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/summary-card-with-large-image
- * https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
- * https://api.slack.com/robots
- *
- * also for icons, this is nice : https://maskable.app/editor
- *
- * testing appearance:
- * facebook: https://developers.facebook.com/tools/debug/
- * google: https://developers.google.com/search/docs/appearance/structured-data
- * twitter: https://cards-dev.twitter.com/validator (deprecated, recommended way is now to just paste into twitter and see how it looks)
- * slack: apparently uses same as twitter
- *
- */
-export function seo({
-  type = "website",
-  site_name = "Optimistic Infinite Crud",
-  title,
-  url,
-  image,
-  description,
-  audio,
-  video,
-  determiner,
-  locale,
-  locale_alternatives,
-}: Options) {
-  const metadata: Metadata = {
-    //as of nextjs14, they added auto relative->absolute conversion for convenience with metadataBase
-    //just put it here to avoid warning
-    //also moved viewport to special "export const viewport={...}" but defaults to
-    //viewport: "width=device-width, initial-scale=1",
-    metadataBase: new URL(absUrl()),
-    title: title,
-    description: description,
-    applicationName: site_name,
-    referrer: "origin-when-cross-origin",
-    manifest: absUrl("/manifest.webmanifest"),
-    icons: [
-      { rel: "icon", type: "image/svg+xml", url: absUrl("/icons/favicon.svg") },
-      { rel: "icon", type: "image/png", url: absUrl("/icons/favicon-48x48.png"), sizes: "48x48" },
-      { rel: "icon", type: "image/png", url: absUrl("/icons/favicon-32x32.png"), sizes: "32x32" },
-      { rel: "apple-touch-icon", url: absUrl("/icons/favicon-maskable-512x512.png") },
-    ],
-    openGraph: {
-      type: type,
-      title: title,
-      description: description,
-      siteName: site_name,
-      url: absUrl(url),
-      images: [
-        {
-          url: absUrl(image),
-        },
-      ],
-      audio: audio,
-      videos: video,
-      determiner: determiner,
-      locale: locale,
-      alternateLocale: locale_alternatives,
-    },
-    twitter: {
-      title: title,
-      card: "summary_large_image",
-      description: description,
-      images: [absUrl(image)],
-    },
-  };
-
-  return metadata;
-}
