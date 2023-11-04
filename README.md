@@ -1,6 +1,17 @@
-# boilerplate
+# nextjs-boilerplate-app
 
-nextjs project boilerplate
+nextjs project boilerplate configured according to my current taste
+
+## first steps
+
+1. edit `public/manifest.webmanifest`
+2. replace `public/icons`
+3. edit default site_name in `src/utils/seo.ts`
+4. create `.env` based on `.env.example`
+   1. follow steps to configure oauth applications
+   2. optionally edit `src/components/SigninButtons`
+
+## notes
 
 - oauth boilerplate
 - bunch utility functions
@@ -21,12 +32,3 @@ nextjs project boilerplate
   - eg `bg-some-color-700` instead of `bg-some-color-700 dark:bg-some-other-color-300`.
   - utility for generating css variables / config object from theme colors here: [todo create repo]()
 - bunch of more specific configurations eslint, tailwind, next
-
-# steps
-
-1. edit `public/manifest.webmanifest`
-2. replace `public/icons`
-3. edit default site_name in `src/utils/seo.ts`
-4. create `.env` based on `.env.example`
-   1. follow steps to configure oauth applications
-   2. optionally edit `src/components/SigninButtons`
