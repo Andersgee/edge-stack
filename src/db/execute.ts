@@ -2,22 +2,21 @@
 import { parse, stringify } from "devalue";
 import type { CompiledQuery } from "kysely";
 
-/**
- * limit to not accidentally use stuff like "reload" or "only-if-cached", "no-cache" etc
- *
- * see https://nextjs.org/docs/app/api-reference/functions/fetch#fetchurl-options
- *
- * no-cache (get fresh AND update cache) would be very useful...
- * but in nextjs, "no-cache" behaves same as "no-store"
- *
- * also: require it to avoid cunfusion because in nextjs, if using something like cookies() elsewhere
- * then the default changes to "no-store" instead of "force-cache"
- * I prefer the default not change depending on some random usage of other functions.
- *
- * also this is only for SELECT querys, hardcode default "no-store" for INSERT, UPDATE and DELETE querys.
- */
-export type RequestInitLimited = RequestInit & {
-  cache: "force-cache" | "no-store";
+export type RequestInitLimited = Omit<RequestInit, "cache"> & {
+  /**
+   * Limited fetch cache options within nextjs
+   *
+   * ## tldr
+   * pass `no-cache` or `no-store` or leave undefined but only if using revalidate
+   *
+   * keep in mind the default changes if using functions like cookies() elsewhere,
+   * better be explicit and always pass this unless using `{next: {revalidate}}`
+   *
+   * read more at [nextjs docs fetch](https://nextjs.org/docs/app/api-reference/functions/fetch#fetchurl-options)
+   *
+   * also this is only for SELECT querys, hardcoded default "no-store" for INSERT, UPDATE and DELETE querys.
+   */
+  cache?: "force-cache" | "no-store";
 };
 
 export async function executeWithFetchGet(compiledQuery: CompiledQuery, init?: RequestInitLimited) {
