@@ -19,15 +19,13 @@ export const postRouter = createTRPCRouter({
       await wait(3000);
     }
 
-    return await db
-      .selectFrom("Post")
-      .selectAll()
-      .orderBy("id", "desc")
-      .limit(LIMIT)
-      .get({
-        cache: "force-cache",
-        next: { tags: [tagsPostRouter.latest()] },
-      });
+    return await db.selectFrom("Post").selectAll().orderBy("id", "desc").limit(LIMIT).get({
+      cache: "no-store",
+    });
+    //.get({
+    //  cache: "force-cache",
+    //  next: { tags: [tagsPostRouter.latest()] },
+    //});
   }),
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
     return await db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({

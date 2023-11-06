@@ -1,31 +1,22 @@
 import { type Config } from "tailwindcss";
-//import { fontFamily } from "tailwindcss/defaultTheme";
-import { type ScreensConfig } from "tailwindcss/types/config";
+import { TAILWIND_screens } from "./src/utils/image-sizes-constants.mjs";
 import defaultTheme from "tailwindcss/defaultTheme";
 import plugin from "tailwindcss/plugin";
+//import { fontFamily } from "tailwindcss/defaultTheme";
 
 //https://tailwindcss.com/docs/configuration#scaffolding-the-entire-default-configuration
-
-//https://tailwindcss.com/docs/screens
-//make sure these values match what is in next.config.mjs
-const DEVICE_SIZES: ScreensConfig = {
-  "sm": "640px",
-  "md": "768px",
-  "lg": "1024px",
-  "xl": "1280px",
-  "2xl": "1536px",
-};
 
 export default {
   content: ["./src/**/*.{ts,tsx}"],
   presets: [],
   darkMode: "media",
   theme: {
-    screens: DEVICE_SIZES,
-    container: {
-      screens: DEVICE_SIZES,
+    screens: TAILWIND_screens,
+    container: ({ theme }) => ({
+      //screens: TAILWIND_screens,
+      screens: theme("screens"),
       //center: true,
-    },
+    }),
     fontFamily: {
       sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
       serif: [...defaultTheme.fontFamily.serif],
