@@ -1,14 +1,19 @@
 "use client";
 
 import { useStore } from "#src/store";
-import type { TokenUser } from "#src/utils/jwt/schema";
 import { SigninButtons } from "./SigninButtons";
 import { SignoutButton } from "./SignoutButton";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { UserImage32x32 } from "./UserImage";
+import { type TokenUser } from "#src/utils/jwt/schema";
 
-export function ProfileButton({ user }: { user: TokenUser | null }) {
+type Props = {
+  user: TokenUser | null;
+};
+
+export function ProfileButton({ user }: Props) {
+  //const user = useStore.use.user();
   const dialogValue = useStore.use.dialogValue();
   const dialogAction = useStore.use.dialogAction();
 
@@ -32,7 +37,9 @@ export function ProfileButton({ user }: { user: TokenUser | null }) {
       ) : (
         <>
           <PopoverTrigger asChild>
-            <Button variant="outline">Sign in</Button>
+            <Button variant="outline" className="whitespace-nowrap">
+              Sign in
+            </Button>
           </PopoverTrigger>
           <PopoverContent>
             <div>

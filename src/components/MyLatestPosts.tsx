@@ -8,27 +8,27 @@ import { PrettyDate } from "./PrettyDate";
 
 type Props = {
   className?: string;
-  slow: boolean;
-  initialData: RouterOutputs["post"]["latest"];
+  initialDataPostMylatest?: RouterOutputs["post"]["mylatest"];
 };
 
-export function ExampleClientComponentWithInitial({ className, slow, initialData }: Props) {
+export function MyLatestPosts({ className, initialDataPostMylatest }: Props) {
   const user = useStore.use.user();
 
-  const { data: posts } = api.post.latest.useQuery(
-    { slow: slow },
+  const { data: posts } = api.post.mylatest.useQuery(
+    { n: 10 },
     {
-      initialData: initialData,
+      enabled: !!user,
+      initialData: initialDataPostMylatest,
     }
   );
 
   return (
-    <BorderWithLabel label="ExampleClientComponentWithInitial">
+    <BorderWithLabel label="MyLatestPosts (client component)">
       <div className={cn("", className)}>
         <div>{user ? `user: signed in as ${user.name}` : "user: not signed in"}</div>
-        <h3>posts:</h3>
+        <h3>my latests posts:</h3>
         <ul>
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <li key={post.id} className="border-b py-2">
               <div>
                 <PrettyDate date={post.createdAt} />

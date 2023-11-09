@@ -13,13 +13,16 @@ export const metadata = seo({
   image: "/icons/favicon-512x512.png",
 });
 
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={fontSans.variable}>
       <body>
         <Providers>
-          <Counter />
-          <BorderWithLabel label="/layout">
+          <BorderWithLabel label="/layout.tsx">
+            <Counter />
             <Topnav />
             {children}
           </BorderWithLabel>

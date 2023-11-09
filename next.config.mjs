@@ -29,11 +29,17 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    logging: {
-      level: "verbose",
+  logging: {
+    fetches: {
+      fullUrl: true,
     },
   },
+
+  //experimental: {
+  //  logging: {
+  //    level: "verbose",
+  //  },
+  //},
 };
 
 export default nextConfig;

@@ -6,15 +6,26 @@ export default function Page() {
   return (
     <BorderWithLabel label="/page">
       <p>
-        just reading Github discussion <a href="https://github.com/vercel/next.js/discussions/54075">Deep Dive</a> and
-        trying develop some intuition about it.
+        important note: use <code>{`<Link prefetch={true}>`}</code> or <code>{`<Link prefetch={false}>`}</code> leaving
+        it undefined has borked interaction with Router Cache in next 14.0.1.
       </p>
       <p>
-        This page is a <code>○ (Static)</code> page so this will be in in-memory client-side cache (aka Router Cache)
-        for <code>300 seconds (5 minutes)</code>.
+        if using prefetch true, then page will be in in-memory client-side cache (aka Router Cache) for{" "}
+        <code>300 seconds (5 minutes)</code>. Yes even dynamic pages.
       </p>
-      <p>After that it will be considered stale and request fresh data.</p>
-      <p>However page will be in the Data Cache on server so it just responds with 304 instead of data.</p>
+      <p>
+        If using prefetch false then only <code>30 seconds</code>, but will also not prefetch obviously.
+      </p>
+      <p>
+        For simplicity only use dynamic pages, eg root layout is dynamic with proper auth state of user on page load.
+        Static vs dynamic page doesnt really matter since we can use server-side http-cache aka (aka Data Cache) to have
+        data available and respond instantly anyway.
+      </p>
+
+      <p>
+        more about Router Cache: <a href="https://nextjs.org/docs/app/building-your-application/caching">here</a> and{" "}
+        <a href="https://github.com/vercel/next.js/discussions/54075">deep dive</a>
+      </p>
     </BorderWithLabel>
   );
 }

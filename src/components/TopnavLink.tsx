@@ -4,7 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "#src/utils/cn";
 
-type Props = { href: string; label: string };
+type Props = {
+  href: string;
+  label: string;
+};
 
 export function TopnavLink({ href, label }: Props) {
   const pathname = usePathname();
@@ -16,6 +19,7 @@ export function TopnavLink({ href, label }: Props) {
         isActive && "text-color-neutral-900 underline"
       )}
       href={href}
+      prefetch={true} //important. (leaving it undefined is borked)
     >
       {label}
     </Link>

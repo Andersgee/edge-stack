@@ -14,18 +14,35 @@ export const tagsPostRouter = {
 const LIMIT = 30;
 
 export const postRouter = createTRPCRouter({
+  /*
   latest: publicProcedure.input(z.object({ slow: z.boolean().optional() })).query(async ({ input }) => {
-    if (input.slow) {
-      await wait(3000);
-    }
+    //if (input.slow) {
+    //  await wait(3000);
+    //}
 
-    return await db.selectFrom("Post").selectAll().orderBy("id", "desc").limit(LIMIT).get({
-      cache: "no-store",
-    });
-    //.get({
-    //  cache: "force-cache",
-    //  next: { tags: [tagsPostRouter.latest()] },
-    //});
+    return await db
+      .selectFrom("Post")
+      .selectAll()
+      .orderBy("id", "desc")
+      .limit(LIMIT)
+      .get({
+        cache: "force-cache",
+        next: { tags: [tagsPostRouter.latest()] },
+      });
+  }),
+  */
+  mylatest: protectedProcedure.input(z.object({ n: z.number().optional() })).query(async ({ input, ctx }) => {
+    await wait(2000);
+
+    return await db
+      .selectFrom("Post")
+      .selectAll()
+      .where("userId", "=", ctx.user.id)
+      .orderBy("id", "desc")
+      .limit(input.n ?? 10)
+      .get({
+        cache: "no-store",
+      });
   }),
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
     return await db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({
