@@ -126,24 +126,17 @@ export const db = {
   fetchFirstOrThrow: getFirstOrThrow,
 };
 
-async function hej() {
-  const a = await db.query.updateTable("Post").where("id", "=", 1).executeTakeFirstOrThrow();
-  a.numChangedRows;
-  a.numUpdatedRows;
-
-  const lgskdsgfd = db.query.updateTable("Post").where("id", "=", 1);
-  const eururuwruew = db.fetch(lgskdsgfd);
-
-  const x = await db.query.updateTable("Post").where("id", "=", 1).executeTakeFirstOrThrowSimple();
-
+async function example() {
+  const { insertId, numInsertedOrUpdatedRows } = await db.query
+    .insertInto("Post")
+    .values({ text: "lala", userId: 1 })
+    .executeTakeFirstOrThrowSimple();
   const { numUpdatedRows, numChangedRows } = await db.query
     .updateTable("Post")
     .where("id", "=", 1)
-    .executeTakeFirstOrThrow();
+    .executeTakeFirstOrThrowSimple();
+  const { numDeletedRows } = await db.query.deleteFrom("Post").where("id", "=", 1).executeTakeFirstOrThrowSimple();
 
-  const q = await db.query.deleteFrom("Post").where("id", "=", 1).executeTakeFirstOrThrow();
-
-  const kek = db.query.selectFrom("Post").selectAll();
-
-  const lelele = await db.fetch(kek, { cache: "force-cache", next: { revalidate: 10 } });
+  const q = db.query.selectFrom("Post").selectAll();
+  const posts = await db.fetch(q, { next: { revalidate: 10 } });
 }
