@@ -34,11 +34,13 @@ type UpdateResult = {
 };
 
 declare module "kysely" {
+  /*
   interface SelectQueryBuilder<DB, TB extends keyof DB, O> {
     get(init: RequestInitLimited): Promise<Simplify<O>[]>;
     getFirst(init: RequestInitLimited): Promise<Simplify<O> | null>;
     getFirstOrThrow(init: RequestInitLimited): Promise<Simplify<O>>;
   }
+  */
 
   interface UpdateQueryBuilder<DB, UT extends keyof DB, TB extends keyof DB, O> {
     post(): Promise<UpdateResult | null>;
@@ -57,6 +59,7 @@ declare module "kysely" {
 }
 
 //select
+/*
 SelectQueryBuilder.prototype.get = async function <O>(init: RequestInitLimited): Promise<Simplify<O>[]> {
   return (await executeWithFetchGet(this.compile(), init)) as Simplify<O>[];
 };
@@ -73,9 +76,12 @@ SelectQueryBuilder.prototype.getFirstOrThrow = async function <O>(init: RequestI
   }
   return result as Simplify<O>;
 };
+*/
 
 //update
 UpdateQueryBuilder.prototype.post = async function <O>(): Promise<UpdateResult | null> {
+  const a = await executeWithFetchPost(this.compile());
+  //a.insertId
   const result = (await executeWithFetchPost(this.compile())) as {
     numUpdatedOrDeletedRows: bigint | undefined;
   };
@@ -118,7 +124,6 @@ DeleteQueryBuilder.prototype.postOrThrow = async function <O>(): Promise<DeleteR
 };
 
 //insert
-
 InsertQueryBuilder.prototype.post = async function <O>(): Promise<InsertResult | null> {
   const result = (await executeWithFetchPost(this.compile())) as {
     insertId: bigint | undefined;
@@ -150,3 +155,18 @@ export const db = new Kysely<DB>({
     createDriver: () => new DummyDriver(),
   },
 });
+
+async function hmm() {
+  const a = await db.deleteFrom("Post").where("id", "=", 1).executeTakeFirstOrThrow();
+  a.numDeletedRows;
+
+  const b = await db
+    .insertInto("Post")
+    .values({
+      text: "lala",
+      userId: 1,
+    })
+    .executeTakeFirstOrThrow();
+  b.insertId;
+  b.numInsertedOrUpdatedRows;
+}

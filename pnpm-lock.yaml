@@ -63,8 +63,8 @@ dependencies:
     specifier: ^4.15.4
     version: 4.15.4
   kysely:
-    specifier: '0.25'
-    version: 0.25.0
+    specifier: ~0.26.3
+    version: 0.26.3
   next:
     specifier: 14.0.1
     version: 14.0.1(react-dom@18.2.0)(react@18.2.0)
@@ -3594,8 +3594,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /kysely@0.25.0:
-    resolution: {integrity: sha512-srn0efIMu5IoEBk0tBmtGnoUss4uwvxtbFQWG/U2MosfqIace1l43IFP1PmEpHRDp+Z79xIcKEqmHH3dAvQdQA==}
+  /kysely@0.26.3:
+    resolution: {integrity: sha512-yWSgGi9bY13b/W06DD2OCDDHQmq1kwTGYlQ4wpZkMOJqMGCstVCFIvxCCVG4KfY1/3G0MhDAcZsip/Lw8/vJWw==}
     engines: {node: '>=14.0.0'}
     dev: false
 

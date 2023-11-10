@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { parse, stringify } from "devalue";
-import type { CompiledQuery } from "kysely";
+import type { CompiledQuery, QueryResult } from "kysely";
 
 export type RequestInitLimited = Omit<RequestInit, "cache"> & {
   /**
@@ -45,7 +45,7 @@ export async function executeWithFetchGet(compiledQuery: CompiledQuery, init?: R
   }
 }
 
-export async function executeWithFetchPost(compiledQuery: CompiledQuery) {
+export async function executeWithFetchPost<O>(compiledQuery: CompiledQuery): Promise<QueryResult<O>> {
   const body = {
     sql: compiledQuery.sql,
     parameters: compiledQuery.parameters,
@@ -63,8 +63,8 @@ export async function executeWithFetchPost(compiledQuery: CompiledQuery) {
 
   if (res.ok) {
     try {
-      const info = parse(await res.text());
-      return info;
+      const result = parse(await res.text()); // as QueryResult<O>
+      return result;
     } catch (error) {
       throw new Error("failed to parse response");
     }
