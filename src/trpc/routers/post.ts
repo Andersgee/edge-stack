@@ -34,20 +34,16 @@ export const postRouter = createTRPCRouter({
   mylatest: protectedProcedure.input(z.object({ n: z.number().optional() })).query(async ({ input, ctx }) => {
     await wait(2000);
 
-    return await db
+    return await db()
       .selectFrom("Post")
       .selectAll()
       .where("userId", "=", ctx.user.id)
       .orderBy("id", "desc")
       .limit(input.n ?? 10)
-      .get({
-        cache: "no-store",
-      });
+      .execute();
   }),
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
-    return await db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({
-      cache: "no-store",
-    });
+    return await db().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
     if (Math.random() < DEBUG_ERROR_FRACTION) {
@@ -55,17 +51,18 @@ export const postRouter = createTRPCRouter({
       throw "debug throw here";
     }
 
-    const { insertId: postId } = await db
+    const { insertId: postId } = await db()
       .insertInto("Post")
       .values({
         text: input.text,
         userId: ctx.user.id,
       })
-      .postOrThrow();
+      .executeTakeFirstOrThrow();
 
     revalidateTag(tagsPostRouter.latest());
 
-    return await db.selectFrom("Post").selectAll().where("id", "=", postId).getFirst({ cache: "no-store" });
+    const newPost = await db().selectFrom("Post").selectAll().where("id", "=", Number(postId)).executeTakeFirst();
+    return newPost ?? null;
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.number(), text: z.string() }))
@@ -75,16 +72,17 @@ export const postRouter = createTRPCRouter({
         throw "debug throw here";
       }
 
-      await db
+      await db()
         .updateTable("Post")
         .where("id", "=", input.postId)
         .where("userId", "=", ctx.user.id)
         .set({
           text: input.text,
         })
-        .postOrThrow();
+        .executeTakeFirstOrThrow();
 
-      return await db.selectFrom("Post").selectAll().where("id", "=", input.postId).getFirst({ cache: "no-store" });
+      const updatedPost = await db().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
+      return updatedPost ?? null;
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
@@ -93,9 +91,13 @@ export const postRouter = createTRPCRouter({
       throw "debug throw here";
     }
 
-    await db.deleteFrom("Post").where("id", "=", input.postId).where("userId", "=", ctx.user.id).postOrThrow();
+    const deleteResult = await db()
+      .deleteFrom("Post")
+      .where("id", "=", input.postId)
+      .where("userId", "=", ctx.user.id)
+      .executeTakeFirstOrThrow();
 
-    return true;
+    return deleteResult.numDeletedRows > 0;
   }),
 
   infinitePosts: publicProcedure
@@ -110,7 +112,7 @@ export const postRouter = createTRPCRouter({
 
       const limit = LIMIT;
 
-      let query = db
+      let query = db()
         .selectFrom("Post")
         .selectAll()
         .orderBy("id", "desc")
@@ -120,7 +122,7 @@ export const postRouter = createTRPCRouter({
         query = query.where("id", "<", input.cursor);
       }
 
-      const items = await query.get({ cache: "no-store" });
+      const items = await query.execute();
 
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {

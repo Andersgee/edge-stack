@@ -9,33 +9,37 @@ export const tagsUserRouter = {
 
 export const userRouter = createTRPCRouter({
   info: protectedProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
-    return await db
+    const user = await db({
+      cache: "force-cache",
+      next: { tags: [tagsUserRouter.info(input)] },
+    })
       .selectFrom("User")
       .selectAll()
       .where("User.id", "=", input.userId)
-      .getFirst({
-        cache: "force-cache",
-        next: { tags: [tagsUserRouter.info(input)] },
-      });
+      .executeTakeFirst();
+
+    return user ?? null;
   }),
   infoPublic: publicProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
-    return await db
+    const user = await db({
+      cache: "force-cache",
+      next: { tags: [tagsUserRouter.info(input)] },
+    })
       .selectFrom("User")
       .select(["id", "name", "image"])
       .where("User.id", "=", input.userId)
-      .getFirst({
-        cache: "force-cache",
-        next: { tags: [tagsUserRouter.info(input)] },
-      });
+      .executeTakeFirst();
+
+    return user ?? null;
   }),
   update: protectedProcedure.input(z.object({ name: z.string() })).query(async ({ input, ctx }) => {
-    await db
+    const _updateResult = await db()
       .updateTable("User")
       .where("id", "=", ctx.user.id)
       .set({
         name: input.name,
       })
-      .postOrThrow();
+      .executeTakeFirstOrThrow();
 
     revalidateTag(tagsUserRouter.info({ userId: ctx.user.id }));
     return true;

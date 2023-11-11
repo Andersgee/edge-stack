@@ -1,7 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest } from "next/server";
 import { tagsUserRouter } from "#src/trpc/routers/user";
-import { db } from "#src/db";
 import {
   GITHUB_EMAILINFO,
   GITHUB_EMAILS_URL,
@@ -15,9 +14,12 @@ import {
 import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
 import type { TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
+import { db as dbfactory } from "#src/db";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
+
+const db = dbfactory();
 
 export async function GET(request: NextRequest) {
   try {
@@ -81,15 +83,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Authenticate the user
-    const existingUser = await db.selectFrom("User").selectAll().where("email", "=", userInfo.email).getFirst({
-      cache: "no-store",
-    });
+    const existingUser = await db.selectFrom("User").selectAll().where("email", "=", userInfo.email).executeTakeFirst();
 
     let tokenUser: TokenUser | undefined = undefined;
 
     if (existingUser) {
       if (!existingUser.githubUserId) {
-        await db.updateTable("User").set({ githubUserId: userInfo.id }).where("id", "=", existingUser.id).post();
+        await db.updateTable("User").set({ githubUserId: userInfo.id }).where("id", "=", existingUser.id).execute();
       }
 
       tokenUser = {
@@ -106,10 +106,10 @@ export async function GET(request: NextRequest) {
           githubUserId: userInfo.id,
           image: userInfo.avatar_url,
         })
-        .postOrThrow();
+        .executeTakeFirstOrThrow();
 
       tokenUser = {
-        id: insertResult.insertId,
+        id: Number(insertResult.insertId),
         name: userInfo.name,
         image: userInfo.avatar_url,
       };

@@ -1,7 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest } from "next/server";
 import { tagsUserRouter } from "#src/trpc/routers/user";
-import { db } from "#src/db";
 import {
   GOOGLE_discoveryDocument,
   GOOGLE_OPENID_DISCOVERY_URL,
@@ -13,9 +12,12 @@ import {
 import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
 import { type TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
+import { db as dbfactory } from "#src/db";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
+
+const db = dbfactory();
 
 export async function GET(request: NextRequest) {
   try {
@@ -65,15 +67,13 @@ export async function GET(request: NextRequest) {
     const userInfo = GOOGLE_USERINFO.parse(JSON.parse(Buffer.from(id_token_payload, "base64").toString()));
 
     // Authenticate the user
-    const existingUser = await db.selectFrom("User").selectAll().where("email", "=", userInfo.email).getFirst({
-      cache: "no-store",
-    });
+    const existingUser = await db.selectFrom("User").selectAll().where("email", "=", userInfo.email).executeTakeFirst();
 
     let tokenUser: TokenUser | undefined = undefined;
 
     if (existingUser) {
       if (!existingUser.googleUserSub) {
-        await db.updateTable("User").set({ googleUserSub: userInfo.sub }).where("id", "=", existingUser.id).post();
+        await db.updateTable("User").set({ googleUserSub: userInfo.sub }).where("id", "=", existingUser.id).execute();
       }
 
       tokenUser = {
@@ -90,10 +90,10 @@ export async function GET(request: NextRequest) {
           googleUserSub: userInfo.sub,
           image: userInfo.picture,
         })
-        .postOrThrow();
+        .executeTakeFirstOrThrow();
 
       tokenUser = {
-        id: insertResult.insertId,
+        id: Number(insertResult.insertId),
         name: userInfo.name,
         image: userInfo.picture,
       };

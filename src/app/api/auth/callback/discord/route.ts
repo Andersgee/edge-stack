@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest } from "next/server";
 import { tagsUserRouter } from "#src/trpc/routers/user";
-import { db } from "#src/db";
+
 import {
   DISCORD_TOKEN,
   DISCORD_TOKEN_URL,
@@ -13,9 +13,12 @@ import {
 import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
 import type { TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
+import { db as dbfactory } from "#src/db";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
+
+const db = dbfactory();
 
 //https://discord.com/developers/docs/topics/oauth2
 //https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information
@@ -76,17 +79,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Authenticate the user
-    const existingUser = await db
-      .selectFrom("User")
-      .selectAll()
-      .where("email", "=", userInfo.email)
-      .getFirst({ cache: "no-store" });
+    const existingUser = await db.selectFrom("User").selectAll().where("email", "=", userInfo.email).executeTakeFirst();
 
     let tokenUser: TokenUser | undefined = undefined;
 
     if (existingUser) {
       if (!existingUser.discordUserId) {
-        await db.updateTable("User").set({ discordUserId: userInfo.id }).where("id", "=", existingUser.id).post();
+        await db.updateTable("User").set({ discordUserId: userInfo.id }).where("id", "=", existingUser.id).execute();
       }
       tokenUser = {
         id: existingUser.id,
@@ -102,10 +101,10 @@ export async function GET(request: NextRequest) {
           discordUserId: userInfo.id,
           image: userInfo.avatar,
         })
-        .postOrThrow();
+        .executeTakeFirstOrThrow();
 
       tokenUser = {
-        id: insertResult.insertId,
+        id: Number(insertResult.insertId),
         name: userInfo.username,
         image: userInfo.avatar,
       };

@@ -19,15 +19,15 @@ export const stuffRouter = createTRPCRouter({
     return true;
   }),
   revalidateExample: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
-    const post = await db
+    const post = await db({
+      next: {
+        revalidate: 10,
+      },
+    })
       .selectFrom("Post")
       .selectAll()
       .where("id", "=", input.postId)
-      .getFirst({
-        next: {
-          revalidate: 10,
-        },
-      });
+      .executeTakeFirst();
     return post;
   }),
 });

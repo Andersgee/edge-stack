@@ -1,8 +1,19 @@
 import type { CompiledQuery, DatabaseConnection, Driver, QueryResult } from "kysely";
 
+export type RequestInitLimited = Omit<RequestInit, "cache"> & {
+  /**
+   * Only `force-cache`, `no-store` or `undefined` is compatible with nextjs http cache.
+   *
+   * So we limit this to not accidentally use stuff like `reload` or `no-cache` etc here.
+   */
+  cache?: "force-cache" | "no-store";
+};
+
 export interface FetchDriverConfig {
+  /** fetch(url, init) */
   url: string;
-  authorization: string;
+  /** fetch(url, init) */
+  init?: RequestInitLimited;
   transformer: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     serialize: (value: any) => string;
@@ -61,23 +72,19 @@ class FetchConnection implements DatabaseConnection {
   }
 
   async executeQuery<R>(compiledQuery: CompiledQuery): Promise<QueryResult<R>> {
-    const body = {
+    const q = this.config.transformer.serialize({
       sql: compiledQuery.sql,
       parameters: compiledQuery.parameters,
-    };
-    const res = await fetch(this.config.url, {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "text/plain",
-        "Authorization": this.config.authorization,
-      },
-      body: this.config.transformer.serialize(body),
+    });
+
+    const url = `${this.config.url}?q=${q}`;
+    const res = await fetch(url, {
+      ...this.config.init,
     });
 
     if (res.ok) {
       try {
-        const result = this.config.transformer.deserialize(await res.text());
+        const result = this.config.transformer.deserialize(await res.text()) as QueryResult<R>;
         return result;
       } catch (error) {
         throw new Error("failed to parse response");
