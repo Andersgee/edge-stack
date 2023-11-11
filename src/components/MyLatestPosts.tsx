@@ -2,6 +2,7 @@
 
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { useStore } from "#src/store";
+
 import { cn } from "#src/utils/cn";
 import { BorderWithLabel } from "./BorderWithLabel";
 import { PrettyDate } from "./PrettyDate";
@@ -25,7 +26,7 @@ export function MyLatestPosts({ className, initialDataPostMylatest }: Props) {
   return (
     <BorderWithLabel label="MyLatestPosts (client component)">
       <div className={cn("", className)}>
-        <div>{user ? `user: signed in as ${user.name}` : "user: not signed in"}</div>
+        <div>{`user: ${user?.name ?? "not signed in"}`}</div>
         <h3>my latests posts:</h3>
         <ul>
           {posts?.map((post) => (
