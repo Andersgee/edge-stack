@@ -2,13 +2,10 @@
 
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { useStore } from "#src/store";
-
 import { cn } from "#src/utils/cn";
-import { imageSizes } from "#src/utils/image-sizes";
 import { BorderWithLabel } from "./BorderWithLabel";
 import { PostCrud } from "./PostCrud";
 import { PrettyDate } from "./PrettyDate";
-import Image from "next/image";
 import { UserImage32x32 } from "./UserImage";
 
 type Props = {
