@@ -10,7 +10,7 @@ export const metadata = seo({
   title: "Boilerplate app",
   description: "Boilerplate app",
   url: "/",
-  image: "/icons/favicon-512x512.png",
+  image: "/andyfx.png",
 });
 
 export const runtime = "edge";

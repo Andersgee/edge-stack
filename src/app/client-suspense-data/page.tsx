@@ -18,6 +18,6 @@ export default function Page() {
 async function SuspendedMyLatestPosts() {
   const { api, user } = await apiRsc();
 
-  const initialData = user ? await api.post.mylatest.fetch({ n: 10 }) : undefined;
+  const initialData = user ? await api.post.mylatest.fetch() : undefined;
   return <MyLatestPosts initialDataPostMylatest={initialData} />;
 }

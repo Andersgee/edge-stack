@@ -4,8 +4,15 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { wait } from "#src/utils/wait";
 import { revalidateTag } from "next/cache";
 
-const DEBUG_ERROR_MS = 2000;
-const DEBUG_ERROR_FRACTION = 0.5;
+async function maybeDebugThrow() {
+  const DEBUG_ERROR_MS = 2000;
+  const DEBUG_ERROR_FRACTION = 0.5;
+
+  if (Math.random() < DEBUG_ERROR_FRACTION) {
+    await wait(DEBUG_ERROR_MS);
+    throw "debug throw here";
+  }
+}
 
 export const tagsPostRouter = {
   latest: () => `post-latest`,
@@ -31,25 +38,41 @@ export const postRouter = createTRPCRouter({
       });
   }),
   */
-  mylatest: protectedProcedure.input(z.object({ n: z.number().optional() })).query(async ({ input, ctx }) => {
+  mylatest: protectedProcedure.query(async ({ ctx }) => {
     await wait(2000);
 
-    return await db()
+    const posts = db()
+      .selectFrom("Post")
+      .innerJoin("User", "User.id", "Post.userId")
+      .select([
+        "Post.createdAt",
+        "Post.id",
+        "Post.text",
+        "Post.userId",
+        "User.image as userImage",
+        "User.name as userName",
+      ])
+      .where("userId", "=", ctx.user.id)
+      .orderBy("id", "desc")
+      .limit(10)
+      .execute();
+
+    /*
+    const posts = await db()
       .selectFrom("Post")
       .selectAll()
       .where("userId", "=", ctx.user.id)
       .orderBy("id", "desc")
-      .limit(input.n ?? 10)
+      .limit(10)
       .execute();
+    */
+    return posts;
   }),
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
     return await db().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    if (Math.random() < DEBUG_ERROR_FRACTION) {
-      await wait(DEBUG_ERROR_MS);
-      throw "debug throw here";
-    }
+    //await maybeDebugThrow()
 
     const { insertId: postId } = await db()
       .insertInto("Post")
@@ -61,16 +84,27 @@ export const postRouter = createTRPCRouter({
 
     revalidateTag(tagsPostRouter.latest());
 
-    const newPost = await db().selectFrom("Post").selectAll().where("id", "=", Number(postId)).executeTakeFirst();
+    const newPost = db()
+      .selectFrom("Post")
+      .innerJoin("User", "User.id", "Post.userId")
+      .select([
+        "Post.createdAt",
+        "Post.id",
+        "Post.text",
+        "Post.userId",
+        "User.image as userImage",
+        "User.name as userName",
+      ])
+      .where("Post.id", "=", Number(postId))
+      .executeTakeFirst();
+
+    //const newPost = await db().selectFrom("Post").selectAll().where("id", "=", Number(postId)).executeTakeFirst();
     return newPost ?? null;
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.number(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      if (Math.random() < DEBUG_ERROR_FRACTION) {
-        await wait(DEBUG_ERROR_MS);
-        throw "debug throw here";
-      }
+      //await maybeDebugThrow()
 
       await db()
         .updateTable("Post")
@@ -86,10 +120,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
-    if (Math.random() < DEBUG_ERROR_FRACTION) {
-      await wait(DEBUG_ERROR_MS);
-      throw "debug throw here";
-    }
+    //await maybeDebugThrow()
 
     const deleteResult = await db()
       .deleteFrom("Post")
@@ -107,9 +138,6 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input }) => {
-      //await wait(2000);
-      //throw "debug throw here";
-
       const limit = LIMIT;
 
       let query = db()

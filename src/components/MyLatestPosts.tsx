@@ -4,8 +4,12 @@ import { type RouterOutputs, api } from "#src/hooks/api";
 import { useStore } from "#src/store";
 
 import { cn } from "#src/utils/cn";
+import { imageSizes } from "#src/utils/image-sizes";
 import { BorderWithLabel } from "./BorderWithLabel";
+import { PostCrud } from "./PostCrud";
 import { PrettyDate } from "./PrettyDate";
+import Image from "next/image";
+import { UserImage32x32 } from "./UserImage";
 
 type Props = {
   className?: string;
@@ -15,13 +19,10 @@ type Props = {
 export function MyLatestPosts({ className, initialDataPostMylatest }: Props) {
   const user = useStore.use.user();
 
-  const { data: posts } = api.post.mylatest.useQuery(
-    { n: 10 },
-    {
-      enabled: !!user,
-      initialData: initialDataPostMylatest,
-    }
-  );
+  const { data: posts } = api.post.mylatest.useQuery(undefined, {
+    enabled: !!user,
+    initialData: initialDataPostMylatest,
+  });
 
   return (
     <BorderWithLabel label="MyLatestPosts (client component)">
@@ -30,15 +31,21 @@ export function MyLatestPosts({ className, initialDataPostMylatest }: Props) {
         <h3>my latests posts:</h3>
         <ul>
           {posts?.map((post) => (
-            <li key={post.id} className="border-b py-2">
+            <li key={post.id} className="flex border-b py-2">
+              <UserImage32x32 image={post.userImage ?? ""} alt={post.userName} />
               <div>
-                <PrettyDate date={post.createdAt} />
+                <div>
+                  <PrettyDate date={post.createdAt} />
+                </div>
+                <div>{post.text}</div>
               </div>
-              <div>{post.text}</div>
             </li>
           ))}
         </ul>
       </div>
+      <BorderWithLabel label="PostCrud (client component)">
+        <PostCrud />
+      </BorderWithLabel>
     </BorderWithLabel>
   );
 }

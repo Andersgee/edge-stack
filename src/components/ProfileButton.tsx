@@ -25,7 +25,7 @@ export function ProfileButton({ user }: Props) {
       {user ? (
         <>
           <PopoverTrigger className="rounded-md p-[6px] outline-none hover:bg-color-neutral-200 focus-visible:focusring">
-            <UserImage32x32 image={user.image} alt={user.image} />
+            <UserImage32x32 image={user.image} alt={user.name} />
           </PopoverTrigger>
           <PopoverContent>
             <div className="p-4">

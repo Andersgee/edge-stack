@@ -1,0 +1,37 @@
+"use client";
+
+import { Button } from "#src/components/ui/button";
+import { Input } from "#src/components/ui/input";
+import { api } from "#src/hooks/api";
+import { cn } from "#src/utils/cn";
+import { useState } from "react";
+
+type Props = {
+  className?: string;
+};
+
+export function PostCrud({ className }: Props) {
+  const [text, setText] = useState("");
+  const apiUtils = api.useUtils();
+  const { mutate, isLoading } = api.post.create.useMutation({
+    onSuccess: (createdPost) => {
+      setText("");
+      if (createdPost) {
+        apiUtils.post.mylatest.setData(undefined, (prev) => {
+          if (!prev) return prev;
+          const data = structuredClone(prev);
+          return [createdPost, ...data];
+        });
+      }
+    },
+  });
+
+  return (
+    <div className={cn("", className)}>
+      <Input type="text" value={text} onChange={(e) => setText(e.target.value)} />
+      <Button onClick={() => mutate({ text })} disabled={isLoading || !text}>
+        create
+      </Button>
+    </div>
+  );
+}

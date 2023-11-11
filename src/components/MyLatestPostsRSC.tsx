@@ -10,8 +10,8 @@ type Props = {
 
 export async function MyLatestPostsRSC({ className }: Props) {
   const { api, user } = await apiRsc();
+  const posts = user ? await api.post.mylatest.fetch(undefined) : undefined;
 
-  const posts = user ? await api.post.mylatest.fetch({ n: 10 }) : undefined;
   return (
     <BorderWithLabel label="MyLatestPostsRSC (server component)">
       <div className={cn("", className)}>
