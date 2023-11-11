@@ -27,25 +27,3 @@ export const db = (init?: RequestInitLimited) =>
         }),
     },
   });
-
-/*
-export const db = new Kysely<DB>({
-  dialect: {
-    createAdapter: () => new MysqlAdapter(),
-    createIntrospector: (db) => new MysqlIntrospector(db),
-    createQueryCompiler: () => new MysqlQueryCompiler(),
-    createDriver: () =>
-      new FetchDriver({
-        transformer: transformer,
-        url: process.env.DATABASE_HTTP_URL,
-        init: {
-          method: "GET",
-          cache: "no-store",
-          headers: {
-            Authorization: process.env.DATABASE_HTTP_AUTH_HEADER,
-          },
-        },
-      }),
-  },
-});
-*/
