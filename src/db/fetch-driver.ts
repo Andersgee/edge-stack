@@ -78,9 +78,7 @@ class FetchConnection implements DatabaseConnection {
     });
 
     const url = `${this.config.url}?q=${q}`;
-    const res = await fetch(url, {
-      ...this.config.init,
-    });
+    const res = await fetch(url, this.config.init);
 
     if (res.ok) {
       try {
