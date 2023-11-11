@@ -9,10 +9,7 @@ export const tagsUserRouter = {
 
 export const userRouter = createTRPCRouter({
   info: protectedProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
-    const user = await db({
-      cache: "force-cache",
-      next: { tags: [tagsUserRouter.info(input)] },
-    })
+    const user = await db({ next: { tags: [tagsUserRouter.info(input)] } })
       .selectFrom("User")
       .selectAll()
       .where("User.id", "=", input.userId)
@@ -21,10 +18,7 @@ export const userRouter = createTRPCRouter({
     return user ?? null;
   }),
   infoPublic: publicProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
-    const user = await db({
-      cache: "force-cache",
-      next: { tags: [tagsUserRouter.info(input)] },
-    })
+    const user = await db({ next: { tags: [tagsUserRouter.info(input)] } })
       .selectFrom("User")
       .select(["id", "name", "image"])
       .where("User.id", "=", input.userId)

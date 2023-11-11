@@ -14,58 +14,22 @@ async function maybeDebugThrow() {
   }
 }
 
-export const tagsPostRouter = {
-  latest: () => `post-latest`,
-};
-
 const LIMIT = 30;
 
 export const postRouter = createTRPCRouter({
-  /*
-  latest: publicProcedure.input(z.object({ slow: z.boolean().optional() })).query(async ({ input }) => {
-    //if (input.slow) {
-    //  await wait(3000);
-    //}
-
-    return await db
-      .selectFrom("Post")
-      .selectAll()
-      .orderBy("id", "desc")
-      .limit(LIMIT)
-      .get({
-        cache: "force-cache",
-        next: { tags: [tagsPostRouter.latest()] },
-      });
-  }),
-  */
   mylatest: protectedProcedure.query(async ({ ctx }) => {
     await wait(2000);
 
-    const posts = db()
+    const posts = db({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
-      .select([
-        "Post.createdAt",
-        "Post.id",
-        "Post.text",
-        "Post.userId",
-        "User.image as userImage",
-        "User.name as userName",
-      ])
+      .selectAll("Post")
+      .select(["User.image as userImage", "User.name as userName"])
       .where("userId", "=", ctx.user.id)
       .orderBy("id", "desc")
       .limit(10)
       .execute();
 
-    /*
-    const posts = await db()
-      .selectFrom("Post")
-      .selectAll()
-      .where("userId", "=", ctx.user.id)
-      .orderBy("id", "desc")
-      .limit(10)
-      .execute();
-    */
     return posts;
   }),
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
@@ -73,8 +37,9 @@ export const postRouter = createTRPCRouter({
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
     //await maybeDebugThrow()
+    const d = db();
 
-    const { insertId: postId } = await db()
+    const { insertId: postId } = await d
       .insertInto("Post")
       .values({
         text: input.text,
@@ -82,19 +47,11 @@ export const postRouter = createTRPCRouter({
       })
       .executeTakeFirstOrThrow();
 
-    revalidateTag(tagsPostRouter.latest());
-
-    const newPost = db()
+    const newPost = d
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
-      .select([
-        "Post.createdAt",
-        "Post.id",
-        "Post.text",
-        "Post.userId",
-        "User.image as userImage",
-        "User.name as userName",
-      ])
+      .selectAll("Post")
+      .select(["User.image as userImage", "User.name as userName"])
       .where("Post.id", "=", Number(postId))
       .executeTakeFirst();
 
@@ -105,8 +62,9 @@ export const postRouter = createTRPCRouter({
     .input(z.object({ postId: z.number(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
       //await maybeDebugThrow()
+      const d = db();
 
-      await db()
+      await d
         .updateTable("Post")
         .where("id", "=", input.postId)
         .where("userId", "=", ctx.user.id)
@@ -115,7 +73,14 @@ export const postRouter = createTRPCRouter({
         })
         .executeTakeFirstOrThrow();
 
-      const updatedPost = await db().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
+      const updatedPost = d
+        .selectFrom("Post")
+        .innerJoin("User", "User.id", "Post.userId")
+        .selectAll("Post")
+        .select(["User.image as userImage", "User.name as userName"])
+        .where("Post.id", "=", Number(input.postId))
+        .executeTakeFirst();
+
       return updatedPost ?? null;
     }),
 
