@@ -4,7 +4,7 @@ import { type RouterOutputs, api } from "#src/hooks/api";
 import { useStore } from "#src/store";
 import { cn } from "#src/utils/cn";
 import { BorderWithLabel } from "./BorderWithLabel";
-import { PostCrud } from "./PostCrud";
+import { DeletePostButton, PostCrud } from "./PostCrud";
 import { PrettyDate } from "./PrettyDate";
 import { UserImage32x32 } from "./UserImage";
 
@@ -28,7 +28,7 @@ export function MyLatestPosts({ className, initialDataPostMylatest }: Props) {
         <h3>my latests posts:</h3>
         <ul>
           {posts?.map((post) => (
-            <li key={post.id} className="flex border-b py-2">
+            <li key={post.id} className="flex gap-4 border-b py-4">
               <UserImage32x32 image={post.userImage ?? ""} alt={post.userName} />
               <div>
                 <div>
@@ -36,6 +36,7 @@ export function MyLatestPosts({ className, initialDataPostMylatest }: Props) {
                 </div>
                 <div>{post.text}</div>
               </div>
+              <DeletePostButton postId={post.id} />
             </li>
           ))}
         </ul>

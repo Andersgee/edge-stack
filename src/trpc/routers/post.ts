@@ -17,8 +17,23 @@ async function maybeDebugThrow() {
 const LIMIT = 30;
 
 export const postRouter = createTRPCRouter({
+  latest: protectedProcedure.query(async ({ ctx }) => {
+    //await wait(2000);
+
+    const posts = db({ next: { revalidate: 10 } })
+      .selectFrom("Post")
+      .innerJoin("User", "User.id", "Post.userId")
+      .selectAll("Post")
+      .select(["User.image as userImage", "User.name as userName"])
+      .orderBy("id", "desc")
+      .limit(10)
+      .execute();
+
+    return posts;
+  }),
+
   mylatest: protectedProcedure.query(async ({ ctx }) => {
-    await wait(2000);
+    //await wait(2000);
 
     const posts = db({ next: { revalidate: 10 } })
       .selectFrom("Post")
@@ -103,7 +118,8 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input }) => {
-      const limit = LIMIT;
+      //const limit = LIMIT;
+      const limit = 3;
 
       let query = db()
         .selectFrom("Post")
