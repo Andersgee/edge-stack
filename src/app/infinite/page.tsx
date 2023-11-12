@@ -1,4 +1,5 @@
 import { BorderWithLabel } from "#src/components/BorderWithLabel";
+import { LoadMorePosts, PostCreate, PostList } from "#src/components/InfinitePosts";
 import { apiRsc } from "#src/trpc/api-rsc";
 import { Suspense } from "react";
 
@@ -6,7 +7,7 @@ import { Suspense } from "react";
 
 export default function Page() {
   return (
-    <BorderWithLabel label="/client-suspense-data/page.tsx">
+    <BorderWithLabel label="/infinite/page.tsx">
       <Suspense fallback={<p>Loading...</p>}>
         <Wrapper />
       </Suspense>
@@ -17,6 +18,12 @@ export default function Page() {
 async function Wrapper() {
   const { api, user } = await apiRsc();
 
-  const initialData = user ? await api.post.infinitePosts.fetch({}) : undefined;
-  return <div>a</div>;
+  const initialData = await api.post.infinitePosts.fetch({});
+  return (
+    <>
+      {/*<LoadMorePosts />*/}
+      <PostCreate user={user} />
+      <PostList initialData={initialData} user={user} />
+    </>
+  );
 }

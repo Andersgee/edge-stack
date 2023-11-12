@@ -14,8 +14,6 @@ async function maybeDebugThrow() {
   }
 }
 
-const LIMIT = 30;
-
 export const postRouter = createTRPCRouter({
   latest: protectedProcedure.query(async ({ ctx }) => {
     //await wait(2000);
@@ -118,25 +116,25 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input }) => {
-      //const limit = LIMIT;
-      const limit = 3;
+      await wait(1000);
+      const limit = 5;
 
       let query = db()
         .selectFrom("Post")
         .selectAll()
         .orderBy("id", "desc")
-        .limit(limit + 1); //one extra to know where next page starts
+        .limit(limit + 1); //one extra to know first item of next page
 
       if (input.cursor !== undefined) {
-        query = query.where("id", "<", input.cursor);
+        query = query.where("id", "<=", input.cursor);
       }
 
       const items = await query.execute();
 
       let nextCursor: number | undefined = undefined;
       if (items.length > limit) {
-        const nextItem = items.pop(); //dont return the one extra
-        nextCursor = nextItem?.id;
+        const firstItemOfNextPage = items.pop()!; //dont return the one extra
+        nextCursor = firstItemOfNextPage.id;
       }
       return { items, nextCursor };
     }),

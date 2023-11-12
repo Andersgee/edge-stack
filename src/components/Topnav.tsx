@@ -16,6 +16,7 @@ export async function Topnav() {
             <TopnavLink label="rsc data suspense" href="/rsc-data-suspense" />
             <TopnavLink label="client data" href="/client-data" />
             <TopnavLink label="client suspense data" href="/client-suspense-data" />
+            <TopnavLink label="infinite" href="/infinite" />
           </div>
         </div>
         <div>
