@@ -41,7 +41,7 @@ type Options = {
  *
  * #### general note about `<Image sizes"...">`
  *
- * if using fill, then default (in words) is "always load large enough image to cover entire screen width"
+ * if using fill without specifying sizes, then default (in words) is "always load large enough image to cover entire screen width"
  *
  * eg `sizes="100vw"`
  *
@@ -50,12 +50,12 @@ type Options = {
  * `sizes=imageSizes("w-screen-2xl", {sm: "w-screen-md", md: "w-screen-xl", xl: "w-screen-2xl"})`
  */
 export function imageSizes(width: Width, o?: Options) {
-  const w = `${SIZE[width]}px`;
+  const w = `${SIZE[width]}`;
   if (!o) return w;
 
-  const xl2 = o["2xl"] ? `(min-width: ${SIZE["w-screen-2xl"]}px) ${SIZE[o["2xl"]]}px, ` : "";
-  const xl = o.xl ? `(min-width: ${SIZE["w-screen-xl"]}px) ${SIZE[o.xl]}px, ` : "";
-  const md = o.md ? `(min-width: ${SIZE["w-screen-md"]}px) ${SIZE[o.md]}px, ` : "";
-  const sm = o.sm ? `(min-width: ${SIZE["w-screen-sm"]}px) ${SIZE[o.sm]}px, ` : "";
+  const xl2 = o["2xl"] ? `(min-width: ${SIZE["w-screen-2xl"]}) ${SIZE[o["2xl"]]}, ` : "";
+  const xl = o.xl ? `(min-width: ${SIZE["w-screen-xl"]}) ${SIZE[o.xl]}, ` : "";
+  const md = o.md ? `(min-width: ${SIZE["w-screen-md"]}) ${SIZE[o.md]}, ` : "";
+  const sm = o.sm ? `(min-width: ${SIZE["w-screen-sm"]}) ${SIZE[o.sm]}, ` : "";
   return `${xl2}${xl}${md}${sm}${w}`;
 }
