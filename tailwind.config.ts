@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { type Config } from "tailwindcss";
 import { TAILWIND_screens } from "./src/utils/image-sizes-constants.mjs";
 import defaultTheme from "tailwindcss/defaultTheme";
