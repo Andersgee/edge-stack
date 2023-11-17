@@ -1,7 +1,5 @@
-import { createServerSideHelpers } from "@trpc/react-query/server";
 import { getUserFromCookie } from "#src/utils/jwt";
 import { trpcRouter } from ".";
-import { transformer } from "./transformer";
 import { headers } from "next/headers";
 import type { Ctx } from "./trpc";
 
@@ -15,50 +13,39 @@ async function createTrpcContext(): Promise<Ctx> {
   };
 }
 
-//https://trpc.io/docs/client/nextjs/server-side-helpers#1-internal-router
-
 /**
- * trpc api for server components. calls the procedure directly without a fetch request
+ * for server components calling protected (or public) procedures
  *
- * makes route opt into dynamic rendering at request time since relies on dynamic functions `cookies()` and `headers()`
+ * Will opt route into dynamic rendering since makes use of `next/headers` and
  *
- * use apiRscPublic instead if only calling publicProcedures
- *
- * ## Example
+ * ## Example usage
  *
  * ```ts
  * const { api, user } = await apiRsc();
- * const event = await api.post.getById.fetch({ postId });
+ * const event = await api.post.getById({ postId });
  * ```
- */
+ * */
 export const apiRsc = async () => {
   const ctx = await createTrpcContext();
-
   return {
-    api: createServerSideHelpers({
-      router: trpcRouter,
-      ctx,
-      transformer: transformer,
-    }),
+    api: trpcRouter.createCaller(ctx),
     user: ctx.user,
   };
 };
 
 /**
- * trpc api for server components. calls the procedure directly without a fetch request
+ * for server components calling public procedures
  *
- * for publicProcedures only
- *
- * should not make route opt into dynamic rendering at request time unlike apiRsc
- *
- * ## Example
+ * ## Example usage
  *
  * ```ts
- * const api = apiRscPublic()
+ * const { api } = apiRscPublic();
+ * const event = await api.post.getById({ postId });
  * ```
- */
-export const apiRscPublic = createServerSideHelpers({
-  router: trpcRouter,
-  ctx: { user: null, resHeaders: null, reqHeaders: null },
-  transformer: transformer,
-});
+ * */
+export const apiRscPublic = () => {
+  const ctx: Ctx = { user: null, resHeaders: null, reqHeaders: null };
+  return {
+    api: trpcRouter.createCaller(ctx),
+  };
+};

@@ -1,5 +1,4 @@
 import { apiRsc } from "#src/trpc/api-rsc";
-//import { apiRsc } from "#src/trpc/api-rsc";
 import { cn } from "#src/utils/cn";
 import { BorderWithLabel } from "./BorderWithLabel";
 import { PrettyDate } from "./PrettyDate";
@@ -10,7 +9,7 @@ type Props = {
 
 export async function MyLatestPostsRSC({ className }: Props) {
   const { api, user } = await apiRsc();
-  const posts = user ? await api.post.mylatest.fetch() : undefined;
+  const posts = user ? await api.post.mylatest() : undefined;
 
   return (
     <BorderWithLabel label="MyLatestPostsRSC (server component)">

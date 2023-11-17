@@ -20,7 +20,7 @@ nextjs project boilerplate configured according to my current taste
 - call trpc procedures directly as regular functions in server components
   - eg `const data = await api.post.getById.fetch({postId})`
   - note that calling protected procedures `{ api, user } = await apiRsc()` in server components will opt route into dynamic rendering at request time
-  - there is also `const api = apiRscPublic()` that does _not_ require dynamic rendering at request time, only for publicProcedures
+  - there is also `const { api } = apiRscPublic()` that does _not_ require dynamic rendering at request time, only for publicProcedures
 - prisma for db schema handling only
   - `pnpm prisma generate` and `pnpm prisma db push`
 - kysely query builder with `post()` and `get()` methods for nextjs http cache compatible db queries

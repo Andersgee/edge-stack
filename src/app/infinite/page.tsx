@@ -18,7 +18,7 @@ export default function Page() {
 async function Wrapper() {
   const { api, user } = await apiRsc();
 
-  const initialData = await api.post.infinitePosts.fetch({});
+  const initialData = await api.post.infinitePosts({});
   return (
     <>
       {/*<LoadMorePosts />*/}
