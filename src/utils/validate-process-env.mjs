@@ -24,13 +24,13 @@ export const envSchema = z.object({
   NEXT_PUBLIC_HASHIDS_SALT: z.string(),
 });
 
+/**
+ * @param {z.ZodFormattedError<z.infer<typeof envSchema>>} errors
+ */
 function formatErrors(errors) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return Object.entries(errors)
     .map(([name, value]) => {
-      if (value && "_errors" in value)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        return `${name}: ${value._errors.join(", ")}\n`;
+      if (value && "_errors" in value) return `${name}: ${value._errors.join(", ")}\n`;
     })
     .filter(Boolean);
 }
