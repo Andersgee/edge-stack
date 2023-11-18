@@ -14,7 +14,7 @@ async function createTrpcContext(): Promise<Ctx> {
 }
 
 /**
- * for server components calling protected (or public) procedures
+ * for server components (or server actions) calling protected (or public) procedures
  *
  * Will opt route into dynamic rendering since makes use of `next/headers` and
  *
@@ -34,7 +34,7 @@ export const apiRsc = async () => {
 };
 
 /**
- * for server components calling public procedures
+ * for server components (or server actions) calling public procedures
  *
  * ## Example usage
  *

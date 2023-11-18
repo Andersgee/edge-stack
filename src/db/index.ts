@@ -35,8 +35,18 @@ import { transformer } from "./transformer";
  *
  * //with revalidate:
  * //always instantly respond with cached data (except the very first time)
- * //if more than x seconds has passed since added to cache then also fetch fresh data and update cache
+ * //if more than x seconds has passed since added to cache (when calling this) then also fetch fresh data and update cache for next call
  * const posts = await db({ next: { revalidate: 10 } })
+ *   .selectFrom("Post")
+ *   .selectAll()
+ *   .orderBy("id", "desc")
+ *   .limit(10)
+ *   .execute();
+ *
+ * //once only
+ * //always instantly respond with cached data (except the very first time)
+ * //never update cache
+ * await db({ cache: "force-cache" })
  *   .selectFrom("Post")
  *   .selectAll()
  *   .orderBy("id", "desc")
