@@ -18,12 +18,11 @@ export function encodeParams(params: Record<string, string | number | boolean>) 
  *
  * (for either server or client environment)
  *
- * fallbacks to `localhost:3000` if no `process.env.NEXT_PUBLIC_DOMAIN_URL`
+ * uses process.env.NEXT_PUBLIC_ABSURL
  */
 export function absUrl(url = "") {
   const path = url === "/" ? "" : url;
-  if (process.env.NEXT_PUBLIC_DOMAIN_URL) return `https://${process.env.NEXT_PUBLIC_DOMAIN_URL}${path}`;
-  return `http://localhost:${process.env.PORT ?? 3000}${path}`;
+  return `${process.env.NEXT_PUBLIC_ABSURL}${path}`;
 }
 
 /**

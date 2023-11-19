@@ -22,6 +22,7 @@ export const envSchema = z.object({
   DATABASE_HTTP_URL: z.string().url(),
   DATABASE_HTTP_AUTH_HEADER: z.string(),
   NEXT_PUBLIC_HASHIDS_SALT: z.string(),
+  NEXT_PUBLIC_ABSURL: z.string(),
 });
 
 /**

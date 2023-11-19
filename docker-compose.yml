@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  db:
+    image: andersgee/http-mysql8
+    restart: unless-stopped
+    env_file:
+      - ./.env.db
+    expose:
+      - 3000
+      - 3306
+    ports:
+      - 4000:3000
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

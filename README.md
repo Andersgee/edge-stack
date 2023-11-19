@@ -4,10 +4,17 @@ nextjs project boilerplate configured according to my current taste
 
 ## first steps
 
+1. install `pnpm install`
+2. start database `docker compose up`
+3. push schema `pnpm prisma db push`
+4. lets go `pnpm dev` or `pnpm build && pnpm start`
+
+## second steps
+
 1. edit `public/manifest.webmanifest`
-2. replace `public/icons`
-3. edit default site_name in `src/utils/seo.ts`
-4. create `.env` based on `.env.example`
+1. replace `public/icons`
+1. edit default site_name in `src/utils/seo.ts`
+1. create `.env` based on `.env.example`
    1. follow steps to configure oauth applications
    2. optionally edit `src/components/SigninButtons`
 
