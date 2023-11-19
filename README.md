@@ -4,37 +4,37 @@ nextjs project boilerplate configured according to my current taste
 
 ## first steps
 
-1. install `pnpm install`
-2. start database `docker compose up`
-3. push schema `pnpm prisma db push`
-4. lets go `pnpm dev` or `pnpm build && pnpm start`
+1. copy paste `.env` and `.env.db` from examples
+2. install `pnpm install`
+3. start database `docker compose up`
+4. push schema `pnpm prisma db push`
+5. lets go `pnpm dev`
 
-## second steps
+## sensible second steps
 
 1. edit `public/manifest.webmanifest`
-1. replace `public/icons`
-1. edit default site_name in `src/utils/seo.ts`
-1. create `.env` based on `.env.example`
-   1. follow steps to configure oauth applications
-   2. optionally edit `src/components/SigninButtons`
+2. replace `public/icons`
+3. edit default site_name in `src/utils/seo.ts`
+4. follow steps in env file to configure oauth applications
 
 ## notes
 
 - oauth boilerplate
-- bunch utility functions
+- some utility functions
 - trpc edge runtime for client components
   - eg `const {data} = api.post.getById.useQuery({postId})`
 - call trpc procedures directly as regular functions in server components
-  - eg `const data = await api.post.getById.fetch({postId})`
+  - eg `const data = await api.post.getById({postId})`
   - note that calling protected procedures `{ api, user } = await apiRsc()` in server components will opt route into dynamic rendering at request time
   - there is also `const { api } = apiRscPublic()` that does _not_ require dynamic rendering at request time, only for publicProcedures
 - prisma for db schema handling only
   - `pnpm prisma generate` and `pnpm prisma db push`
-- kysely query builder with `post()` and `get()` methods for nextjs http cache compatible db queries
-  - eg `db.selectFrom("Post").selectAll().get({cache: "force-cache"})`
-  - or `db.selectFrom("Post").selectAll().get({cache: "force-cache", {next: {tags: ["some-tag"]}}})`
+- kysely query builder with fetch driver for nextjs http cache compatible db queries
+  - eg `db({cache: "force-cache"}).selectFrom("Post").selectAll().execute()`
+  - or `db({next: {tags: ["some-tag"]}}).selectFrom("Post").selectAll().execute()`
     - somewhere else: `revalidateTag("some-tag")`
-  - or `db.selectFrom("Post").selectAll().get({next: {revalidate: 10}})`
+  - or `db({next: {revalidate: 10}}).selectFrom("Post").selectAll().execute()`
+  - regular `db()...` without args defaults to {cache:"no-store}
 - tailwind with themed colors via css variables
   - eg `bg-some-color-700` instead of `bg-some-color-700 dark:bg-some-other-color-300`.
   - utility for generating css variables / config object from theme colors here: [todo create repo]()
