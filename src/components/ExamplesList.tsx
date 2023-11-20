@@ -10,14 +10,14 @@ import { Button } from "./ui/button";
 
 type Props = {
   className?: string;
-  initialData?: RouterOutputs["post"]["mylatest"];
+  initialData?: RouterOutputs["example"]["getAll"];
 };
 
 export function ExamplesList({ className, initialData }: Props) {
   const user = useStore.use.user();
 
   const { data: posts } = api.example.getAll.useQuery(undefined, {
-    //enabled: !!user,
+    //enabled: !!user
     initialData: initialData,
   });
 
@@ -41,11 +41,11 @@ export function ExamplesList({ className, initialData }: Props) {
   );
 }
 
-export function CreateExample({ className }: Props) {
+export function CreateExample({ className }: { className?: string }) {
   const [text, setText] = useState("");
 
   const apiUtils = api.useUtils();
-  const { mutate, isLoading } = api.example.create.useMutation({
+  const exampleCreate = api.example.create.useMutation({
     onSuccess: ({ insertId }) => {
       setText("");
       void apiUtils.example.getAll.invalidate();
@@ -55,7 +55,7 @@ export function CreateExample({ className }: Props) {
   return (
     <div className={cn("flex", className)}>
       <Input type="text" value={text} onChange={(e) => setText(e.target.value)} />
-      <Button onClick={() => mutate({ text })} disabled={isLoading || !text}>
+      <Button onClick={() => exampleCreate.mutate({ text })} disabled={exampleCreate.isPending || !text}>
         create
       </Button>
     </div>

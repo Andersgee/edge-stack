@@ -14,7 +14,7 @@ type Props = {
 export function PostCrud({ className }: Props) {
   const [text, setText] = useState("");
   //const apiUtils = api.useUtils();
-  const { mutate, isLoading } = api.post.create.useMutation({
+  const postCreate = api.post.create.useMutation({
     onSuccess: (createdPost) => {
       setText("");
       //if (createdPost) {
@@ -30,7 +30,7 @@ export function PostCrud({ className }: Props) {
   return (
     <div className={cn("flex", className)}>
       <Input type="text" value={text} onChange={(e) => setText(e.target.value)} />
-      <Button onClick={() => mutate({ text })} disabled={isLoading || !text}>
+      <Button onClick={() => postCreate.mutate({ text })} disabled={postCreate.isPending || !text}>
         create
       </Button>
     </div>

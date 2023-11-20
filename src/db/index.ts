@@ -4,29 +4,29 @@ import { FetchDriver, type RequestInitLimited } from "./fetch-driver";
 import { transformer } from "./transformer";
 
 /**
- * this is just regular `fetch()` under the hood.
+ * this is a query builder using regular `fetch()` under the hood.
  *
- * ## vanilla usage
+ * ## Example usage
  * ```ts
+ * //without arguments
+ * //always fetch and respond with fresh data
  * //defaults to cache: "no-store" so this does not interact with nextjs http-cache at all.
- * const { insertId } = await db()
+ * const { insertId } = await dbfetch()
  *   .insertInto("Post")
  *   .values({ text: "hello", userId: 1 })
  *   .executeTakeFirstOrThrow();
  *
- * const posts = await db()
+ * const posts = await dbfetch()
  *   .selectFrom("Post")
  *   .selectAll()
  *   .orderBy("id","desc")
  *   .limit(10)
  *   .execute();
- * ```
- * ## advanced usage
- * ```ts
+ *
  * //with tag:
  * //always instantly respond with cached data (except the very first time)
  * //never update cache until revalidateTag("latest-10-posts") is called somewhere
- * const posts = await db({ next: { tags: ["latest-10-posts"] } })
+ * const posts = await dbfetch({ next: { tags: ["latest-10-posts"] } })
  *   .selectFrom("Post")
  *   .selectAll()
  *   .orderBy("id", "desc")
@@ -36,7 +36,7 @@ import { transformer } from "./transformer";
  * //with revalidate:
  * //always instantly respond with cached data (except the very first time)
  * //if more than x seconds has passed since added to cache (when calling this) then also fetch fresh data and update cache for next call
- * const posts = await db({ next: { revalidate: 10 } })
+ * const posts = await dbfetch({ next: { revalidate: 10 } })
  *   .selectFrom("Post")
  *   .selectAll()
  *   .orderBy("id", "desc")
@@ -46,7 +46,7 @@ import { transformer } from "./transformer";
  * //once only
  * //always instantly respond with cached data (except the very first time)
  * //never update cache
- * await db({ cache: "force-cache" })
+ * await dbfetch({ cache: "force-cache" })
  *   .selectFrom("Post")
  *   .selectAll()
  *   .orderBy("id", "desc")
@@ -54,8 +54,8 @@ import { transformer } from "./transformer";
  *   .execute();
  * ```
  */
-export const db = (init?: RequestInitLimited) =>
-  new Kysely<DB>({
+export function dbfetch(init?: RequestInitLimited) {
+  return new Kysely<DB>({
     dialect: {
       createAdapter: () => new MysqlAdapter(),
       createIntrospector: (db) => new MysqlIntrospector(db),
@@ -84,3 +84,4 @@ export const db = (init?: RequestInitLimited) =>
       },
     },
   });
+}

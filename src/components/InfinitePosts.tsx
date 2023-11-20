@@ -5,7 +5,7 @@ import { PrettyDate } from "#src/components/PrettyDate";
 import { Input } from "#src/components/ui/input";
 import { type RouterOutputs, api } from "#src/hooks/api";
 import { type TokenUser } from "#src/utils/jwt/schema";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "#src/components/ui/button";
 import { randomUint } from "#src/utils/random";
 import { cn } from "#src/utils/cn";
@@ -261,7 +261,7 @@ function PostListItemForCreator({
                 <Edit /> Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                disabled={postDelete.isLoading}
+                disabled={postDelete.isPending}
                 onSelect={(e) => {
                   //e.preventDefault(); //prevent autofocus on DropdownMenuTrigger, aka allow autofocus on <Input>
                   postDelete.mutate({ postId: post.id });
@@ -290,7 +290,7 @@ function PostListItemForCreator({
           >
             <Input ref={inputRef} autoFocus type="text" onChange={(e) => setText(e.target.value)} value={text} />
             <div className="flex gap-2">
-              <Button type="submit" variant="positive" disabled={postUpdate.isLoading}>
+              <Button type="submit" variant="positive" disabled={postUpdate.isPending}>
                 <Check /> Save
               </Button>
               <Button

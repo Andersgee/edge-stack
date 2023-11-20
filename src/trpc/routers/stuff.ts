@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { db } from "#src/db";
+import { dbfetch } from "#src/db";
 
 export const stuffRouter = createTRPCRouter({
   cookieExample: publicProcedure.query(({ ctx }) => {
@@ -19,7 +19,7 @@ export const stuffRouter = createTRPCRouter({
     return true;
   }),
   revalidateExample: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
-    const post = await db({
+    const post = await dbfetch({
       next: {
         revalidate: 10,
       },

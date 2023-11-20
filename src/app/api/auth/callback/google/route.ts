@@ -12,12 +12,12 @@ import {
 import { createTokenFromUser, getSessionFromRequestCookie, verifyStateToken } from "#src/utils/jwt";
 import { type TokenUser } from "#src/utils/jwt/schema";
 import { absUrl, encodeParams } from "#src/utils/url";
-import { db as dbfactory } from "#src/db";
+import { dbfetch } from "#src/db";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
 
-const db = dbfactory();
+const db = dbfetch();
 
 export async function GET(request: NextRequest) {
   try {

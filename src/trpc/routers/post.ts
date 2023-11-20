@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { db } from "#src/db";
+import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { wait } from "#src/utils/wait";
 import { revalidateTag } from "next/cache";
@@ -18,7 +18,7 @@ export const postRouter = createTRPCRouter({
   latest: protectedProcedure.query(async ({ ctx }) => {
     //await wait(2000);
 
-    const posts = db({ next: { revalidate: 10 } })
+    const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
@@ -33,7 +33,7 @@ export const postRouter = createTRPCRouter({
   mylatest: protectedProcedure.query(async ({ ctx }) => {
     //await wait(2000);
 
-    const posts = db({ next: { revalidate: 10 } })
+    const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
@@ -46,13 +46,13 @@ export const postRouter = createTRPCRouter({
     return posts;
   }),
   getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
-    return await db().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
+    return await dbfetch().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
     //await maybeDebugThrow()
-    const d = db();
+    const db = dbfetch();
 
-    const { insertId: postId } = await d
+    const { insertId: postId } = await db
       .insertInto("Post")
       .values({
         text: input.text,
@@ -60,7 +60,7 @@ export const postRouter = createTRPCRouter({
       })
       .executeTakeFirstOrThrow();
 
-    const newPost = d
+    const newPost = await db
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
@@ -75,7 +75,7 @@ export const postRouter = createTRPCRouter({
     .input(z.object({ postId: z.number(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
       //await maybeDebugThrow()
-      const d = db();
+      const d = dbfetch();
 
       await d
         .updateTable("Post")
@@ -100,7 +100,7 @@ export const postRouter = createTRPCRouter({
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
     //await maybeDebugThrow()
 
-    const deleteResult = await db()
+    const deleteResult = await dbfetch()
       .deleteFrom("Post")
       .where("id", "=", input.postId)
       .where("userId", "=", ctx.user.id)
@@ -119,7 +119,7 @@ export const postRouter = createTRPCRouter({
       await wait(1000);
       const limit = 5;
 
-      let query = db()
+      let query = dbfetch()
         .selectFrom("Post")
         .selectAll()
         .orderBy("id", "desc")
