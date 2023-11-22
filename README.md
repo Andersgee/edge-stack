@@ -39,3 +39,11 @@ nextjs project boilerplate configured according to my current taste
   - eg `bg-some-color-700` instead of `bg-some-color-700 dark:bg-some-other-color-300`.
   - utility for generating css variables / config object from theme colors here: [todo create repo]()
 - bunch of more specific configurations eslint, tailwind, next
+
+### resources
+
+[data cache usage and pricing](https://vercel.com/docs/infrastructure/data-cache/limits-and-pricing)
+
+- The maximum size of an item in the cache is 2 MB. Items larger than this will not be cached.
+- Tags per item – A cache item can have a maximum of 64 tags.
+- Maximum tag length – The maximum tag length is 256 bytes.

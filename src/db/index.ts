@@ -61,11 +61,13 @@ export function dbfetch(init?: RequestInitLimited) {
       createIntrospector: (db) => new MysqlIntrospector(db),
       createQueryCompiler: () => new MysqlQueryCompiler(),
       createDriver: () => {
-        //default to "force-cache" if using next.tags
-        let cache: RequestInitLimited["cache"] = init?.next?.tags !== undefined ? "force-cache" : "no-store";
-
-        if (init?.next?.revalidate !== undefined) {
-          //also, default to undefined if using next.revalidate (this is what nextjs wants)
+        //default to no-store
+        let cache: RequestInitLimited["cache"] = "no-store";
+        if (init?.next?.tags !== undefined) {
+          //default to "force-cache" if using next.tags
+          cache = "force-cache";
+        } else if (init?.next?.revalidate !== undefined) {
+          //default to undefined if using next.revalidate (this is what nextjs wants)
           cache = undefined;
         }
 
