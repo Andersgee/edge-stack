@@ -2,21 +2,35 @@ import { getUserFromCookie } from "#src/utils/jwt";
 import { trpcRouter } from ".";
 import { headers } from "next/headers";
 import type { Ctx } from "./trpc";
+import { cache } from "react";
 
-async function createTrpcContext(): Promise<Ctx> {
+/*
+note about cache(): https://react.dev/reference/react/cache
+wrapping apiRsc in cache() means "call it at most once for each server request"
+meaning if a page has multiple server components that use apiRsc() we can skip some work.
+
+here apiRsc() isnt actually expensive or slow at all, but why not, best practise and what not.
+
+there is also the option to "preload" eg call apiRsc() somewhere early without awaiting it
+
+again this is "react cache", its not related at all to nextjs client side router cache or nextjs server side data cache
+*/
+
+async function createTrpcRscContext() {
   const user = await getUserFromCookie();
-
-  return {
-    user,
+  const ctx: Ctx = {
+    user: user,
     reqHeaders: headers(),
     resHeaders: null,
   };
+
+  return ctx;
 }
 
 /**
- * for server components (or server actions) calling protected (or public) procedures
+ * For server components (or server actions) calling protected (or public) procedures.
  *
- * Will opt route into dynamic rendering since makes use of `next/headers` and
+ * Will opt route into dynamic rendering since makes use of "dynamic functions" aka `next/headers`.
  *
  * ## Example usage
  *
@@ -25,16 +39,18 @@ async function createTrpcContext(): Promise<Ctx> {
  * const event = await api.post.getById({ postId });
  * ```
  * */
-export const apiRsc = async () => {
-  const ctx = await createTrpcContext();
+export const apiRsc = cache(async () => {
+  const ctx = await createTrpcRscContext();
   return {
     api: trpcRouter.createCaller(ctx),
     user: ctx.user,
   };
-};
+});
 
 /**
- * for server components (or server actions) calling public procedures
+ * For server components (or server actions) calling public procedures.
+ *
+ * Will error on protected procedures.
  *
  * ## Example usage
  *
@@ -43,9 +59,13 @@ export const apiRsc = async () => {
  * const event = await api.post.getById({ postId });
  * ```
  * */
-export const apiRscPublic = () => {
-  const ctx: Ctx = { user: null, resHeaders: null, reqHeaders: null };
+export const apiRscPublic = cache(() => {
+  const ctx: Ctx = {
+    user: null,
+    resHeaders: null,
+    reqHeaders: null,
+  };
   return {
     api: trpcRouter.createCaller(ctx),
   };
-};
+});
