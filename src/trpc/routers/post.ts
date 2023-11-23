@@ -1,23 +1,11 @@
 import { z } from "zod";
 import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { wait } from "#src/utils/wait";
+import { sleep } from "#src/utils/sleep";
 import { revalidateTag } from "next/cache";
-
-async function maybeDebugThrow() {
-  const DEBUG_ERROR_MS = 2000;
-  const DEBUG_ERROR_FRACTION = 0.5;
-
-  if (Math.random() < DEBUG_ERROR_FRACTION) {
-    await wait(DEBUG_ERROR_MS);
-    throw "debug throw here";
-  }
-}
 
 export const postRouter = createTRPCRouter({
   latest: protectedProcedure.query(async ({ ctx }) => {
-    //await wait(2000);
-
     const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
@@ -31,8 +19,6 @@ export const postRouter = createTRPCRouter({
   }),
 
   mylatest: protectedProcedure.query(async ({ ctx }) => {
-    //await wait(2000);
-
     const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
@@ -116,7 +102,7 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input }) => {
-      await wait(1000);
+      await sleep(1000);
       const limit = 5;
 
       let query = dbfetch()
