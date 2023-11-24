@@ -4,7 +4,7 @@ import { absUrl } from "./url";
 /** meta tags for SEO, with sensible required fields. */
 export function seo({
   type = "website",
-  site_name = "nextjs-boilerplate-app",
+  site_name = "edge-stack",
   title,
   url,
   image,

@@ -1,14 +1,18 @@
-# nextjs-boilerplate-app
+# edge-stack
 
-nextjs project boilerplate configured according to my current taste
+nextjs project boilerplate configured according to current taste
+
+```sh
+pnpm create @andersgee/edge-stack
+```
 
 ## first steps
 
-1. copy paste `.env` and `.env.db` from examples
-2. install `pnpm install`
+1. install `pnpm install`
+2. rename `.env.example` to `.env` and `.env.db.example` to `.env.db`
 3. start database `docker compose up`
 4. push schema `pnpm prisma db push`
-5. lets go `pnpm dev`
+5. start developing `pnpm dev`
 
 ## sensible second steps
 

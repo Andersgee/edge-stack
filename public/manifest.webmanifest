@@ -1,7 +1,7 @@
 {
-  "name": "nextjs-boilerplate-app",
-  "short_name": "nextjs-boilerplate-app",
-  "description": "Boilerplate app Example.",
+  "name": "edge-stack",
+  "short_name": "edge-stack",
+  "description": "Boilerplate app.",
   "display": "standalone",
   "orientation": "any",
   "scope": "/",
