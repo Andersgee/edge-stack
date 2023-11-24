@@ -6,9 +6,6 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env.db
-    expose:
-      - 3000
-      - 3306
     ports:
       - 4000:3000
       - 3306:3306
