@@ -2,10 +2,9 @@ import { z } from "zod";
 import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { sleep } from "#src/utils/sleep";
-import { revalidateTag } from "next/cache";
 
 export const postRouter = createTRPCRouter({
-  latest: protectedProcedure.query(async ({ ctx }) => {
+  latest: protectedProcedure.query(async () => {
     const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
@@ -35,7 +34,7 @@ export const postRouter = createTRPCRouter({
     return await dbfetch().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    //await maybeDebugThrow()
+    //await maybeSleepAndThrow()
     const db = dbfetch();
 
     const { insertId: postId } = await db
@@ -60,7 +59,7 @@ export const postRouter = createTRPCRouter({
   update: protectedProcedure
     .input(z.object({ postId: z.number(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      //await maybeDebugThrow()
+      //await maybeSleepAndThrow()
       const d = dbfetch();
 
       await d
@@ -84,7 +83,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
-    //await maybeDebugThrow()
+    //await maybeSleepAndThrow()
 
     const deleteResult = await dbfetch()
       .deleteFrom("Post")

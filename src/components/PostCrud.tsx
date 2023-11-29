@@ -15,7 +15,7 @@ export function PostCrud({ className }: Props) {
   const [text, setText] = useState("");
   //const apiUtils = api.useUtils();
   const postCreate = api.post.create.useMutation({
-    onSuccess: (createdPost) => {
+    onSuccess: (_createdPost) => {
       setText("");
       //if (createdPost) {
       //  apiUtils.post.mylatest.setData(undefined, (prev) => {

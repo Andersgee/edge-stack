@@ -98,7 +98,7 @@ function PostListItem({ post }: { post: RouterOutputs["post"]["infinitePosts"]["
 
 function PostListItemForCreator({
   post,
-  user,
+  user: _user,
 }: {
   post: RouterOutputs["post"]["infinitePosts"]["items"][number];
   user: TokenUser;
@@ -250,7 +250,7 @@ function PostListItemForCreator({
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuGroup>
               <DropdownMenuItem
-                onSelect={(e) => {
+                onSelect={() => {
                   setText(post.text);
                   setIsEditing(true);
                   //e.preventDefault();
@@ -262,7 +262,7 @@ function PostListItemForCreator({
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={postDelete.isPending}
-                onSelect={(e) => {
+                onSelect={() => {
                   //e.preventDefault(); //prevent autofocus on DropdownMenuTrigger, aka allow autofocus on <Input>
                   postDelete.mutate({ postId: post.id });
                 }}

@@ -46,7 +46,7 @@ export function CreateExample({ className }: { className?: string }) {
 
   const apiUtils = api.useUtils();
   const exampleCreate = api.example.create.useMutation({
-    onSuccess: ({ insertId }) => {
+    onSuccess: () => {
       setText("");
       void apiUtils.example.getAll.invalidate();
     },
