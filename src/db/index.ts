@@ -87,3 +87,55 @@ export function dbfetch(init?: RequestInitLimited) {
     },
   });
 }
+
+type TransactionResult = {
+  /** technically "rows_affected" */
+  numAffectedRows: bigint;
+  /** technically "rows_affected" */
+  numChangedRows: bigint;
+  /** technically "last_insert_id" */
+  insertId: bigint;
+};
+
+/**
+ * multiple querys in sequence, in one fetch, with rollback if any one of them fails
+ *
+ * not quite a real transaction since can not use intermediate results in following querys
+ *
+ * also "data definition" stuff like CREATE and ALTER etc all do implicit
+ * commits and can not be rolled back, see: https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html
+ * so they are commited even on error / rollback
+ */
+export async function dbtransaction(
+  compiledQuerys: { sql: string; parameters: readonly unknown[] }[]
+): Promise<TransactionResult[]> {
+  const body = compiledQuerys.map((compiledQuery) =>
+    transformer.serialize({
+      sql: compiledQuery.sql,
+      parameters: compiledQuery.parameters,
+    })
+  );
+  const url = `${process.env.DATABASE_HTTP_URL}/transaction`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Authorization": process.env.DATABASE_HTTP_AUTH_HEADER,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (res.ok) {
+    try {
+      const result = transformer.deserialize(await res.text()) as TransactionResult[];
+
+      return result;
+    } catch (error) {
+      throw new Error("failed to parse response");
+    }
+  } else {
+    const text = await res.text();
+    console.log("res not ok. text:", text);
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+}
