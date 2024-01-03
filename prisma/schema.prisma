@@ -26,9 +26,12 @@ model User {
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    text      String
-    createdAt DateTime @default(now())
+    id   Int    @id @default(autoincrement())
+    text String
+
+    createdAt DateTime @default(now()) @db.DateTime(3)
+    updatedAt DateTime @default(now()) @updatedAt @db.DateTime(3)
+    //hmm       DateTime @default(now()) @db.DateTime(3)
 
     user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId Int
@@ -37,5 +40,4 @@ model Post {
 model Example {
     id   Int    @id @default(autoincrement())
     text String
-    woop String
 }

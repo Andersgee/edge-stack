@@ -3,7 +3,7 @@ import {
   REFERENTIAL_ACTION_MAP,
   prisma_default_from_col,
   prisma_type_from_col,
-  prisma_updateat_from_col,
+  prisma_updatedat_from_col,
 } from "./mysql-prisma-map";
 import { ts_type_from_col } from "./mysql-typescript-map";
 import { groupBy } from "./utils";
@@ -206,7 +206,7 @@ async function getTableTypes(db: DB) {
           const isNullable = column.IS_NULLABLE === "YES";
           const defaultValue = prisma_default_from_col(type, column);
           const atDefault = defaultValue ? `@default(${defaultValue})` : "";
-          const atUpdatedAt = prisma_updateat_from_col(column);
+          const atUpdatedAt = prisma_updatedat_from_col(column);
           const isGenerated = !!defaultValue;
           const colName = column.COLUMN_NAME;
           const tsstring = `${ts_type_from_col(column)}${isNullable ? " | null" : ""}`;

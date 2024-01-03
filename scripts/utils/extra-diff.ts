@@ -3,7 +3,7 @@ import type { IntrospectResult } from "scripts/mysql8-introspect";
 
 type Item = { tableName: string; colName: string };
 
-/** a list of sql related to "@upddateAt" usage */
+/** a list of sql related to "@updatedAt" usage */
 export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
   const db_atupdatedAt: Item[] = [];
   for (const [tn, cols] of Object.entries(r.tableTypes)) {
@@ -22,13 +22,13 @@ export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
     (a) => !schema_atupdatedAt.some((b) => b.tableName === a.tableName && b.colName === a.colName)
   );
 
-  const addsqls = needs_adding.map((x) => add_updateat_sql(x, r));
-  const removesqls = needs_removal.map((x) => remove_updateat_sql(x, r));
+  const addsqls = needs_adding.map((x) => add_updatedat_sql(x, r));
+  const removesqls = needs_removal.map((x) => remove_updatedat_sql(x, r));
   return addsqls.concat(removesqls).filter(Boolean);
 }
 
 /**
- * just look at lines and grab tableName and colName of wherever "@updateAt" appears.
+ * just look at lines and grab tableName and colName of wherever "@updatedAt" appears.
  * If more of these things come up might be worth properly parsing entire file.
  */
 function schema_updatedat_usage(schemaPrismaPath: string) {
@@ -48,7 +48,7 @@ function schema_updatedat_usage(schemaPrismaPath: string) {
   return relevant;
 }
 
-function add_updateat_sql(x: Item, r: IntrospectResult) {
+function add_updatedat_sql(x: Item, r: IntrospectResult) {
   const info = r.tableTypes[x.tableName]?.find((a) => a.COLUMN_NAME === x.colName);
   if (!info) {
     return "";
@@ -63,7 +63,7 @@ function add_updateat_sql(x: Item, r: IntrospectResult) {
   return sql;
 }
 
-function remove_updateat_sql(x: Item, r: IntrospectResult) {
+function remove_updatedat_sql(x: Item, r: IntrospectResult) {
   const info = r.tableTypes[x.tableName]?.find((a) => a.COLUMN_NAME === x.colName);
   if (!info) {
     return "";

@@ -113,14 +113,14 @@ export const REFERENTIAL_ACTION_MAP = {
   "NO ACTION": "NoAction",
 };
 
-export function prisma_updateat_from_col(col: Col) {
+export function prisma_updatedat_from_col(col: Col) {
   //note:
-  //prisma has an "@updateAt" which means "update this col with current time any time this row is updated"
+  //prisma has an "@updatedAt" which means "update this col with current time any time this row is updated"
   //but prisma wants to handle that in prisma client rather than on db level
-  //this complicates things, because prisma diff does not care about any @updateAt usage
+  //this complicates things, because prisma diff does not care about any @updatedAt usage
   //
-  //anyway, mysql has the functionality so atleast we can PULL any "@updateAt" usage
-  //see "check-updateat-usage.ts" for dealing with actually PUSHING "@updateAt" usage
+  //anyway, mysql has the functionality so atleast we can PULL any "@updatedAt" usage
+  //see "extra-diff.ts" for dealing with actually PUSHING "@updatedAt" usage
 
   return col.EXTRA.startsWith("DEFAULT_GENERATED on update CURRENT_TIMESTAMP") ? "@updatedAt" : "";
 }

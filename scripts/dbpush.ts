@@ -16,7 +16,7 @@ main idea is to:
 3. apply sql
 4. generate typescript types
 
-but there are some caveats: prisma diff does not care about certain things like @updateat 
+but there are some caveats: prisma diff does not care about certain things like @updatedAt 
 since they want to handle that in prisma client rather than on database level
 
 
@@ -69,6 +69,7 @@ async function main() {
   await apply(prismadiffsql);
   //6
   introspectresult = await introspect(db);
+  savePulledPrismaSchema(introspectresult);
   //7
   extradiffsql = extradiff(schemaPrismaPath, introspectresult);
   //8
