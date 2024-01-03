@@ -10,7 +10,7 @@ import { z } from "zod";
  * its only purpose is to type the global process.env
  */
 export const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]),
+  //NODE_ENV: z.enum(["development", "test", "production"]),
 
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),

@@ -1,0 +1,44 @@
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_MYSQL_URL")
+}
+
+model Example {
+  id Int  @default(autoincrement())
+  text String
+  woop String
+
+  @@id([id])
+}
+
+model Post {
+  id Int  @default(autoincrement())
+  text String
+  createdAt DateTime @db.DateTime(3) @default(now())
+  userId Int
+
+  Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@index([userId])
+  @@id([id])
+}
+
+model User {
+  id Int  @default(autoincrement())
+  email String
+  googleUserSub String?
+  discordUserId String?
+  githubUserId Int?
+  image String?
+  name String
+  createdAt DateTime @db.DateTime(3) @default(now())
+
+  Post_userId_fkey Post[]
+
+  @@id([id])
+  @@unique([discordUserId])
+  @@unique([email])
+  @@unique([githubUserId])
+  @@unique([googleUserSub])
+}
+

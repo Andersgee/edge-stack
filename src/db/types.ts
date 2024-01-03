@@ -1,31 +1,48 @@
-import type { ColumnType } from "kysely";
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
-export type Timestamp = ColumnType<Date, Date | string, Date | string>;
-
-export type Example = {
-  id: Generated<number>;
-  text: string;
-};
-export type Post = {
-  id: Generated<number>;
-  text: string;
-  createdAt: Generated<Timestamp>;
-  userId: number;
-};
-export type User = {
-  id: Generated<number>;
-  email: string;
-  googleUserSub: string | null;
-  discordUserId: string | null;
-  githubUserId: number | null;
-  image: string | null;
-  name: string;
-  createdAt: Generated<Timestamp>;
-};
+import type { Generated } from "kysely";
+import type { GeoJSON } from "./geojson-types";
+  
 export type DB = {
   Example: Example;
   Post: Post;
   User: User;
 };
+
+export type Example = {
+  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  id: Generated<number>;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  text: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  woop: string;
+};
+
+export type Post = {
+  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  id: Generated<number>;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  text: string;
+  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
+  createdAt: Generated<Date>;
+  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  userId: number;
+};
+
+export type User = {
+  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  id: Generated<number>;
+  /** indexed: (email), dbtype: 'varchar(191)', eg string with max 191 chars */
+  email: string;
+  /** indexed: (googleUserSub), dbtype: 'varchar(191)', eg string with max 191 chars */
+  googleUserSub: string | null;
+  /** indexed: (discordUserId), dbtype: 'varchar(191)', eg string with max 191 chars */
+  discordUserId: string | null;
+  /** indexed: (githubUserId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  githubUserId: number | null;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  image: string | null;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  name: string;
+  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
+  createdAt: Generated<Date>;
+};
+

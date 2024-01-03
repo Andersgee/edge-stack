@@ -88,15 +88,14 @@ export function dbfetch(init?: RequestInitLimited) {
   });
 }
 
-type TransactionResult = {
+type TransactionResults = {
   /** technically "rows_affected" */
   numAffectedRows: bigint;
   /** technically "rows_affected" */
   numChangedRows: bigint;
   /** technically "last_insert_id" */
   insertId: bigint;
-};
-
+}[];
 /**
  * multiple querys in sequence, in one fetch, with rollback if any one of them fails
  *
@@ -106,9 +105,9 @@ type TransactionResult = {
  * commits and can not be rolled back, see: https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html
  * so they are commited even on error / rollback
  */
-export async function dbtransaction(
+export async function dbTransaction(
   compiledQuerys: { sql: string; parameters: readonly unknown[] }[]
-): Promise<TransactionResult[]> {
+): Promise<TransactionResults> {
   const body = compiledQuerys.map((compiledQuery) =>
     transformer.serialize({
       sql: compiledQuery.sql,
@@ -127,8 +126,7 @@ export async function dbtransaction(
 
   if (res.ok) {
     try {
-      const result = transformer.deserialize(await res.text()) as TransactionResult[];
-
+      const result = transformer.deserialize(await res.text()) as TransactionResults;
       return result;
     } catch (error) {
       throw new Error("failed to parse response");
