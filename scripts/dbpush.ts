@@ -2,7 +2,8 @@ import "dotenv/config";
 import "#src/utils/validate-process-env.mjs";
 import { introspect, generatePrismaSchema, generateTypescriptTypes, type IntrospectResult } from "./mysql8-introspect";
 import { dbfetch, dbTransaction } from "#src/db";
-import { writeFileSync } from "fs";
+//import { writeFileSync } from "fs";
+import { writeFile } from "fs/promises";
 import { join } from "path";
 import { prismadiff } from "./utils/prisma-diff";
 import { extradiff } from "./utils/extra-diff";
@@ -47,7 +48,7 @@ const typescriptTypesPath = join(cwd, "src", "db", "types.ts");
 async function main() {
   //1
   let introspectresult = await introspect(db);
-  savePulledPrismaSchema(introspectresult);
+  await savePulledPrismaSchema(introspectresult);
   //2
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
   //3
@@ -69,7 +70,7 @@ async function main() {
   await apply(prismadiffsql);
   //6
   introspectresult = await introspect(db);
-  savePulledPrismaSchema(introspectresult);
+  await savePulledPrismaSchema(introspectresult);
   //7
   extradiffsql = extradiff(schemaPrismaPath, introspectresult);
   //8
@@ -84,7 +85,7 @@ async function main() {
 async function validateAndGenerateTypes() {
   console.log("validating");
   const introspectresult = await introspect(db);
-  savePulledPrismaSchema(introspectresult);
+  await savePulledPrismaSchema(introspectresult);
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
   const extradiffsql = extradiff(schemaPrismaPath, introspectresult);
 
@@ -95,20 +96,20 @@ async function validateAndGenerateTypes() {
     console.log("on validate, found unexpected extradiffsql:", extradiffsql);
   }
 
-  saveTypescriptTypes(introspectresult);
+  await saveTypescriptTypes(introspectresult);
 }
 
-function savePulledPrismaSchema(introspectresult: IntrospectResult) {
+async function savePulledPrismaSchema(introspectresult: IntrospectResult) {
   const path = pulledPrismaPath;
   const prismaschemastring = generatePrismaSchema(introspectresult);
-  writeFileSync(path, prismaschemastring);
+  await writeFile(path, prismaschemastring);
   console.log(`saved ${path}`);
 }
 
-function saveTypescriptTypes(introspectresult: IntrospectResult) {
+async function saveTypescriptTypes(introspectresult: IntrospectResult) {
   const path = typescriptTypesPath;
   const typescriptstring = generateTypescriptTypes(introspectresult);
-  writeFileSync(path, typescriptstring);
+  await writeFile(path, typescriptstring);
   console.log(`saved ${path}`);
 }
 

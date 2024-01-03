@@ -15,6 +15,7 @@ model Post {
   text String
   createdAt DateTime @db.DateTime(3) @default(now())
   userId Int
+  updatedAt DateTime @db.DateTime(3) @default(now())
   hmm DateTime @db.DateTime(3) @default(now())
 
   Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)

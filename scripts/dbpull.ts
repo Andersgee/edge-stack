@@ -2,7 +2,7 @@ import "dotenv/config";
 import "#src/utils/validate-process-env.mjs";
 import { introspect, generatePrismaSchema, generateTypescriptTypes } from "./mysql8-introspect";
 import { dbfetch } from "#src/db";
-import { writeFileSync } from "fs";
+import { writeFile } from "fs/promises";
 import { join } from "path";
 
 const db = dbfetch();
@@ -17,8 +17,8 @@ async function main() {
   const prismastring = generatePrismaSchema(info);
   const typescriptstring = generateTypescriptTypes(info);
 
-  writeFileSync(pulledPrismaPath, prismastring);
-  writeFileSync(typescriptTypesPath, typescriptstring);
+  await writeFile(pulledPrismaPath, prismastring);
+  await writeFile(typescriptTypesPath, typescriptstring);
 
   console.log("saved introspected types.ts and pulled.prisma");
 }
