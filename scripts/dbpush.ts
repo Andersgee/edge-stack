@@ -30,7 +30,7 @@ actual steps:
 7. generate extradiffsql (compare introspectresult with schema.prisma)
 8. apply extradiffsql (if any)
 9. validate
-  get introspectresult (yet again) and save pulled.prisma
+  perhaps get introspectresult (yet again) and save pulled.prisma
   generate prismadiffsql (compare schema.prisma - pulled.prisma with "prisma diff")
   generate extradiffsql (compare introspectresult with schema.prisma)
   check that indeed no diffs.
@@ -45,18 +45,17 @@ const pulledPrismaPath = join(cwd, "prisma", "pulled.prisma");
 const typescriptTypesPath = join(cwd, "src", "db", "types.ts");
 
 async function main() {
-  //1
+  //1,2,3
   let introspectresult = await introspect(db);
   await savePulledPrismaSchema(introspectresult);
-  //2
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
-  //3
   let extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
+
   //4
   if (prismadiffsql.length === 0) {
     if (extradiffsql.length > 0) {
-      await apply(extradiffsql);
-      await validateAndGenerateTypes();
+      introspectresult = await applyAndIntrospect(extradiffsql);
+      await validateAndSaveTypes(introspectresult);
       console.log("Done.");
       return;
     } else {
@@ -65,36 +64,41 @@ async function main() {
       return;
     }
   }
-  //5
-  await apply(prismadiffsql);
-  //6
-  introspectresult = await introspect(db);
-  await savePulledPrismaSchema(introspectresult);
-  //7
+  //5,6,7
+  introspectresult = await applyAndIntrospect(prismadiffsql);
   extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
-  //8
+  //8, 9
   if (extradiffsql.length > 0) {
-    await apply(extradiffsql);
+    introspectresult = await applyAndIntrospect(extradiffsql);
+    await validateAndSaveTypes(introspectresult);
+    console.log("Done.");
+    return;
+  } else {
+    await validateAndSaveTypes(introspectresult);
+    console.log("Done.");
+    return;
   }
-  //9
-  await validateAndGenerateTypes();
-  console.log("Done.");
 }
 
-async function validateAndGenerateTypes() {
-  console.log("validating");
-  const introspectresult = await introspect(db);
+async function applyAndIntrospect(sql: string[]) {
+  await apply(sql);
+  return await introspect(db);
+}
+
+async function validateAndSaveTypes(introspectresult: IntrospectResult) {
   await savePulledPrismaSchema(introspectresult);
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
   const extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
 
+  if (prismadiffsql.length === 0 && extradiffsql.length === 0) {
+    console.log("validated.");
+  }
   if (prismadiffsql.length > 0) {
     console.log("on validate, found unexpected prismadiffsql:", prismadiffsql);
   }
   if (extradiffsql.length > 0) {
     console.log("on validate, found unexpected extradiffsql:", extradiffsql);
   }
-
   await saveTypescriptTypes(introspectresult);
 }
 
