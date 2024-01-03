@@ -2,7 +2,6 @@ import "dotenv/config";
 import "#src/utils/validate-process-env.mjs";
 import { introspect, generatePrismaSchema, generateTypescriptTypes, type IntrospectResult } from "./mysql8-introspect";
 import { dbfetch, dbTransaction } from "#src/db";
-//import { writeFileSync } from "fs";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import { prismadiff } from "./utils/prisma-diff";
@@ -52,7 +51,7 @@ async function main() {
   //2
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
   //3
-  let extradiffsql = extradiff(schemaPrismaPath, introspectresult);
+  let extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
   //4
   if (prismadiffsql.length === 0) {
     if (extradiffsql.length > 0) {
@@ -72,7 +71,7 @@ async function main() {
   introspectresult = await introspect(db);
   await savePulledPrismaSchema(introspectresult);
   //7
-  extradiffsql = extradiff(schemaPrismaPath, introspectresult);
+  extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
   //8
   if (extradiffsql.length > 0) {
     await apply(extradiffsql);
@@ -87,7 +86,7 @@ async function validateAndGenerateTypes() {
   const introspectresult = await introspect(db);
   await savePulledPrismaSchema(introspectresult);
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
-  const extradiffsql = extradiff(schemaPrismaPath, introspectresult);
+  const extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
 
   if (prismadiffsql.length > 0) {
     console.log("on validate, found unexpected prismadiffsql:", prismadiffsql);

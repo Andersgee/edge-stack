@@ -1,10 +1,10 @@
-import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import type { IntrospectResult } from "scripts/mysql8-introspect";
 
 type Item = { tableName: string; colName: string };
 
 /** a list of sql related to "@updatedAt" usage */
-export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
+export async function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
   const db_atupdatedAt: Item[] = [];
   for (const [tn, cols] of Object.entries(r.tableTypes)) {
     for (const col of cols) {
@@ -13,7 +13,7 @@ export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
       }
     }
   }
-  const schema_atupdatedAt = schema_updatedat_usage(prismaSchemaPath);
+  const schema_atupdatedAt = await schema_updatedat_usage(prismaSchemaPath);
 
   const needs_adding = schema_atupdatedAt.filter(
     (a) => !db_atupdatedAt.some((b) => b.tableName === a.tableName && b.colName === a.colName)
@@ -31,9 +31,9 @@ export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
  * just look at lines and grab tableName and colName of wherever "@updatedAt" appears.
  * If more of these things come up might be worth properly parsing entire file.
  */
-function schema_updatedat_usage(schemaPrismaPath: string) {
+async function schema_updatedat_usage(schemaPrismaPath: string) {
   const relevant: Item[] = [];
-  const content = readFileSync(schemaPrismaPath, "utf8");
+  const content = await readFile(schemaPrismaPath, "utf8");
   let currentModel = "";
   for (const str of content.split("\n")) {
     const line = str.trim().split("//")[0]!;
