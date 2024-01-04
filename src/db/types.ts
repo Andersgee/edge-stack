@@ -12,6 +12,8 @@ export type Example = {
   id: Generated<number>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   text: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  woop: string;
 };
 
 export type Post = {

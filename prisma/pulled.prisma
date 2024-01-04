@@ -6,20 +6,12 @@ datasource db {
 model Example {
   id Int  @default(autoincrement())
   text String
+  woop String
+  hmm String
+  kook DateTime @db.DateTime(3) @default(now())
+  welp String
 
   @@id([id])
-}
-
-model Post {
-  id Int  @default(autoincrement())
-  text String
-  createdAt DateTime @db.DateTime(3) @default(now())
-  userId Int
-
-  Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-
-  @@id([id])
-  @@index([userId])
 }
 
 model User {
@@ -39,5 +31,17 @@ model User {
   @@unique([googleUserSub])
   @@unique([discordUserId])
   @@unique([githubUserId])
+}
+
+model Post {
+  id Int  @default(autoincrement())
+  text String
+  createdAt DateTime @db.DateTime(3) @default(now())
+  userId Int
+
+  Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@id([id])
+  @@index([userId])
 }
 

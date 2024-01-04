@@ -15,9 +15,9 @@ export type IntrospectResult = Awaited<ReturnType<typeof introspect>>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function introspect(db: Kysely<any>) {
-  if (!(await hasConnection(db))) {
-    throw new Error("no connection to db");
-  }
+  //if (!(await hasConnection(db))) {
+  //  throw new Error("no connection to db");
+  //}
 
   const [{ tableTypes, enums }, { tableIndexing }, { tableRelations, opposingTableRelations }] = await Promise.all([
     getTableTypes(db as DB),

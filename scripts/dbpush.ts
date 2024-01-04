@@ -46,46 +46,40 @@ const typescriptTypesPath = join(cwd, "src", "db", "types.ts");
 
 async function main() {
   //1,2,3
-  let introspectresult = await introspect(db);
+  const introspectresult = await introspect(db);
   await savePulledPrismaSchema(introspectresult);
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
-  let extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
+  const extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
 
-  //4
-  if (prismadiffsql.length === 0) {
-    if (extradiffsql.length > 0) {
-      introspectresult = await applyAndIntrospect(extradiffsql);
-      await validateAndSaveTypes(introspectresult);
-      console.log("Done.");
-      return;
-    } else {
-      console.log("No changes found.");
-      console.log("Done.");
-      return;
-    }
+  if (prismadiffsql.length === 0 && extradiffsql.length === 0) {
+    console.log("No changes found.");
+    console.log("Done.");
+    return;
   }
-  //5,6,7
-  introspectresult = await applyAndIntrospect(prismadiffsql);
-  extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
-  //8, 9
+
+  if (prismadiffsql.length === 0 && extradiffsql.length > 0) {
+    console.log(`Only extradiff changes found.`);
+    await apply(extradiffsql);
+    await validate();
+    console.log("Done.");
+    return;
+  }
+
+  //ok. this is regular scenario
+  //apply prismadiff first, then introspect again and potentially apply extradiff if any
+  await apply(prismadiffsql);
+  const introspectresult2 = await introspect(db);
+  const extradiffsql2 = await extradiff(schemaPrismaPath, introspectresult2);
   if (extradiffsql.length > 0) {
-    introspectresult = await applyAndIntrospect(extradiffsql);
-    await validateAndSaveTypes(introspectresult);
-    console.log("Done.");
-    return;
-  } else {
-    await validateAndSaveTypes(introspectresult);
-    console.log("Done.");
-    return;
+    await apply(extradiffsql2);
   }
+
+  await validate();
+  console.log("Done.");
 }
 
-async function applyAndIntrospect(sql: string[]) {
-  await apply(sql);
-  return await introspect(db);
-}
-
-async function validateAndSaveTypes(introspectresult: IntrospectResult) {
+async function validate() {
+  const introspectresult = await introspect(db);
   await savePulledPrismaSchema(introspectresult);
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
   const extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
@@ -99,19 +93,21 @@ async function validateAndSaveTypes(introspectresult: IntrospectResult) {
   if (extradiffsql.length > 0) {
     console.log("on validate, found unexpected extradiffsql:", extradiffsql);
   }
-  await saveTypescriptTypes(introspectresult);
+  //await saveTypescriptTypes(introspectresult);
 }
 
 async function savePulledPrismaSchema(introspectresult: IntrospectResult) {
-  const path = pulledPrismaPath;
   const prismaschemastring = generatePrismaSchema(introspectresult);
+
+  const path = pulledPrismaPath;
   await writeFile(path, prismaschemastring);
   console.log(`saved ${path}`);
 }
 
 async function saveTypescriptTypes(introspectresult: IntrospectResult) {
-  const path = typescriptTypesPath;
   const typescriptstring = generateTypescriptTypes(introspectresult);
+
+  const path = typescriptTypesPath;
   await writeFile(path, typescriptstring);
   console.log(`saved ${path}`);
 }
@@ -119,7 +115,14 @@ async function saveTypescriptTypes(introspectresult: IntrospectResult) {
 async function apply(sqls: string[]) {
   console.log("applying sql:", sqls);
   const compiledQuerys = sqls.map((s) => ({ sql: s, parameters: [] }));
-  await dbTransaction(compiledQuerys);
+  const transactionresults = await dbTransaction(compiledQuerys);
+  console.log("transactionresults:", transactionresults);
 }
 
-void main();
+main()
+  .then(() => {
+    console.log("done");
+  })
+  .catch((err) => {
+    console.log(err);
+  });

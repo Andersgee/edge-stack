@@ -12,10 +12,10 @@ const pulledPrismaPath = join(cwd, "prisma", "pulled.prisma");
 const typescriptTypesPath = join(cwd, "src", "db", "types.ts");
 
 async function main() {
-  const info = await introspect(db);
+  const introspectresult = await introspect(db);
 
-  const prismastring = generatePrismaSchema(info);
-  const typescriptstring = generateTypescriptTypes(info);
+  const prismastring = generatePrismaSchema(introspectresult);
+  const typescriptstring = generateTypescriptTypes(introspectresult);
 
   await writeFile(pulledPrismaPath, prismastring);
   await writeFile(typescriptTypesPath, typescriptstring);

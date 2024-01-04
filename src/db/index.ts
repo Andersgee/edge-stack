@@ -117,6 +117,7 @@ export async function dbTransaction(
   const url = `${process.env.DATABASE_HTTP_URL}/transaction`;
   const res = await fetch(url, {
     method: "POST",
+    cache: "no-store",
     headers: {
       "Authorization": process.env.DATABASE_HTTP_AUTH_HEADER,
       "Content-Type": "application/json",
