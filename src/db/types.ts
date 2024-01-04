@@ -3,8 +3,8 @@ import type { GeoJSON } from "./geojson-types";
   
 export type DB = {
   Example: Example;
-  Post: Post;
   User: User;
+  Post: Post;
 };
 
 export type Example = {
@@ -12,19 +12,12 @@ export type Example = {
   id: Generated<number>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   text: string;
+  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
+  kook: Generated<Date>;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  hmm: string;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   woop: string;
-};
-
-export type Post = {
-  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  id: Generated<number>;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  text: string;
-  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
-  createdAt: Generated<Date>;
-  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  userId: number;
 };
 
 export type User = {
@@ -44,5 +37,16 @@ export type User = {
   name: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   createdAt: Generated<Date>;
+};
+
+export type Post = {
+  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  id: Generated<number>;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  text: string;
+  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
+  createdAt: Generated<Date>;
+  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  userId: number;
 };
 
