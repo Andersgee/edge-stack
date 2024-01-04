@@ -9,6 +9,7 @@ export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
   for (const [tn, cols] of Object.entries(r.tableTypes)) {
     for (const col of cols) {
       if (col.EXTRA.startsWith("DEFAULT_GENERATED on update CURRENT_TIMESTAMP")) {
+        //console.log("in extradiff, looking for '@updatedAt' on dblevel , found col", col);
         db_atupdatedAt.push({ tableName: tn, colName: col.COLUMN_NAME });
       }
     }
@@ -22,9 +23,18 @@ export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
     (a) => !schema_atupdatedAt.some((b) => b.tableName === a.tableName && b.colName === a.colName)
   );
 
+  console.log("in extradiff, db_atupdatedAt:", db_atupdatedAt);
+  console.log("in extradiff, schema_atupdatedAt:", schema_atupdatedAt);
+  console.log("in extradiff, needs_adding:", needs_adding);
+  console.log("in extradiff, needs_removal:", needs_removal);
+
   const addsqls = needs_adding.map((x) => add_updatedat_sql(x, r));
   const removesqls = needs_removal.map((x) => remove_updatedat_sql(x, r));
-  return addsqls.concat(removesqls).filter(Boolean);
+
+  const extradiffsql = addsqls.concat(removesqls).filter(Boolean);
+  //console.log("in extradiff, final extradiffsql:", extradiffsql);
+
+  return extradiffsql;
 }
 
 /**
@@ -51,6 +61,7 @@ function schema_updatedat_usage(schemaPrismaPath: string) {
 function add_updatedat_sql(x: Item, r: IntrospectResult) {
   const info = r.tableTypes[x.tableName]?.find((a) => a.COLUMN_NAME === x.colName);
   if (!info) {
+    console.log("in add_updatedat_sql, does not exist in introspectresult, IGNORING item:", x);
     return "";
   }
   if (!info.COLUMN_DEFAULT || !info.COLUMN_DEFAULT.startsWith("CURRENT_TIMESTAMP")) {
@@ -66,6 +77,7 @@ function add_updatedat_sql(x: Item, r: IntrospectResult) {
 function remove_updatedat_sql(x: Item, r: IntrospectResult) {
   const info = r.tableTypes[x.tableName]?.find((a) => a.COLUMN_NAME === x.colName);
   if (!info) {
+    console.log("in remove_updatedat_sql, does not exist in introspectresult, IGNORING  item:", x);
     return "";
   }
 

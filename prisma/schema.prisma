@@ -25,19 +25,18 @@ model Post {
 
     createdAt DateTime @default(now()) @db.DateTime(3)
     //updatedAt DateTime @default(now()) @updatedAt @db.DateTime(3)
-    //hmm       DateTime @default(now()) @updatedAt @db.DateTime(3)
+    hmm       DateTime @default(now()) @updatedAt @db.DateTime(4)
 
     user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId Int
 }
 
 model Example {
-    id   Int    @id @default(autoincrement())
-    text String
-    woop String
-    nell String
+    id      Int    @id @default(autoincrement())
+    text    String
+    wopidoo Int
+    hoho    Int
+    merk    Int
 
-    welp String
-    kook DateTime @default(now()) @updatedAt
-    //updatedAt DateTime @default(now()) @updatedAt @db.DateTime(3)
+    someauto DateTime @default(now()) @updatedAt @db.DateTime(3)
 }

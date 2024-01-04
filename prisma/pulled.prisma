@@ -3,6 +3,16 @@ datasource db {
   url = env("DATABASE_MYSQL_URL")
 }
 
+model Example {
+  id Int  @default(autoincrement())
+  text String
+  wopidoo Int
+  hoho Int
+  someauto DateTime @db.DateTime(3) @default(now()) @updatedAt
+
+  @@id([id])
+}
+
 model User {
   id Int  @default(autoincrement())
   email String
@@ -27,21 +37,11 @@ model Post {
   text String
   createdAt DateTime @db.DateTime(3) @default(now())
   userId Int
+  hmm DateTime @db.DateTime(4) @default(now()) @updatedAt
 
   Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   @@id([id])
   @@index([userId])
-}
-
-model Example {
-  id Int  @default(autoincrement())
-  text String
-  kook DateTime @db.DateTime(3) @default(now()) @updatedAt
-  woop String
-  welp String
-  nell String
-
-  @@id([id])
 }
 
