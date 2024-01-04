@@ -9,7 +9,6 @@ model Example {
   woop String
   hmm String
   kook DateTime @db.DateTime(3) @default(now())
-  welp String
 
   @@id([id])
 }
