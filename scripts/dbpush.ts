@@ -2,7 +2,7 @@ import "dotenv/config";
 import "#src/utils/validate-process-env.mjs";
 import { introspect, generatePrismaSchema, generateTypescriptTypes, type IntrospectResult } from "./mysql8-introspect";
 import { dbfetch, dbTransaction } from "#src/db";
-import { writeFile } from "fs/promises";
+import { writeFileSync } from "fs";
 import { join } from "path";
 import { prismadiff } from "./utils/prisma-diff";
 import { extradiff } from "./utils/extra-diff";
@@ -47,9 +47,9 @@ const typescriptTypesPath = join(cwd, "src", "db", "types.ts");
 async function main() {
   //1,2,3
   const introspectresult = await introspect(db);
-  await savePulledPrismaSchema(introspectresult);
+  savePulledPrismaSchema(introspectresult);
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
-  const extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
+  const extradiffsql = extradiff(schemaPrismaPath, introspectresult);
 
   if (prismadiffsql.length === 0 && extradiffsql.length === 0) {
     console.log("No changes found.");
@@ -69,8 +69,9 @@ async function main() {
   //apply prismadiff first, then introspect again and potentially apply extradiff if any
   await apply(prismadiffsql);
   const introspectresult2 = await introspect(db);
-  const extradiffsql2 = await extradiff(schemaPrismaPath, introspectresult2);
+  const extradiffsql2 = extradiff(schemaPrismaPath, introspectresult2);
   if (extradiffsql2.length > 0) {
+    console.log("found extradiffsql2 (after applying prismadiffsql)");
     await apply(extradiffsql2);
   }
 
@@ -79,36 +80,37 @@ async function main() {
 }
 
 async function validate() {
+  console.log("validating...");
   const introspectresult = await introspect(db);
-  await savePulledPrismaSchema(introspectresult);
+  savePulledPrismaSchema(introspectresult);
   const prismadiffsql = await prismadiff(pulledPrismaPath, schemaPrismaPath);
-  const extradiffsql = await extradiff(schemaPrismaPath, introspectresult);
+  const extradiffsql = extradiff(schemaPrismaPath, introspectresult);
 
   if (prismadiffsql.length === 0 && extradiffsql.length === 0) {
-    console.log("validated.");
+    console.log("...validation ok");
   }
   if (prismadiffsql.length > 0) {
-    console.log("on validate, found unexpected prismadiffsql:", prismadiffsql);
+    console.log("...validation warning, found unexpected prismadiffsql:", prismadiffsql);
   }
   if (extradiffsql.length > 0) {
-    console.log("on validate, found unexpected extradiffsql:", extradiffsql);
+    console.log("...validation warning, found unexpected extradiffsql:", extradiffsql);
   }
   //await saveTypescriptTypes(introspectresult);
 }
 
-async function savePulledPrismaSchema(introspectresult: IntrospectResult) {
+function savePulledPrismaSchema(introspectresult: IntrospectResult) {
   const prismaschemastring = generatePrismaSchema(introspectresult);
 
   const path = pulledPrismaPath;
-  await writeFile(path, prismaschemastring, "utf8");
+  writeFileSync(path, prismaschemastring, "utf8");
   console.log(`saved ${path}`);
 }
 
-async function saveTypescriptTypes(introspectresult: IntrospectResult) {
+function saveTypescriptTypes(introspectresult: IntrospectResult) {
   const typescriptstring = generateTypescriptTypes(introspectresult);
 
   const path = typescriptTypesPath;
-  await writeFile(path, typescriptstring, "utf8");
+  writeFileSync(path, typescriptstring, "utf8");
   console.log(`saved ${path}`);
 }
 

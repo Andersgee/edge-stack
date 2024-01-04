@@ -12,12 +12,14 @@ export type Example = {
   id: Generated<number>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   text: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  hmm: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   kook: Generated<Date>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  hmm: string;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
   woop: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  welp: string;
 };
 
 export type User = {

@@ -3,16 +3,6 @@ datasource db {
   url = env("DATABASE_MYSQL_URL")
 }
 
-model Example {
-  id Int  @default(autoincrement())
-  text String
-  kook DateTime @db.DateTime(3) @default(now())
-  hmm String
-  woop String
-
-  @@id([id])
-}
-
 model User {
   id Int  @default(autoincrement())
   email String
@@ -42,5 +32,16 @@ model Post {
 
   @@id([id])
   @@index([userId])
+}
+
+model Example {
+  id Int  @default(autoincrement())
+  text String
+  kook DateTime @db.DateTime(3) @default(now()) @updatedAt
+  woop String
+  welp String
+  nell String
+
+  @@id([id])
 }
 

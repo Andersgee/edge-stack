@@ -32,11 +32,12 @@ model Post {
 }
 
 model Example {
-    id   Int      @id @default(autoincrement())
+    id   Int    @id @default(autoincrement())
     text String
     woop String
-    hmm  String
-    //welp String
-    kook DateTime @default(now())
+    nell String
+
+    welp String
+    kook DateTime @default(now()) @updatedAt
     //updatedAt DateTime @default(now()) @updatedAt @db.DateTime(3)
 }
