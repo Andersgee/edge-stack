@@ -11,7 +11,7 @@ pnpm create @andersgee/edge-stack
 1. install `pnpm install`
 2. rename `.env.example` to `.env` and `.env.db.example` to `.env.db`
 3. start database `docker compose up`
-4. push schema `pnpm prisma db push`
+4. push schema `pnpm dbpush`
 5. start developing `pnpm dev`
 
 ## sensible second steps
@@ -26,13 +26,14 @@ pnpm create @andersgee/edge-stack
 - oauth boilerplate
 - some utility functions
 - trpc edge runtime for client components
-  - eg `const {data} = api.post.getById.useQuery({postId})`
+  - eg `const { data } = api.post.getById.useQuery({postId})`
 - call trpc procedures directly as regular functions in server components
   - eg `const data = await api.post.getById({postId})`
   - note that calling protected procedures `{ api, user } = await apiRsc()` in server components will opt route into dynamic rendering at request time
   - there is also `const { api } = apiRscPublic()` that does _not_ require dynamic rendering at request time, only for publicProcedures
-- prisma for db schema handling only
-  - `pnpm prisma generate` and `pnpm prisma db push`
+- schema.prisma for schema definition only
+  - `pnpm dbpush` to push schema and generate types for kysely
+  - or just `pnpm dbpull` to generate types for kysely
 - kysely query builder with fetch driver for nextjs server side data cache (http cache) compatible db queries
   - eg `db({cache: "force-cache"}).selectFrom("Post").selectAll().execute()`
   - or `db({next: {tags: ["some-tag"]}}).selectFrom("Post").selectAll().execute()`
