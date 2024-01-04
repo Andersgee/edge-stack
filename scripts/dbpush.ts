@@ -70,7 +70,7 @@ async function main() {
   await apply(prismadiffsql);
   const introspectresult2 = await introspect(db);
   const extradiffsql2 = await extradiff(schemaPrismaPath, introspectresult2);
-  if (extradiffsql.length > 0) {
+  if (extradiffsql2.length > 0) {
     await apply(extradiffsql2);
   }
 
@@ -100,7 +100,7 @@ async function savePulledPrismaSchema(introspectresult: IntrospectResult) {
   const prismaschemastring = generatePrismaSchema(introspectresult);
 
   const path = pulledPrismaPath;
-  await writeFile(path, prismaschemastring);
+  await writeFile(path, prismaschemastring, "utf8");
   console.log(`saved ${path}`);
 }
 
@@ -108,7 +108,7 @@ async function saveTypescriptTypes(introspectresult: IntrospectResult) {
   const typescriptstring = generateTypescriptTypes(introspectresult);
 
   const path = typescriptTypesPath;
-  await writeFile(path, typescriptstring);
+  await writeFile(path, typescriptstring, "utf8");
   console.log(`saved ${path}`);
 }
 
