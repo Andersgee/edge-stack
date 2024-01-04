@@ -39,11 +39,14 @@ async function main() {
   //there might be extradiff
   //but introspectresult is stale after applying
   const introspectresult2 = await introspect(db);
-  const extradiffsql = extradiff(schemaPrismaPath, introspectresult2);
+  const extradiffsql = extradiff(introspectresult2, schemaPrismaPath);
   console.log("applying extradiffsql");
   await apply(extradiffsql);
 
-  await validateAndSave();
+  //await validateAndSave();
+
+  await writeFile(typescriptTypesPath, generateTypescriptTypes(introspectresult2));
+  console.log(`saved final ${typescriptTypesPath}`);
 
   console.log("Done.");
 }
@@ -54,7 +57,7 @@ async function validateAndSave() {
   await writeFile(pulledPrismaPath, generatePrismaSchema(introspectresult));
   console.log(`saved final ${pulledPrismaPath}`);
   const prismadiffsql = prismadiff(pulledPrismaPath, schemaPrismaPath);
-  const extradiffsql = extradiff(schemaPrismaPath, introspectresult);
+  const extradiffsql = extradiff(introspectresult, schemaPrismaPath);
 
   if (prismadiffsql.length === 0 && extradiffsql.length === 0) {
     console.log("...validation ok");
@@ -78,7 +81,7 @@ async function apply(sqls: string[]) {
   const compiledQuerys = sqls.map((s) => ({ sql: s, parameters: [] }));
   const transactionresults = await dbTransaction(compiledQuerys);
   console.log("transactionresults:", transactionresults);
-  await breather();
+  //await breather();
 }
 
 async function breather() {

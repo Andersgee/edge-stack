@@ -36,7 +36,6 @@ model Example {
     text    String
     wopidoo Int
     hoho    Int
-    merk    Int
 
     someauto DateTime @default(now()) @updatedAt @db.DateTime(3)
 }

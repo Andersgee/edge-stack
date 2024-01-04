@@ -3,8 +3,12 @@ import type { IntrospectResult } from "scripts/mysql8-introspect";
 
 type Item = { tableName: string; colName: string };
 
-/** a list of sql related to "@updatedAt" usage */
-export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
+/**
+ * a list of sql related to "@updatedAt" usage.
+ *
+ * aka a list of sql that takes your "from introspectresult to schema.prisma"
+ */
+export function extradiff(r: IntrospectResult, prismaSchemaPath: string) {
   const db_atupdatedAt: Item[] = [];
   for (const [tn, cols] of Object.entries(r.tableTypes)) {
     for (const col of cols) {
@@ -23,8 +27,8 @@ export function extradiff(prismaSchemaPath: string, r: IntrospectResult) {
     (a) => !schema_atupdatedAt.some((b) => b.tableName === a.tableName && b.colName === a.colName)
   );
 
-  console.log("in extradiff, db_atupdatedAt:", db_atupdatedAt);
-  console.log("in extradiff, schema_atupdatedAt:", schema_atupdatedAt);
+  //console.log("in extradiff, db_atupdatedAt:", db_atupdatedAt);
+  //console.log("in extradiff, schema_atupdatedAt:", schema_atupdatedAt);
   console.log("in extradiff, needs_adding:", needs_adding);
   console.log("in extradiff, needs_removal:", needs_removal);
 
