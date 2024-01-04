@@ -6,10 +6,20 @@ datasource db {
 model Example {
   id Int  @default(autoincrement())
   text String
-  wopidoo Int
-  hoho Int
-  someauto DateTime @db.DateTime(3) @default(now()) @updatedAt
 
+  @@id([id])
+}
+
+model Post {
+  id Int  @default(autoincrement())
+  text String
+  createdAt DateTime @db.DateTime(3) @default(now())
+  userId Int
+  hmm DateTime @db.DateTime(4) @default(now()) @updatedAt
+
+  Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@index([userId])
   @@id([id])
 }
 
@@ -26,22 +36,9 @@ model User {
   Post_userId_fkey Post[]
 
   @@id([id])
-  @@unique([email])
-  @@unique([googleUserSub])
   @@unique([discordUserId])
+  @@unique([email])
   @@unique([githubUserId])
-}
-
-model Post {
-  id Int  @default(autoincrement())
-  text String
-  createdAt DateTime @db.DateTime(3) @default(now())
-  userId Int
-  hmm DateTime @db.DateTime(4) @default(now()) @updatedAt
-
-  Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-
-  @@id([id])
-  @@index([userId])
+  @@unique([googleUserSub])
 }
 

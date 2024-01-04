@@ -30,7 +30,7 @@ ${tableNames.map((x) => `  ${x}: ${x};`).join("\n")}
 export function generateTypescriptTypes(r: IntrospectResult): string {
   let s = prelude(Object.keys(r.tableTypes));
 
-  for (const [tableName, columns] of Object.entries(r.tableTypes)) {
+  for (const [tableName, columns] of Object.entries(r.tableTypes).sort((a, b) => a[0].localeCompare(b[0]))) {
     s += `export type ${tableName} = {\n`;
     for (const column of columns) {
       const tds = dbtypedocstring(column);

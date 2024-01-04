@@ -3,8 +3,8 @@ import type { GeoJSON } from "./geojson-types";
   
 export type DB = {
   Example: Example;
-  User: User;
   Post: Post;
+  User: User;
 };
 
 export type Example = {
@@ -12,12 +12,19 @@ export type Example = {
   id: Generated<number>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   text: string;
-  /** dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  wopidoo: number;
-  /** dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  hoho: number;
+};
+
+export type Post = {
+  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  id: Generated<number>;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  text: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
-  someauto: Generated<Date>;
+  createdAt: Generated<Date>;
+  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  userId: number;
+  /** default: now(), dbtype: 'datetime(4)', eg "2000-12-24 21:01:59.123456" with max 4 digits after decimal */
+  hmm: Generated<Date>;
 };
 
 export type User = {
@@ -37,18 +44,5 @@ export type User = {
   name: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   createdAt: Generated<Date>;
-};
-
-export type Post = {
-  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  id: Generated<number>;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  text: string;
-  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
-  createdAt: Generated<Date>;
-  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  userId: number;
-  /** default: now(), dbtype: 'datetime(4)', eg "2000-12-24 21:01:59.123456" with max 4 digits after decimal */
-  hmm: Generated<Date>;
 };
 

@@ -9,7 +9,7 @@ export function generatePrismaSchema({
 }: IntrospectResult): string {
   let s = `datasource db {\n  provider = "mysql"\n  url = env("DATABASE_MYSQL_URL")\n}\n\n`;
   //better...
-  for (const [tableName, columns] of Object.entries(tableTypes)) {
+  for (const [tableName, columns] of Object.entries(tableTypes).sort((a, b) => a[0].localeCompare(b[0]))) {
     s += `model ${tableName} {\n`;
     for (const column of columns) {
       s += `  ${column.prismastring}\n`;

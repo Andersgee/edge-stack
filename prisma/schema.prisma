@@ -32,10 +32,6 @@ model Post {
 }
 
 model Example {
-    id      Int    @id @default(autoincrement())
-    text    String
-    wopidoo Int
-    hoho    Int
-
-    someauto DateTime @default(now()) @updatedAt @db.DateTime(3)
+    id   Int    @id @default(autoincrement())
+    text String
 }

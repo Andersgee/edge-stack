@@ -20,6 +20,10 @@ main idea is to:
 but there are some caveats: prisma diff does not care about certain things like @updatedAt 
 since they want to handle that in prisma client rather than on database level
 
+there are additional caveats apparently where you cant quite trust
+the information_schema queries actually have up to date info...
+not sure how to solve
+
 */
 
 const db = dbfetch();
@@ -46,7 +50,7 @@ async function main() {
   //await validateAndSave();
 
   await writeFile(typescriptTypesPath, generateTypescriptTypes(introspectresult2));
-  console.log(`saved final ${typescriptTypesPath}`);
+  console.log(`saved ${typescriptTypesPath}`);
 
   console.log("Done.");
 }
