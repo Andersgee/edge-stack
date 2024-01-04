@@ -6,6 +6,7 @@ datasource db {
 model Example {
   id Int  @default(autoincrement())
   text String
+  wolo DateTime @db.DateTime(3) @default(now())
 
   @@id([id])
 }

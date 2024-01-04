@@ -34,4 +34,6 @@ model Post {
 model Example {
     id   Int    @id @default(autoincrement())
     text String
+
+    wolo DateTime @default(now()) @db.DateTime(3)
 }
