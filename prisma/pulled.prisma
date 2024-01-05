@@ -7,6 +7,8 @@ model Example {
   id Int  @default(autoincrement())
   text String
   wolo DateTime @db.DateTime(3) @default(now())
+  mekor String
+  bekor BigInt
 
   @@id([id])
 }
@@ -20,8 +22,8 @@ model Post {
 
   Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  @@index([userId])
   @@id([id])
+  @@index([userId])
 }
 
 model User {
@@ -37,9 +39,9 @@ model User {
   Post_userId_fkey Post[]
 
   @@id([id])
-  @@unique([discordUserId])
   @@unique([email])
-  @@unique([githubUserId])
   @@unique([googleUserSub])
+  @@unique([discordUserId])
+  @@unique([githubUserId])
 }
 

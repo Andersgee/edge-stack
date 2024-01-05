@@ -24,6 +24,9 @@ there are additional caveats apparently where you cant quite trust
 the information_schema queries actually have up to date info...
 not sure how to solve
 
+select * from information_schema.COLUMNS where TABLE_SCHEMA = database() and TABLE_NAME = `Example`
+
+
 */
 
 const db = dbfetch();

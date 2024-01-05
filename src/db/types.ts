@@ -3,8 +3,8 @@ import type { GeoJSON } from "./geojson-types";
   
 export type DB = {
   Example: Example;
-  Post: Post;
   User: User;
+  Post: Post;
 };
 
 export type Example = {
@@ -14,6 +14,10 @@ export type Example = {
   text: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   wolo: Generated<Date>;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  mekor: string;
+  /** dbtype: 'bigint' eg number in range [-2^63, 2^63-1] */
+  bekor: bigint;
 };
 
 export type Post = {

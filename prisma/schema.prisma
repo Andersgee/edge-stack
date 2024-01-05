@@ -36,4 +36,6 @@ model Example {
     text String
 
     wolo DateTime @default(now()) @db.DateTime(3)
+
+    bekor BigInt
 }
