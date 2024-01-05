@@ -15,7 +15,7 @@ model Example {
 
 model ExampleTwo {
   id Int  @default(autoincrement())
-  mamman String
+  mamman DateTime @db.DateTime(3)
   pappan String
 
   @@id([id])

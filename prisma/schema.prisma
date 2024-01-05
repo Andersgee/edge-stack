@@ -41,7 +41,7 @@ model Example {
 }
 
 model ExampleTwo {
-    id     Int    @id @default(autoincrement())
-    mamman String
+    id     Int      @id @default(autoincrement())
+    mamman DateTime @default(now()) @updatedAt
     pappan String
 }
