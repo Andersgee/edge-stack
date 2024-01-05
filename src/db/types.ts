@@ -5,6 +5,7 @@ export type DB = {
   Example: Example;
   User: User;
   Post: Post;
+  ExampleTwo: ExampleTwo;
 };
 
 export type Example = {
@@ -12,12 +13,25 @@ export type Example = {
   id: Generated<number>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   text: string;
-  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
-  wolo: Generated<Date>;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  mekor: string;
   /** dbtype: 'bigint' eg number in range [-2^63, 2^63-1] */
   bekor: bigint;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  lleelel: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  mamma: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  holy: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  smeket: string;
+};
+
+export type ExampleTwo = {
+  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  id: Generated<number>;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  mamman: string;
+  /** dbtype: 'varchar(191)', eg string with max 191 chars */
+  pappan: string;
 };
 
 export type Post = {

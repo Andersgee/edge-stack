@@ -13,11 +13,29 @@ type DB = Kysely<MysqlDB>;
 
 export type IntrospectResult = Awaited<ReturnType<typeof introspect>>;
 
+async function updateSchemaMeta(db: DB) {
+  const COLUMNS = await db
+    .selectFrom("information_schema.COLUMNS as c")
+    .select("c.TABLE_NAME")
+    .where("c.TABLE_SCHEMA", "=", sql`database()`)
+    .execute();
+
+  const tableNames = Object.keys(groupBy(COLUMNS, "TABLE_NAME"));
+  console.log("updateSchemaMeta, tableNames:", tableNames);
+  for (const tableName of tableNames) {
+    const r = await sql.raw(`ANALYZE TABLE \`${tableName}\``).execute(db);
+    console.log("analyze table result, r:", r);
+  }
+
+  return 1;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function introspect(db: Kysely<any>) {
   //if (!(await hasConnection(db))) {
   //  throw new Error("no connection to db");
   //}
+  await updateSchemaMeta(db as DB);
 
   const [{ tableTypes, enums }, { tableIndexing }, { tableRelations, opposingTableRelations }] = await Promise.all([
     getTableTypes(db as DB),

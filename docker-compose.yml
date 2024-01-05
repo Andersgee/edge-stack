@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   db:
-    image: andersgee/http-mysql8-sqlx:0.22
+    image: andersgee/http-mysql8-sqlx:0.23
     restart: unless-stopped
     env_file:
       - ./.env.db

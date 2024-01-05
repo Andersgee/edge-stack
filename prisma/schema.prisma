@@ -32,10 +32,18 @@ model Post {
 }
 
 model Example {
-    id   Int    @id @default(autoincrement())
-    text String
+    id      Int    @id @default(autoincrement())
+    text    String
+    lleelel String
 
-    wolo DateTime @default(now()) @db.DateTime(3)
+    bekor  BigInt
+    mamma  String
+    holy   String
+    smeket String
+}
 
-    bekor BigInt
+model ExampleTwo {
+    id     Int    @id @default(autoincrement())
+    mamman String
+    pappan String
 }
