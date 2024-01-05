@@ -13,29 +13,19 @@ type DB = Kysely<MysqlDB>;
 
 export type IntrospectResult = Awaited<ReturnType<typeof introspect>>;
 
-async function updateSchemaMeta(db: DB) {
-  const COLUMNS = await db
-    .selectFrom("information_schema.COLUMNS as c")
-    .select("c.TABLE_NAME")
-    .where("c.TABLE_SCHEMA", "=", sql`database()`)
-    .execute();
-
-  const tableNames = Object.keys(groupBy(COLUMNS, "TABLE_NAME"));
-  console.log("updateSchemaMeta, tableNames:", tableNames);
-  for (const tableName of tableNames) {
-    const r = await sql.raw(`ANALYZE TABLE \`${tableName}\``).execute(db);
-    console.log("analyze table result, r:", r);
-  }
-
-  return 1;
-}
-
+/**
+ * grab stuff from information_schema tables.
+ *
+ * for generating types.ts, only one query to information_schema.COLUMNS is actually needed
+ *
+ * but generating schema.prisma, we need indexing and relations aswell
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function introspect(db: Kysely<any>) {
-  //if (!(await hasConnection(db))) {
-  //  throw new Error("no connection to db");
-  //}
-  await updateSchemaMeta(db as DB);
+  if (!(await hasConnection(db))) {
+    throw new Error("no connection to db");
+  }
+  await refreshInformationSchemaTables(db as DB);
 
   const [{ tableTypes, enums }, { tableIndexing }, { tableRelations, opposingTableRelations }] = await Promise.all([
     getTableTypes(db as DB),
@@ -44,6 +34,27 @@ export async function introspect(db: Kysely<any>) {
   ]);
 
   return { tableTypes, enums, tableIndexing, tableRelations, opposingTableRelations };
+}
+
+/**
+ * information_schema queries will NOT return fresh info by default.
+ *
+ * https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_information_schema_stats_expiry
+ *
+ * supposedly setting information_schema_stats_expiry=0 either globally or on session
+ * should be an option? but that doesnt work and not sure we want it anyway.
+ */
+async function refreshInformationSchemaTables(db: DB) {
+  const COLUMNS = await db
+    .selectFrom("information_schema.COLUMNS as c")
+    .select("c.TABLE_NAME")
+    .where("c.TABLE_SCHEMA", "=", sql`database()`)
+    .execute();
+
+  const tableNames = unique(COLUMNS.map((c) => c.TABLE_NAME));
+  for (const tableName of tableNames) {
+    await sql.raw(`ANALYZE TABLE \`${tableName}\``).execute(db);
+  }
 }
 
 async function hasConnection(db: Kysely<unknown>) {
@@ -75,6 +86,7 @@ async function getTableRelations(db: DB) {
 
   //the only reason for this query is for prisma.schema, we need to know if the actual column is nullable
   //because the relation written out needs to be with "?" if the actual column is written with "?".
+  //rc or kcu does not have any "nullable" info
   const STATISTICS = await db
     .selectFrom("information_schema.STATISTICS as s")
     .select(["s.COLUMN_NAME", "s.TABLE_NAME", "s.INDEX_NAME", "s.SEQ_IN_INDEX", "s.NON_UNIQUE", "s.NULLABLE"])

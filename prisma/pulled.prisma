@@ -6,12 +6,9 @@ datasource db {
 model Example {
   id Int  @default(autoincrement())
   text String
-  wolo DateTime @db.DateTime(3) @default(now()) @updatedAt
   bekor BigInt
   lleelel String
   mamma String
-  holy String
-  smeket String
 
   @@id([id])
 }

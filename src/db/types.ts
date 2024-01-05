@@ -2,10 +2,10 @@ import type { Generated } from "kysely";
 import type { GeoJSON } from "./geojson-types";
   
 export type DB = {
-  Example: Example;
   User: User;
-  Post: Post;
   ExampleTwo: ExampleTwo;
+  Example: Example;
+  Post: Post;
 };
 
 export type Example = {
@@ -19,10 +19,6 @@ export type Example = {
   lleelel: string;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   mamma: string;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  holy: string;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  smeket: string;
 };
 
 export type ExampleTwo = {

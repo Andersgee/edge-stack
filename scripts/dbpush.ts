@@ -88,13 +88,6 @@ async function apply(sqls: string[]) {
   const compiledQuerys = sqls.map((s) => ({ sql: s, parameters: [] }));
   const transactionresults = await dbTransaction(compiledQuerys);
   console.log("transactionresults:", transactionresults);
-  //await breather();
-}
-
-async function breather() {
-  const ms = 10000;
-  console.log(`sleeping ${ms}ms... cuz informationschema does not update instantly?..`);
-  await sleep(ms);
 }
 
 void main();

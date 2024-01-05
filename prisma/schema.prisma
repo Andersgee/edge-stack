@@ -36,10 +36,8 @@ model Example {
     text    String
     lleelel String
 
-    bekor  BigInt
-    mamma  String
-    holy   String
-    smeket String
+    bekor BigInt
+    mamma String
 }
 
 model ExampleTwo {
