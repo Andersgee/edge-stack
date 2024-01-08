@@ -52,10 +52,10 @@ async function main() {
 
 async function apply(sqls: string[]) {
   if (sqls.length === 0) {
-    console.log("applying sql:", sqls, "(empty, skipping)");
+    console.log("(empty, skipping)");
     return;
   }
-  console.log("applying sql:", sqls);
+  console.log(sqls);
   const compiledQuerys = sqls.map((s) => ({ sql: s, parameters: [] }));
   await dbTransaction(compiledQuerys);
 }
