@@ -8,6 +8,7 @@ import { InputDemo } from "./InputDemo";
 import AccordionDemo from "./AccordionDemo";
 import { HovercardDemo } from "./HovercardDemo";
 import { AlertDialogDemo } from "./AlertDialogDemo";
+import { ToastDemo } from "./ToastDemo";
 
 export default function Page() {
   return (
@@ -46,6 +47,10 @@ export default function Page() {
         <div>
           <h2>8. HovercardDemo</h2>
           <HovercardDemo />
+        </div>
+        <div>
+          <h2>9. ToastDemo</h2>
+          <ToastDemo />
         </div>
 
         <div>

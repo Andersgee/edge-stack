@@ -5,6 +5,7 @@ import { Providers } from "#src/context/Providers";
 import { seo } from "#src/utils/seo";
 import { TopnavLink } from "#src/components/TopnavLink";
 import { ProfileButton } from "#src/components/user/ProfileButton";
+import { Toaster } from "#src/ui/toaster";
 
 export const metadata = seo({
   title: "Boilerplate app",
@@ -25,6 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Topnav />
           {children}
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

@@ -176,6 +176,15 @@ export default {
       "state-checked": 'state="checked"',
       "state-unchecked": 'state="unchecked"',
       "state-indeterminate": 'state="indeterminate"',
+      //https://www.radix-ui.com/primitives/docs/components/toast
+      "swipe-start": 'swipe="start"',
+      "swipe-move": 'swipe="move"',
+      "swipe-cancel": 'swipe="cancel"',
+      "swipe-end": 'swipe="end"',
+      "swipe-direction-up": 'data-swipe-direction="up"',
+      "swipe-direction-down": 'data-swipe-direction="down"',
+      "swipe-direction-left": 'data-swipe-direction="left"',
+      "swipe-direction-right": 'data-swipe-direction="right"',
 
       //https://github.com/pacocoursey/cmdk#parts-and-styling
     },
