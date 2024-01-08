@@ -29,8 +29,8 @@ export function extradiff(r: IntrospectResult, prismaSchemaPath: string) {
 
   //console.log("in extradiff, db_atupdatedAt:", db_atupdatedAt);
   //console.log("in extradiff, schema_atupdatedAt:", schema_atupdatedAt);
-  console.log("in extradiff, needs_adding:", needs_adding);
-  console.log("in extradiff, needs_removal:", needs_removal);
+  //console.log("in extradiff, needs_adding:", needs_adding);
+  //console.log("in extradiff, needs_removal:", needs_removal);
 
   const addsqls = needs_adding.map((x) => add_updatedat_sql(x, r));
   const removesqls = needs_removal.map((x) => remove_updatedat_sql(x, r));
