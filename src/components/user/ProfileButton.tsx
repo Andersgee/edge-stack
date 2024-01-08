@@ -3,10 +3,10 @@
 import { useStore } from "#src/store";
 import { SigninButtons } from "./SigninButtons";
 import { SignoutButton } from "./SignoutButton";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Button } from "./ui/button";
 import { UserImage32x32 } from "./UserImage";
 import { type TokenUser } from "#src/utils/jwt/schema";
+import { Popover, PopoverContent, PopoverTrigger } from "#src/ui/popover";
+import { Button } from "#src/ui/button";
 
 type Props = {
   user: TokenUser | null;

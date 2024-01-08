@@ -4,27 +4,27 @@ import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const tagsUserRouter = {
-  info: (p: { userId: number }) => `user-info-${p.userId}`,
+  info: (p: { userId: bigint }) => `user-info-${p.userId}`,
 };
 
 export const userRouter = createTRPCRouter({
-  info: protectedProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
+  info: protectedProcedure.input(z.object({ userId: z.bigint() })).query(async ({ input }) => {
     const user = await dbfetch({ next: { tags: [tagsUserRouter.info(input)] } })
       .selectFrom("User")
       .selectAll()
       .where("User.id", "=", input.userId)
-      .executeTakeFirst();
+      .executeTakeFirstOrThrow();
 
-    return user ?? null;
+    return user;
   }),
-  infoPublic: publicProcedure.input(z.object({ userId: z.number() })).query(async ({ input }) => {
+  infoPublic: publicProcedure.input(z.object({ userId: z.bigint() })).query(async ({ input }) => {
     const user = await dbfetch({ next: { tags: [tagsUserRouter.info(input)] } })
       .selectFrom("User")
       .select(["id", "name", "image"])
       .where("User.id", "=", input.userId)
-      .executeTakeFirst();
+      .executeTakeFirstOrThrow();
 
-    return user ?? null;
+    return user;
   }),
   update: protectedProcedure.input(z.object({ name: z.string() })).query(async ({ input, ctx }) => {
     const _updateResult = await dbfetch()

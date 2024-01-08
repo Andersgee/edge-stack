@@ -16,22 +16,19 @@ export const postRouter = createTRPCRouter({
 
     return posts;
   }),
-
   mylatest: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.user.id;
     const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
       .select(["User.image as userImage", "User.name as userName"])
-      .where("userId", "=", ctx.user.id)
+      .where("userId", "=", userId)
       .orderBy("id", "desc")
       .limit(10)
       .execute();
 
     return posts;
-  }),
-  getById: publicProcedure.input(z.object({ postId: z.number() })).query(async ({ input }) => {
-    return await dbfetch().selectFrom("Post").selectAll().where("id", "=", input.postId).executeTakeFirst();
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
     //await maybeSleepAndThrow()
@@ -41,7 +38,7 @@ export const postRouter = createTRPCRouter({
       .insertInto("Post")
       .values({
         text: input.text,
-        userId: ctx.user.id,
+        userId: BigInt(ctx.user.id),
       })
       .executeTakeFirstOrThrow();
 
@@ -50,41 +47,39 @@ export const postRouter = createTRPCRouter({
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
       .select(["User.image as userImage", "User.name as userName"])
-      .where("Post.id", "=", Number(postId))
+      .where("Post.id", "=", postId!)
       .executeTakeFirst();
 
     //const newPost = await db().selectFrom("Post").selectAll().where("id", "=", Number(postId)).executeTakeFirst();
     return newPost ?? null;
   }),
   update: protectedProcedure
-    .input(z.object({ postId: z.number(), text: z.string() }))
+    .input(z.object({ postId: z.bigint(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      //await maybeSleepAndThrow()
-      const d = dbfetch();
+      const userId = ctx.user.id;
+      const db = dbfetch();
 
-      await d
+      await db
         .updateTable("Post")
         .where("id", "=", input.postId)
-        .where("userId", "=", ctx.user.id)
+        .where("userId", "=", userId)
         .set({
           text: input.text,
         })
         .executeTakeFirstOrThrow();
 
-      const updatedPost = d
+      const updatedPost = db
         .selectFrom("Post")
         .innerJoin("User", "User.id", "Post.userId")
         .selectAll("Post")
         .select(["User.image as userImage", "User.name as userName"])
-        .where("Post.id", "=", Number(input.postId))
+        .where("Post.id", "=", input.postId)
         .executeTakeFirst();
 
       return updatedPost ?? null;
     }),
 
-  delete: protectedProcedure.input(z.object({ postId: z.number() })).mutation(async ({ input, ctx }) => {
-    //await maybeSleepAndThrow()
-
+  delete: protectedProcedure.input(z.object({ postId: z.bigint() })).mutation(async ({ input, ctx }) => {
     const deleteResult = await dbfetch()
       .deleteFrom("Post")
       .where("id", "=", input.postId)
@@ -97,7 +92,7 @@ export const postRouter = createTRPCRouter({
   infinitePosts: publicProcedure
     .input(
       z.object({
-        cursor: z.number().optional(),
+        cursor: z.bigint().optional(),
       })
     )
     .query(async ({ input }) => {
@@ -116,7 +111,7 @@ export const postRouter = createTRPCRouter({
 
       const items = await query.execute();
 
-      let nextCursor: number | undefined = undefined;
+      let nextCursor: bigint | undefined = undefined;
       if (items.length > limit) {
         const firstItemOfNextPage = items.pop()!; //dont return the one extra
         nextCursor = firstItemOfNextPage.id;

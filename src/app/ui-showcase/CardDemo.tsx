@@ -1,8 +1,8 @@
 import { cn } from "#src/utils/cn";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "#src/components/ui/card";
-import { Button } from "#src/components/ui/button";
-import { Bell, Check } from "#src/components/Icons";
-import { Switch } from "#src/components/ui/switch";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "#src/ui/card";
+import { Button } from "#src/ui/button";
+import { Bell, Check } from "#src/icons";
+import { Switch } from "#src/ui/switch";
 
 const notifications = [
   {

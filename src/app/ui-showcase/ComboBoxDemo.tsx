@@ -1,10 +1,10 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "#src/components/Icons";
-import { Button } from "#src/components/ui/button";
+import { Check, ChevronsUpDown } from "#src/icons";
+import { Button } from "#src/ui/button";
 import { cn } from "#src/utils/cn";
-import { Popover, PopoverTrigger, PopoverContent } from "#src/components/ui/popover";
-import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from "#src/components/ui/command";
+import { Popover, PopoverTrigger, PopoverContent } from "#src/ui/popover";
+import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from "#src/ui/command";
 import { useState } from "react";
 import { CommandList } from "cmdk";
 

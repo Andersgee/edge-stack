@@ -4,7 +4,7 @@ import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 
 import { cn } from "#src/utils/cn";
-import { Check, ChevronRight, Circle } from "../Icons";
+import { Check, ChevronRight, Circle } from "#src/icons";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -27,7 +27,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "data-state-open:bg-color-neutral-200 data-highlighted:bg-color-neutral-200 flex cursor-pointer select-none items-center  rounded-sm px-2 py-1.5 text-sm outline-none",
+      "flex cursor-pointer select-none items-center rounded-sm px-2  py-1.5 text-sm outline-none data-highlighted:bg-color-neutral-200 data-state-open:bg-color-neutral-200",
       inset && "pl-8",
       className
     )}
@@ -89,7 +89,7 @@ const DropdownMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       //"data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:nothover:focusring select-none rounded-md outline-none",
-      "data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-color-neutral-200 flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 outline-none",
+      "flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 outline-none data-highlighted:bg-color-neutral-200 data-disabled:pointer-events-none data-disabled:opacity-50",
       inset && "pl-8",
       className
     )}

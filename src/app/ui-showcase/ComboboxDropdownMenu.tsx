@@ -1,17 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Calendar, MoreHorizontal, Tags, Trash, User } from "#src/components/Icons";
+import { Calendar, MoreHorizontal, Tags, Trash, User } from "#src/icons";
 
-import { Button } from "#src/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "#src/components/ui/command";
+import { Button } from "#src/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "#src/ui/command";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "#src/components/ui/dropdown-menu";
+} from "#src/ui/dropdown-menu";
 
 const labels = ["feature", "bug", "enhancement", "documentation", "design", "question", "maintenance"];
 

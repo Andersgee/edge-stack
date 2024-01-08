@@ -1,4 +1,4 @@
-import { Button } from "#src/components/ui/button";
+import { Button } from "#src/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,9 +7,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "#src/components/ui/dialog";
-import { Input } from "#src/components/ui/input";
-import { Label } from "#src/components/ui/label";
+} from "#src/ui/dialog";
+import { Input } from "#src/ui/input";
+import { Label } from "#src/ui/label";
 
 export function DialogDemo() {
   return (

@@ -1,5 +1,5 @@
-import { Check, Edit, Trash } from "#src/components/Icons";
-import { Button } from "#src/components/ui/button";
+import { Check, Edit, Trash } from "#src/icons";
+import { Button } from "#src/ui/button";
 
 export function ButtonsDemo() {
   return (

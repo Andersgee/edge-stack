@@ -2,50 +2,26 @@ import type { Generated } from "kysely";
 import type { GeoJSON } from "./geojson-types";
   
 export type DB = {
-  User: User;
-  ExampleTwo: ExampleTwo;
-  Example: Example;
   Post: Post;
-};
-
-export type Example = {
-  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  id: Generated<number>;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  text: string;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  lleelel: string;
-  /** dbtype: 'bigint' eg number in range [-2^63, 2^63-1] */
-  bekor: bigint;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  mamma: string;
-};
-
-export type ExampleTwo = {
-  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  id: Generated<number>;
-  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
-  mamman: Generated<Date>;
-  /** dbtype: 'varchar(191)', eg string with max 191 chars */
-  pappan: string;
+  User: User;
 };
 
 export type Post = {
-  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  id: Generated<number>;
+  /** default: autoincrement(), indexed: (id), dbtype: 'bigint unsigned' eg number in range [0, 2^64-1] */
+  id: Generated<bigint>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   text: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   createdAt: Generated<Date>;
-  /** default: now(), dbtype: 'datetime(4)', eg "2000-12-24 21:01:59.123456" with max 4 digits after decimal */
-  hmm: Generated<Date>;
-  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  userId: number;
+  /** indexed: (userId), dbtype: 'bigint unsigned' eg number in range [0, 2^64-1] */
+  userId: bigint;
+  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
+  updatedAt: Generated<Date>;
 };
 
 export type User = {
-  /** default: autoincrement(), indexed: (id), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  id: Generated<number>;
+  /** default: autoincrement(), indexed: (id), dbtype: 'bigint unsigned' eg number in range [0, 2^64-1] */
+  id: Generated<bigint>;
   /** indexed: (email), dbtype: 'varchar(191)', eg string with max 191 chars */
   email: string;
   /** indexed: (googleUserSub), dbtype: 'varchar(191)', eg string with max 191 chars */
@@ -60,5 +36,7 @@ export type User = {
   name: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   createdAt: Generated<Date>;
+  /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
+  updatedAt: Generated<Date>;
 };
 

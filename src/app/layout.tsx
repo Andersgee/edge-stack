@@ -2,10 +2,9 @@ import "./globals.css";
 import { fontSans } from "#src/utils/font";
 import { apiRsc } from "#src/trpc/api-rsc";
 import { Providers } from "#src/context/Providers";
-import { Topnav } from "#src/components/Topnav";
 import { seo } from "#src/utils/seo";
-import { BorderWithLabel } from "#src/components/BorderWithLabel";
-import { Counter } from "./Counter";
+import { TopnavLink } from "#src/components/TopnavLink";
+import { ProfileButton } from "#src/components/user/ProfileButton";
 
 export const metadata = seo({
   title: "Boilerplate app",
@@ -23,13 +22,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en" className={fontSans.variable}>
       <body>
         <Providers>
-          <BorderWithLabel label="/layout.tsx">
-            <Counter />
-            <Topnav />
-            {children}
-          </BorderWithLabel>
+          <Topnav />
+          {children}
         </Providers>
       </body>
     </html>
+  );
+}
+
+async function Topnav() {
+  const { user } = await apiRsc();
+  //const user = useStore.use.user();
+  return (
+    <div className="m-2 flex items-center justify-between">
+      <div>
+        <div className="flex flex-col md:flex-row">
+          <TopnavLink label="Home" href="/" />
+          <TopnavLink label="Posts" href="/posts" />
+        </div>
+      </div>
+      <div>
+        <ProfileButton user={user} />
+      </div>
+    </div>
   );
 }

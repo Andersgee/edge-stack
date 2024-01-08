@@ -11,7 +11,7 @@ type Props = {
  * without hydration mismatch, by editing string on mount
  *
  * return string, example: "Wednesday, July 5, 2023 at 13:17"
- * */
+ */
 export function PrettyDateLong({ date }: Props) {
   const [str, setStr] = useState(() => prettyDateLong(date, false));
   useEffect(() => {
@@ -25,7 +25,7 @@ export function PrettyDateLong({ date }: Props) {
  * without hydration mismatch, by editing string on mount
  *
  * returns string, example: "Jul 5, 2023, 13:17"
- * */
+ */
 export function PrettyDate({ date }: Props) {
   const [str, setStr] = useState(() => prettyDate(date, false));
   useEffect(() => {

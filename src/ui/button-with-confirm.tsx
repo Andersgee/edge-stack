@@ -10,8 +10,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "#src/components/ui/alert-dialog";
-import { Button, type buttonVariants } from "#src/components/ui/button";
+} from "./alert-dialog";
+import { Button, type buttonVariants } from "./button";
 import { type VariantProps } from "class-variance-authority";
 
 type Props = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "#src/components/ui/input";
+import { Input } from "#src/ui/input";
 
 export function InputDemo() {
   return (

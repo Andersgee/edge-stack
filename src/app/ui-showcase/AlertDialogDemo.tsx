@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonWithConfirmDialog } from "#src/components/ButtonWithConfirmDialog";
+import { ButtonWithConfirmDialog } from "#src/ui/button-with-confirm";
 import { cn } from "#src/utils/cn";
 
 type Props = {

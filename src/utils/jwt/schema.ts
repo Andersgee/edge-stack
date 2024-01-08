@@ -1,12 +1,16 @@
 import { z } from "zod";
 
 export const TokenUserSchema = z.object({
-  id: z.number(),
+  id: z.bigint(),
   name: z.string(),
   image: z.string(),
 });
 
 export type TokenUser = z.infer<typeof TokenUserSchema>;
+
+export const JwtPayloadSchema = z.object({
+  user: TokenUserSchema,
+});
 
 export const TokenSessionSchema = z.object({
   csrf: z.string(),

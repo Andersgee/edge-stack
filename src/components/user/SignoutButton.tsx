@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "#src/ui/button";
 
 type Props = {
   children: React.ReactNode;
