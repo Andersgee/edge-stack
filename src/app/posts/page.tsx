@@ -7,7 +7,7 @@ export default async function Page() {
   const initialPosts = await api.post.latest();
   return (
     <div>
-      <h1>your basic post crud example</h1>
+      <h1>your basic create post example with 10 latest posts server rendered</h1>
       <CreatePost />
       <Wall initialData={initialPosts} />
     </div>
