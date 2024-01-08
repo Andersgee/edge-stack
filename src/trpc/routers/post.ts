@@ -2,7 +2,6 @@ import { z } from "zod";
 import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { maybeSleepAndThrow, sleep } from "#src/utils/sleep";
-import { insertResultObject } from "#src/utils/query-result";
 
 export const postRouter = createTRPCRouter({
   latest: publicProcedure.query(async () => {
