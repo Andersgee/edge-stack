@@ -10,9 +10,9 @@ services:
       - 4000:3000
       - 3306:3306
     volumes:
-      - db-data:/var/lib/mysql
+      - mysqldatadir:/var/lib/mysql
     #fix "mbind: Operation not permitted" warnings:
     cap_add: [SYS_NICE]
 
 volumes:
-  db-data:
+  mysqldatadir:

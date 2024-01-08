@@ -59,11 +59,16 @@ pnpm create @andersgee/edge-stack
 
 either with `docker compose` eg
 
-```
-docker compose up
+```sh
+sudo docker compose up
+#stop/remove container
+sudo docker compose stop
+sudo docker compose rm
+#remove data
+sudo docker compose down -v
 ```
 
-or with `docker run` for example with "bind mount" eg
+or with regular `docker run` for example with "bind mount" eg
 
 ```sh
 mkdir mysqldatadir
@@ -75,4 +80,10 @@ sudo docker run -d \
 --mount type=bind,source="$(pwd)"/mysqldatadir,destination=/var/lib/mysql \
 --restart unless-stopped \
 andersgee/http-mysql8-sqlx:0.3
+
+#stop/remove container
+sudo docker stop edge-stack-db
+sudo docker rm edge-stack-db
+#remove data
+sudo rm -r mysqldatadir
 ```
