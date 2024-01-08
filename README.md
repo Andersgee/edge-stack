@@ -10,7 +10,7 @@ pnpm create @andersgee/edge-stack
 
 1. install `pnpm install`
 2. rename `.env.example` to `.env` and `.env.db.example` to `.env.db`
-3. start database `docker compose up`
+3. [start database](#start-database)
 4. push schema `pnpm dbpush`
 5. start developing `pnpm dev`
 
@@ -54,3 +54,25 @@ pnpm create @andersgee/edge-stack
 
 - At some point `trpc: "^11"` will be released. Until then, use `trpc: "next"` to be able to use `react-query: "^5"`
 - At some point partial prerendering will be stable in nextjs and edge runtime will support static pages. For now, default all pages to edge runtime in root layout (meaning only dynamic rendering of pages). This is not as big of an issue as one would perhaps expect, since we can use server side data cache to avoid any actual data fetching, if we want, even on dynamic pages.
+
+## start database
+
+either with `docker compose` eg
+
+```
+docker compose up
+```
+
+or with `docker run` for example with "bind mount" eg
+
+```sh
+mkdir mysqldatadir
+
+sudo docker run -d \
+--name edge-stack-db \
+--network host \
+--env-file ./.env.db \
+--mount type=bind,source="$(pwd)"/mysqldatadir,destination=/var/lib/mysql \
+--restart unless-stopped \
+andersgee/http-mysql8-sqlx:0.3
+```

@@ -39,9 +39,3 @@ model Example {
     bekor BigInt
     mamma String
 }
-
-model ExampleTwo {
-    id     Int      @id @default(autoincrement())
-    mamman DateTime @default(now()) @updatedAt
-    pappan String
-}

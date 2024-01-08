@@ -6,8 +6,8 @@ datasource db {
 model Example {
   id Int  @default(autoincrement())
   text String
-  bekor BigInt
   lleelel String
+  bekor BigInt
   mamma String
 
   @@id([id])
@@ -15,7 +15,7 @@ model Example {
 
 model ExampleTwo {
   id Int  @default(autoincrement())
-  mamman DateTime @db.DateTime(3)
+  mamman DateTime @db.DateTime(3) @default(now()) @updatedAt
   pappan String
 
   @@id([id])
@@ -25,8 +25,8 @@ model Post {
   id Int  @default(autoincrement())
   text String
   createdAt DateTime @db.DateTime(3) @default(now())
-  userId Int
   hmm DateTime @db.DateTime(4) @default(now()) @updatedAt
+  userId Int
 
   Post_userId_fkey User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 

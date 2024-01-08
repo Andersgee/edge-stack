@@ -13,10 +13,10 @@ export type Example = {
   id: Generated<number>;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   text: string;
-  /** dbtype: 'bigint' eg number in range [-2^63, 2^63-1] */
-  bekor: bigint;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   lleelel: string;
+  /** dbtype: 'bigint' eg number in range [-2^63, 2^63-1] */
+  bekor: bigint;
   /** dbtype: 'varchar(191)', eg string with max 191 chars */
   mamma: string;
 };
@@ -37,10 +37,10 @@ export type Post = {
   text: string;
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   createdAt: Generated<Date>;
-  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
-  userId: number;
   /** default: now(), dbtype: 'datetime(4)', eg "2000-12-24 21:01:59.123456" with max 4 digits after decimal */
   hmm: Generated<Date>;
+  /** indexed: (userId), dbtype: 'int' eg number in range [-2_147_483_648, 2_147_483_647] */
+  userId: number;
 };
 
 export type User = {
