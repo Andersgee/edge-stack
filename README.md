@@ -57,19 +57,6 @@ pnpm create @andersgee/edge-stack
 
 ## start database
 
-either with `docker compose` eg
-
-```sh
-sudo docker compose up
-#stop/remove container
-sudo docker compose stop
-sudo docker compose rm
-#remove data
-sudo docker compose down -v
-```
-
-or with regular `docker run` for example with "bind mount" eg
-
 ```sh
 mkdir mysqldatadir
 
