@@ -2,7 +2,7 @@ import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { type NextRequest } from "next/server";
 import { SESSION_COOKIE_NAME, USER_COOKIE_NAME } from "../auth/schema";
-import { TokenSessionSchema, TokenStateSchema, JwtPayloadSchema, type TokenUser } from "./schema";
+import { TokenSessionSchema, TokenStateSchema, type TokenUser, TokenUserSchema } from "./schema";
 import { transformer } from "#src/db/transformer";
 
 const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -12,9 +12,13 @@ export async function getUserFromToken(token: string | undefined) {
   try {
     const { payload } = await jwtVerify(token, SECRET);
 
-    const user = JwtPayloadSchema.parse(payload).user;
+    if (typeof payload.user !== "string") {
+      return null;
+    }
+    const user = TokenUserSchema.parse(transformer.deserialize(payload.user));
+
     return user;
-  } catch (error) {
+  } catch (err) {
     return null;
   }
 }
@@ -25,7 +29,7 @@ export async function getSessionFromToken(token: string | undefined) {
     const { payload } = await jwtVerify(token, SECRET);
     const session = TokenSessionSchema.parse(payload);
     return session;
-  } catch (error) {
+  } catch (err) {
     return null;
   }
 }

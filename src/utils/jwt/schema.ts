@@ -8,10 +8,6 @@ export const TokenUserSchema = z.object({
 
 export type TokenUser = z.infer<typeof TokenUserSchema>;
 
-export const JwtPayloadSchema = z.object({
-  user: TokenUserSchema,
-});
-
 export const TokenSessionSchema = z.object({
   csrf: z.string(),
 });
