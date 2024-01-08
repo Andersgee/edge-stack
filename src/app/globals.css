@@ -198,12 +198,19 @@
   h6 {
     @apply mb-2 text-lg font-medium text-color-neutral-1000;
   }
+
+  a {
+    @apply border-none outline-none focus:border-none focus:outline-none focus-visible:focusring;
+  }
+
   p {
     @apply my-2 max-w-[55ch] font-sans text-color-neutral-800;
   }
+
   p > a {
-    @apply font-medium text-color-primary-700 underline focus:outline-none focus:focusring;
+    @apply font-medium text-color-primary-700 underline;
   }
+
   svg {
     @apply box-content shrink-0;
     shape-rendering: geometricPrecision;

@@ -15,7 +15,7 @@ export function TopnavLink({ href, label }: Props) {
   return (
     <Link
       className={cn(
-        "focus-visible::focusring rounded-sm px-3 py-2 text-color-neutral-700 outline-none hover:bg-color-neutral-200 hover:text-color-neutral-950",
+        "rounded-sm px-3 py-2 text-color-neutral-700 hover:bg-color-neutral-200 hover:text-color-neutral-950",
         isActive && "text-color-neutral-900 underline"
       )}
       href={href}

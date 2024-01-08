@@ -39,6 +39,7 @@ async function Topnav() {
         <div className="flex flex-col md:flex-row">
           <TopnavLink label="Home" href="/" />
           <TopnavLink label="Posts" href="/posts" />
+          <TopnavLink label="ui showcase" href="/ui-showcase" />
         </div>
       </div>
       <div>
