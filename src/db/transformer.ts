@@ -6,13 +6,15 @@
 export const transformer = {
   serialize: stringify,
   deserialize: parse,
+  /** just deserialize but on `await res.text()` */
+  deserializeResponse: async (res: Response) => parse(await res.text()),
 };
 
-function stringify(input: any) {
+export function stringify(input: any) {
   return JSON.stringify(input, replacer);
 }
 
-function parse(response: string) {
+export function parse(response: string) {
   return JSON.parse(response, reviver);
 }
 

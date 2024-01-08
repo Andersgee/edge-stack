@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { createSessionToken, getSessionFromRequestCookie, getUserFromRequestCookie } from "#src/utils/jwt";
 import { sessionCookieString } from "#src/utils/auth/schema";
+import { transformer } from "#src/db/transformer";
 
 /*
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
@@ -21,7 +22,7 @@ export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   const user = await getUserFromRequestCookie(request);
-  if (user) return NextResponse.json(user, { status: 200 });
+  if (user) return NextResponse.json(transformer.serialize(user), { status: 200 });
 
   const session = await getSessionFromRequestCookie(request);
   if (session) return new Response(undefined, { status: 204 });

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { sleep } from "#src/utils/sleep";
+import { insertResultObject } from "#src/utils/query-result";
 
 export const postRouter = createTRPCRouter({
   latest: protectedProcedure.query(async () => {
@@ -17,13 +18,12 @@ export const postRouter = createTRPCRouter({
     return posts;
   }),
   mylatest: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.user.id;
     const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
       .select(["User.image as userImage", "User.name as userName"])
-      .where("userId", "=", userId)
+      .where("userId", "=", ctx.user.id)
       .orderBy("id", "desc")
       .limit(10)
       .execute();
@@ -34,35 +34,35 @@ export const postRouter = createTRPCRouter({
     //await maybeSleepAndThrow()
     const db = dbfetch();
 
-    const { insertId: postId } = await db
+    const insertResult = await db
       .insertInto("Post")
       .values({
         text: input.text,
-        userId: BigInt(ctx.user.id),
+        userId: ctx.user.id,
       })
       .executeTakeFirstOrThrow();
 
-    const newPost = await db
-      .selectFrom("Post")
-      .innerJoin("User", "User.id", "Post.userId")
-      .selectAll("Post")
-      .select(["User.image as userImage", "User.name as userName"])
-      .where("Post.id", "=", postId!)
-      .executeTakeFirst();
+    return insertResultObject(insertResult);
 
-    //const newPost = await db().selectFrom("Post").selectAll().where("id", "=", Number(postId)).executeTakeFirst();
-    return newPost ?? null;
+    //const newPost = await db
+    //  .selectFrom("Post")
+    //  .innerJoin("User", "User.id", "Post.userId")
+    //  .selectAll("Post")
+    //  .select(["User.image as userImage", "User.name as userName"])
+    //  .where("Post.id", "=", postId!)
+    //  .executeTakeFirstOrThrow();
+    //
+    //return newPost;
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.bigint(), text: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.user.id;
       const db = dbfetch();
 
       await db
         .updateTable("Post")
         .where("id", "=", input.postId)
-        .where("userId", "=", userId)
+        .where("userId", "=", ctx.user.id)
         .set({
           text: input.text,
         })
