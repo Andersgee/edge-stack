@@ -34,9 +34,9 @@ async function Topnav() {
   const { user } = await apiRsc();
   //const user = useStore.use.user();
   return (
-    <div className="m-2 flex items-center justify-between">
+    <div className="m-2 flex justify-between">
       <div>
-        <div className="flex flex-col md:flex-row">
+        <div className="flex">
           <TopnavLink label="Home" href="/" />
           <TopnavLink label="Posts" href="/posts" />
           <TopnavLink label="ui showcase" href="/ui-showcase" />
