@@ -7,6 +7,7 @@ import { api } from "#src/hooks/api";
 import { Button } from "#src/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "#src/ui/form";
 import { Input } from "#src/ui/input";
+import { useToast } from "#src/ui/use-toast";
 
 const FormSchema = z.object({
   text: z.string().min(1, {
@@ -15,14 +16,6 @@ const FormSchema = z.object({
 });
 
 export function CreatePost() {
-  const postCreate = api.post.create.useMutation({
-    onSuccess: (insertResult) => {
-      console.log("submitted, insertResult:", insertResult);
-    },
-    onError: () => {
-      console.log("error");
-    },
-  });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -30,9 +23,30 @@ export function CreatePost() {
     },
   });
 
+  const { toast } = useToast();
+  const utils = api.useUtils();
+  const postCreate = api.post.create.useMutation({
+    onSuccess: (createdPost) => {
+      utils.post.latest.setData(undefined, (prev) => {
+        if (!prev) return undefined;
+        const data = structuredClone(prev);
+        data.unshift(createdPost);
+        return data;
+      });
+      form.reset();
+    },
+    onError: (_error, _variables, _context) => {
+      toast({ variant: "warn", title: "Couldnt create post", description: "Try again" });
+    },
+  });
+
+  function onValid(data: z.infer<typeof FormSchema>) {
+    postCreate.mutate(data);
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => postCreate.mutate(data))} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onValid)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
           name="text"
@@ -47,7 +61,9 @@ export function CreatePost() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={postCreate.isPending}>
+          Submit
+        </Button>
       </form>
     </Form>
   );

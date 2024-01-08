@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { sleep } from "#src/utils/sleep";
+import { maybeSleepAndThrow, sleep } from "#src/utils/sleep";
 import { insertResultObject } from "#src/utils/query-result";
 
 export const postRouter = createTRPCRouter({
   latest: publicProcedure.query(async () => {
-    const posts = dbfetch({ next: { revalidate: 10 } })
+    const posts = await dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
@@ -18,7 +18,7 @@ export const postRouter = createTRPCRouter({
     return posts;
   }),
   mylatest: protectedProcedure.query(async ({ ctx }) => {
-    const posts = dbfetch({ next: { revalidate: 10 } })
+    const posts = await dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
@@ -31,7 +31,7 @@ export const postRouter = createTRPCRouter({
     return posts;
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    //await maybeSleepAndThrow()
+    await maybeSleepAndThrow();
     const db = dbfetch();
 
     const insertResult = await db
@@ -42,17 +42,15 @@ export const postRouter = createTRPCRouter({
       })
       .executeTakeFirstOrThrow();
 
-    return insertResultObject(insertResult);
+    const createdPost = await db
+      .selectFrom("Post")
+      .innerJoin("User", "User.id", "Post.userId")
+      .selectAll("Post")
+      .select(["User.image as userImage", "User.name as userName"])
+      .where("Post.id", "=", insertResult.insertId!)
+      .executeTakeFirstOrThrow();
 
-    //const newPost = await db
-    //  .selectFrom("Post")
-    //  .innerJoin("User", "User.id", "Post.userId")
-    //  .selectAll("Post")
-    //  .select(["User.image as userImage", "User.name as userName"])
-    //  .where("Post.id", "=", postId!)
-    //  .executeTakeFirstOrThrow();
-    //
-    //return newPost;
+    return createdPost;
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.bigint(), text: z.string() }))
