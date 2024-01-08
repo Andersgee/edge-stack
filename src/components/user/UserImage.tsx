@@ -2,7 +2,7 @@ import { api } from "#src/hooks/api";
 import { imageSizes } from "#src/utils/image-sizes";
 import Image from "next/image";
 
-export function UserImage32x32ById({ userId }: { userId: number }) {
+export function UserImage32x32ById({ userId }: { userId: bigint }) {
   const { data: user } = api.user.infoPublic.useQuery({ userId });
   return (
     <div className="relative h-8 w-8 shrink-0">

@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
         .executeTakeFirstOrThrow();
 
       tokenUser = {
-        id: Number(insertResult.insertId),
+        id: insertResult.insertId!,
         name: userInfo.name,
         image: userInfo.picture,
       };

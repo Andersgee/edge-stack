@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/** JSON.stringify/parse but handles Date, bigint and Buffer according to my needs */
 export const transformer = {
   serialize: stringify,
   deserialize: parse,
