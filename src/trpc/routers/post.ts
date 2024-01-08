@@ -5,7 +5,7 @@ import { sleep } from "#src/utils/sleep";
 import { insertResultObject } from "#src/utils/query-result";
 
 export const postRouter = createTRPCRouter({
-  latest: protectedProcedure.query(async () => {
+  latest: publicProcedure.query(async () => {
     const posts = dbfetch({ next: { revalidate: 10 } })
       .selectFrom("Post")
       .innerJoin("User", "User.id", "Post.userId")

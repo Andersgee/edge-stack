@@ -30,19 +30,6 @@ export function CreatePost() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("submitted, data:", data);
-    //postCreate.mutate({text})
-    //toast({
-    //  title: "You submitted the following values:",
-    //  description: (
-    //    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //      <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //    </pre>
-    //  ),
-    //})
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((data) => postCreate.mutate(data))} className="w-2/3 space-y-6">
@@ -51,11 +38,11 @@ export function CreatePost() {
           name="text"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>some text</FormLabel>
+              <FormLabel>some label</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="Whats happening?" {...field} />
               </FormControl>
-              <FormDescription>This is your public display name.</FormDescription>
+              <FormDescription>some description.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -65,24 +52,3 @@ export function CreatePost() {
     </Form>
   );
 }
-
-/*
-import { api } from "#src/hooks/api";
-import { Button } from "#src/ui/button";
-import { Input } from "#src/ui/input";
-import { cn } from "#src/utils/cn";
-
-type Props = {
-  className?: string;
-};
-
-export function CreatePost({ className }: Props) {
-  const postCreate = api.post.create.useMutation();
-  return (
-    <div className={cn("", className)}>
-      <Input type="text" />
-      <Button>Create</Button>
-    </div>
-  );
-}
-*/
