@@ -68,7 +68,7 @@ sudo docker run -d \
 --env-file ./.env.db \
 --mount type=bind,source="$(pwd)"/mysqldatadir,destination=/var/lib/mysql \
 --restart unless-stopped \
-andersgee/http-mysql8-sqlx:0.31
+andersgee/http-mysql8-sqlx:0.32
 ```
 
 other
