@@ -57,6 +57,8 @@ pnpm create @andersgee/edge-stack
 
 ## start database
 
+use the docker image `andersgee/http-mysql8-sqlx` for example:
+
 ```sh
 mkdir mysqldatadir
 
@@ -66,11 +68,21 @@ sudo docker run -d \
 --env-file ./.env.db \
 --mount type=bind,source="$(pwd)"/mysqldatadir,destination=/var/lib/mysql \
 --restart unless-stopped \
-andersgee/http-mysql8-sqlx:0.3
+andersgee/http-mysql8-sqlx:0.31
+```
 
-#stop/remove container
+other
+
+```sh
+#backup
 sudo docker stop edge-stack-db
+sudo cp -r mysqldatadir mysqldatadir_backup
+sudo docker start edge-stack-db
+#remove
 sudo docker rm edge-stack-db
-#remove data
 sudo rm -r mysqldatadir
+
+
+#try this
+sudo cp -r mysqldatadir/db mysqldatadir_db_backup
 ```
