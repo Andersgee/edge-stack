@@ -81,8 +81,4 @@ sudo docker start edge-stack-db
 #remove
 sudo docker rm edge-stack-db
 sudo rm -r mysqldatadir
-
-
-#try this
-sudo cp -r mysqldatadir/db mysqldatadir_db_backup
 ```
