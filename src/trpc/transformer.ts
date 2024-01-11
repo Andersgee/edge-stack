@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+import { JSONE } from "#src/utils/jsone";
 import type { CombinedDataTransformer } from "@trpc/server";
-import { parse, stringify } from "devalue";
 
 export const transformer: CombinedDataTransformer = {
   input: {
-    serialize: (object) => stringify(object),
-    deserialize: (object) => parse(object),
+    serialize: (object) => JSONE.stringify(object),
+    deserialize: (object) => JSONE.parse(object),
   },
   output: {
-    serialize: (object) => stringify(object),
-    deserialize: (object) => parse(object),
+    serialize: (object) => JSONE.stringify(object),
+    deserialize: (object) => JSONE.parse(object),
   },
 };

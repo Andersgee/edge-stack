@@ -10,7 +10,7 @@ export const postRouter = createTRPCRouter({
       .innerJoin("User", "User.id", "Post.userId")
       .selectAll("Post")
       .select(["User.image as userImage", "User.name as userName"])
-      .orderBy("id", "desc")
+      .orderBy("Post.id desc")
       .limit(10)
       .execute();
 
@@ -23,14 +23,14 @@ export const postRouter = createTRPCRouter({
       .selectAll("Post")
       .select(["User.image as userImage", "User.name as userName"])
       .where("userId", "=", ctx.user.id)
-      .orderBy("id", "desc")
+      .orderBy("Post.id desc")
       .limit(10)
       .execute();
 
     return posts;
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    await maybeSleepAndThrow();
+    //await maybeSleepAndThrow();
     const db = dbfetch();
 
     const insertResult = await db
@@ -50,6 +50,21 @@ export const postRouter = createTRPCRouter({
       .executeTakeFirstOrThrow();
 
     return createdPost;
+  }),
+  createtest: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
+    //await maybeSleepAndThrow();
+    const db = dbfetch();
+
+    const insertResult = await db
+      .insertInto("Post")
+      .values({
+        text: input.text,
+        userId: ctx.user.id,
+      })
+      .executeTakeFirstOrThrow();
+    console.log("insertResult:", insertResult);
+
+    return insertResult;
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.bigint(), text: z.string() }))
@@ -99,7 +114,7 @@ export const postRouter = createTRPCRouter({
       let query = dbfetch()
         .selectFrom("Post")
         .selectAll()
-        .orderBy("id", "desc")
+        .orderBy("id desc")
         .limit(limit + 1); //one extra to know first item of next page
 
       if (input.cursor !== undefined) {
