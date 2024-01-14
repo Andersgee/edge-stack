@@ -6,6 +6,7 @@ import { useState } from "react";
 import { transformer } from "#src/trpc/transformer";
 import { api } from "#src/hooks/api";
 import { baseUrl } from "#src/utils/url";
+import { JSONE } from "#src/utils/jsone";
 
 //https://tanstack.com/query/v4/docs/react/guides/important-defaults
 
@@ -28,6 +29,8 @@ export function TrpcProvider({ children }: { children: React.ReactNode }) {
             //select
             //suspense
             //placeholderData
+            //the default JSON.sringify will error on anything without .toJSON() method. like bigint or typed arrays etc
+            queryKeyHashFn: (k) => JSONE.stringify(k),
           },
         },
       })
