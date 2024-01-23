@@ -24,11 +24,9 @@ export function TrpcProvider({ children }: { children: React.ReactNode }) {
             refetchOnReconnect: false,
             refetchOnMount: false,
             retryOnMount: true,
-            //notifyOnChangeProps
             throwOnError: false,
-            //select
-            //suspense
-            //placeholderData
+            //retry: 3,
+            //retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
             //the default JSON.sringify will error on anything without .toJSON() method. like bigint or typed arrays etc
             queryKeyHashFn: (k) => JSONE.stringify(k),
           },

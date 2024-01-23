@@ -13,12 +13,18 @@ export const postRouter = createTRPCRouter({
       .executeTakeFirst();
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    return await dbfetch()
+    const insertResult = await dbfetch()
       .insertInto("Post")
       .values({
         text: input.text,
         userId: ctx.user.id,
       })
+      .executeTakeFirstOrThrow();
+
+    return await dbfetch()
+      .selectFrom("Post")
+      .selectAll()
+      .where("id", "=", insertResult.insertId!)
       .executeTakeFirstOrThrow();
   }),
   update: protectedProcedure
