@@ -2,6 +2,10 @@ datasource db {
   provider = "mysql"
   url = env("DATABASE_MYSQL_URL")
 }
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextIndex"]
+}
 
 model Post {
   id BigInt @db.UnsignedBigInt @default(autoincrement())
