@@ -55,18 +55,6 @@ export const postRouter = createTRPCRouter({
 
     return deleteResult.numDeletedRows > 0;
   }),
-  latest: publicProcedure.query(async () => {
-    const posts = await dbfetch({ next: { revalidate: 10 } })
-      .selectFrom("Post")
-      .innerJoin("User", "User.id", "Post.userId")
-      .selectAll("Post")
-      .select(["User.image as userImage", "User.name as userName"])
-      .orderBy("Post.id desc")
-      .limit(10)
-      .execute();
-
-    return posts;
-  }),
   infinitePosts: publicProcedure
     .input(
       z.object({
