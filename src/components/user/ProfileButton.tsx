@@ -7,6 +7,7 @@ import { UserImage32x32 } from "./UserImage";
 import { type TokenUser } from "#src/utils/jwt/schema";
 import { Popover, PopoverContent, PopoverTrigger } from "#src/ui/popover";
 import { Button } from "#src/ui/button";
+import { dialogDispatch } from "#src/store/slices/dialog";
 
 type Props = {
   user: TokenUser | null;
@@ -15,12 +16,11 @@ type Props = {
 export function ProfileButton({ user }: Props) {
   //const user = useStore.use.user();
   const dialogValue = useStore.use.dialogValue();
-  const dialogAction = useStore.use.dialogAction();
 
   return (
     <Popover
       open={dialogValue === "profilebutton"}
-      onOpenChange={(open) => dialogAction({ type: open ? "show" : "hide", name: "profilebutton" })}
+      onOpenChange={(open) => dialogDispatch({ type: open ? "show" : "hide", name: "profilebutton" })}
     >
       {user ? (
         <>

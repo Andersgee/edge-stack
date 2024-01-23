@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { userCookieString } from "#src/utils/auth/schema";
+import { userCookieRemoveString } from "#src/utils/auth/schema";
 import { absUrl } from "#src/utils/url";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export function GET(request: NextRequest) {
     status: 303,
     headers: {
       "Location": absUrl(route),
-      "Set-Cookie": userCookieString("null", 0),
+      "Set-Cookie": userCookieRemoveString(),
     },
   });
 }

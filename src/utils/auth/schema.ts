@@ -7,6 +7,10 @@ export const USER_COOKIE_MAXAGE = 2592000; //in seconds. 2592000 is 30 days, pro
 export function userCookieString(token: string, maxAge: number) {
   return `${USER_COOKIE_NAME}=${token}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`;
 }
+/** userCookieString with token="null" and maxAge=0 */
+export function userCookieRemoveString() {
+  return userCookieString("null", 0);
+}
 
 export function sessionCookieString(token: string) {
   return `${SESSION_COOKIE_NAME}=${token}; Path=/; Secure; HttpOnly; SameSite=Lax`;
