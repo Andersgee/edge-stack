@@ -9,26 +9,24 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "#src/ui/input";
 import { useToast } from "#src/ui/use-toast";
 
-const FormSchema = z.object({
-  text: z.string().min(1, {
-    message: "text must be at least 1 character.",
-  }),
+const zFormData = z.object({
+  text: z.string().min(1, { message: "at least 1 character" }),
 });
 
+type FormData = z.infer<typeof zFormData>;
+
 export function CreatePostTest() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<FormData>({
+    resolver: zodResolver(zFormData),
     defaultValues: {
       text: "",
     },
   });
-
   const { toast } = useToast();
 
-  const postCreate = api.post.createtest.useMutation({
+  const postCreate = api.post.create.useMutation({
     onSuccess: (insertResult) => {
       console.log("insertResult:", insertResult);
-
       form.reset();
     },
     onError: (_error, _variables, _context) => {
@@ -36,7 +34,7 @@ export function CreatePostTest() {
     },
   });
 
-  function onValid(data: z.infer<typeof FormSchema>) {
+  function onValid(data: FormData) {
     postCreate.mutate(data);
   }
 

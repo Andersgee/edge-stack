@@ -2,69 +2,24 @@ import { z } from "zod";
 import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { maybeSleepAndThrow, sleep } from "#src/utils/sleep";
+import { tagsPost } from "./postTags";
 
 export const postRouter = createTRPCRouter({
-  latest: publicProcedure.query(async () => {
-    const posts = await dbfetch({ next: { revalidate: 10 } })
+  getById: publicProcedure.input(z.object({ id: z.bigint() })).query(async ({ input }) => {
+    return await dbfetch({ next: { tags: [tagsPost.info(input.id)] } })
       .selectFrom("Post")
-      .innerJoin("User", "User.id", "Post.userId")
-      .selectAll("Post")
-      .select(["User.image as userImage", "User.name as userName"])
-      .orderBy("Post.id desc")
-      .limit(10)
-      .execute();
-
-    return posts;
-  }),
-  mylatest: protectedProcedure.query(async ({ ctx }) => {
-    const posts = await dbfetch({ next: { revalidate: 10 } })
-      .selectFrom("Post")
-      .innerJoin("User", "User.id", "Post.userId")
-      .selectAll("Post")
-      .select(["User.image as userImage", "User.name as userName"])
-      .where("userId", "=", ctx.user.id)
-      .orderBy("Post.id desc")
-      .limit(10)
-      .execute();
-
-    return posts;
+      .selectAll()
+      .where("id", "=", input.id)
+      .executeTakeFirst();
   }),
   create: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    //await maybeSleepAndThrow();
-    const db = dbfetch();
-
-    const insertResult = await db
+    return await dbfetch()
       .insertInto("Post")
       .values({
         text: input.text,
         userId: ctx.user.id,
       })
       .executeTakeFirstOrThrow();
-
-    const createdPost = await db
-      .selectFrom("Post")
-      .innerJoin("User", "User.id", "Post.userId")
-      .selectAll("Post")
-      .select(["User.image as userImage", "User.name as userName"])
-      .where("Post.id", "=", insertResult.insertId!)
-      .executeTakeFirstOrThrow();
-
-    return createdPost;
-  }),
-  createtest: protectedProcedure.input(z.object({ text: z.string() })).mutation(async ({ input, ctx }) => {
-    //await maybeSleepAndThrow();
-    const db = dbfetch();
-
-    const insertResult = await db
-      .insertInto("Post")
-      .values({
-        text: input.text,
-        userId: ctx.user.id,
-      })
-      .executeTakeFirstOrThrow();
-    console.log("insertResult:", insertResult);
-
-    return insertResult;
   }),
   update: protectedProcedure
     .input(z.object({ postId: z.bigint(), text: z.string() }))
@@ -100,7 +55,18 @@ export const postRouter = createTRPCRouter({
 
     return deleteResult.numDeletedRows > 0;
   }),
+  latest: publicProcedure.query(async () => {
+    const posts = await dbfetch({ next: { revalidate: 10 } })
+      .selectFrom("Post")
+      .innerJoin("User", "User.id", "Post.userId")
+      .selectAll("Post")
+      .select(["User.image as userImage", "User.name as userName"])
+      .orderBy("Post.id desc")
+      .limit(10)
+      .execute();
 
+    return posts;
+  }),
   infinitePosts: publicProcedure
     .input(
       z.object({
