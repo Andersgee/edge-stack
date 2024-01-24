@@ -44,3 +44,4 @@ export const schema_update_User = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
+
