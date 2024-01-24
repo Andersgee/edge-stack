@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Generated } from "kysely";
 import type { GeoJson } from "./types-geojson";
-
+  
 export type DB = {
   Post: Post;
   User: User;
@@ -39,3 +40,4 @@ export type User = {
   /** default: now(), dbtype: 'datetime(3)', eg "2000-12-24 21:01:59.123456" with max 3 digits after decimal */
   updatedAt: Generated<Date>;
 };
+
