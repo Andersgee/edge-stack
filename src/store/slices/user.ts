@@ -5,6 +5,6 @@ export type Userlice = {
   user: TokenUser | null;
 };
 
-export const createUserSlice: StateCreator<Userlice, [], [], Userlice> = (set, _get) => ({
+export const createUserSlice: StateCreator<Userlice, [], [], Userlice> = (_set, _get) => ({
   user: null,
 });

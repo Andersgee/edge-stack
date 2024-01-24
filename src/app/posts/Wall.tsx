@@ -1,23 +1,25 @@
 "use client";
 
-import { PrettyDate } from "#src/components/PrettyDate";
 import { type RouterOutputs, api } from "#src/hooks/api";
 
 import { useIntersectionObserverCallback } from "#src/hooks/useIntersectionObserverCallback";
 import { cn } from "#src/utils/cn";
+import Link from "next/link";
+import { Post } from "./Post";
+import { hashidFromId } from "#src/utils/hashid";
 
 type Props = {
   className?: string;
-  x: RouterOutputs["post"]["infinitePosts"];
+  initialPosts: RouterOutputs["post"]["infinitePosts"];
 };
 
-export function Wall({ x, className }: Props) {
+export function Wall({ initialPosts, className }: Props) {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = api.post.infinitePosts.useInfiniteQuery(
     {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      initialCursor: x.items.at(-1)?.id,
-      initialData: { pages: [x], pageParams: [] },
+      initialCursor: initialPosts.items.at(-1)?.id,
+      initialData: { pages: [initialPosts], pageParams: [] },
     }
   );
   const ref = useIntersectionObserverCallback(
@@ -38,21 +40,15 @@ export function Wall({ x, className }: Props) {
         .map((page) => page.items)
         .flat()
         .map((post) => (
-          <div key={post.id}>
-            <p>{post.text}</p>
-            <div>
-              <PrettyDate date={post.createdAt} />
-            </div>
-          </div>
+          <Link
+            key={post.id}
+            prefetch={false}
+            className="block hover:bg-color-neutral-200"
+            href={`/posts/${hashidFromId(post.id)}`}
+          >
+            <Post post={post} />
+          </Link>
         ))}
-
-      <div>hasNextPage: {JSON.stringify(hasNextPage)}</div>
-      <div>isFetchingNextPage: {JSON.stringify(isFetchingNextPage)}</div>
-      <div>
-        <button className="bg-red-500 p-3" onClick={() => fetchNextPage()}>
-          fetchNextPage
-        </button>
-      </div>
       <div ref={ref}></div>
     </div>
   );

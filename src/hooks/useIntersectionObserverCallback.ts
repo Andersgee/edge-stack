@@ -1,13 +1,11 @@
-import { useEffect, useRef } from "react";
+import { type DependencyList, useEffect, useRef } from "react";
 
 export function useIntersectionObserverCallback(
   callback: IntersectionObserverCallback,
-  options: IntersectionObserverInit | undefined,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deps: any[]
+  options?: IntersectionObserverInit,
+  deps?: DependencyList
 ) {
   const ref = useRef<HTMLDivElement>(null);
-  //const entry =
   useEffect(() => {
     const node = ref.current;
     const observer = new IntersectionObserver(callback, options);

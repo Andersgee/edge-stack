@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { dbfetch } from "#src/db";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { maybeSleepAndThrow, sleep } from "#src/utils/sleep";
 import { tagsPost } from "./postTags";
 
 export const postRouter = createTRPCRouter({
@@ -68,20 +67,19 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input }) => {
-      await sleep(1000);
-      const limit = 5;
+      const limit = 10;
 
-      let query = dbfetch()
+      let q = dbfetch()
         .selectFrom("Post")
         .selectAll()
         .orderBy("id desc")
         .limit(limit + 1); //one extra to know first item of next page
 
       if (input.cursor !== undefined) {
-        query = query.where("id", "<=", input.cursor);
+        q = q.where("id", "<=", input.cursor);
       }
 
-      const items = await query.execute();
+      const items = await q.execute();
 
       let nextCursor: bigint | undefined = undefined;
       if (items.length > limit) {

@@ -1,5 +1,5 @@
 import { apiRscPublic } from "#src/trpc/api-rsc";
-import { CreatePostTest } from "./CreatePostTest";
+import { CreatePost } from "./CreatePost";
 import { Wall } from "./Wall";
 
 export default async function Page() {
@@ -8,8 +8,8 @@ export default async function Page() {
   return (
     <div>
       <h1>your basic create post example with 10 latest posts server rendered</h1>
-      <CreatePostTest />
-      <Wall x={initialPosts} />
+      <CreatePost />
+      <Wall initialPosts={initialPosts} />
     </div>
   );
 }

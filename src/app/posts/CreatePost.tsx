@@ -17,7 +17,7 @@ const zFormData = z.object({
 
 type FormData = z.infer<typeof zFormData>;
 
-export function CreatePostTest() {
+export function CreatePost() {
   const form = useForm<FormData>({
     resolver: zodResolver(zFormData),
     defaultValues: {
