@@ -88,6 +88,14 @@ export function dbfetch(init?: RequestInitLimited) {
   });
 }
 
+type TransactionResults = {
+  /** technically "rows_affected" */
+  numAffectedRows: bigint;
+  /** technically "rows_affected" */
+  numChangedRows: bigint;
+  /** technically "last_insert_id" */
+  insertId: bigint;
+}[];
 /**
  * multiple querys in sequence, in one fetch, with rollback if any one of them fails
  *
@@ -97,11 +105,15 @@ export function dbfetch(init?: RequestInitLimited) {
  * commits and can not be rolled back, see: https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html
  * so they are commited even on error / rollback
  */
-export async function dbTransaction(compiledQuerys: { sql: string; parameters: readonly unknown[] }[]) {
-  const body = compiledQuerys.map((compiledQuery) => ({
-    sql: compiledQuery.sql,
-    parameters: compiledQuery.parameters,
-  }));
+export async function dbTransaction(
+  compiledQuerys: { sql: string; parameters: readonly unknown[] }[]
+): Promise<TransactionResults> {
+  const body = compiledQuerys.map((compiledQuery) =>
+    JSONE.stringify({
+      sql: compiledQuery.sql,
+      parameters: compiledQuery.parameters,
+    })
+  );
   const url = `${process.env.DATABASE_HTTP_URL}/transaction`;
   const res = await fetch(url, {
     method: "POST",
@@ -110,23 +122,19 @@ export async function dbTransaction(compiledQuerys: { sql: string; parameters: r
       "Authorization": process.env.DATABASE_HTTP_AUTH_HEADER,
       "Content-Type": "application/json",
     },
-    body: JSONE.stringify(body),
+    body: JSON.stringify(body),
   });
 
   if (res.ok) {
     try {
-      const result = JSONE.parse(await res.text()) as {
-        numAffectedRows: bigint;
-        numChangedRows: bigint;
-        insertId: bigint;
-      }[];
+      const result = JSONE.parse(await res.text()) as TransactionResults;
       return result;
     } catch (error) {
       throw new Error("failed to parse response");
     }
   } else {
-    //const text = await res.text();
-    //console.log("res not ok. text:", text);
+    const text = await res.text();
+    console.log("res not ok. text:", text);
     throw new Error(`${res.status} ${res.statusText}`);
   }
 }
