@@ -30,7 +30,6 @@ export function Wall({ initialPosts, className }: Props) {
         void fetchNextPage();
       }
     },
-    undefined,
     [isFetchingNextPage, hasNextPage]
   );
 
