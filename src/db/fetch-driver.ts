@@ -77,7 +77,7 @@ class FetchConnection implements DatabaseConnection {
       parameters: compiledQuery.parameters,
     });
 
-    const url = `${this.config.url}?q=${q}`;
+    const url = `${this.config.url}?q=${encodeURIComponent(q)}`;
     const res = await fetch(url, this.config.init);
 
     if (res.ok) {
